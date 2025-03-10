@@ -2,7 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ComponentScreen } from "./ComponentScreen";
+import { ComponentScreen } from "@/app/components/ComponentScreen";
 import { FaYoutube } from "react-icons/fa"; // Font Awesome의 YouTube 아이콘
 import { IoPersonOutline, IoSearchOutline } from "react-icons/io5"; // Ionicons 5의 아이콘
 import jinwooLogo from "@/public/images/jinwoo-logo.png"; // 로고 이미지
@@ -85,7 +85,7 @@ export const Header = () => {
         </div>
 
         <div className="absolute top-0 left-[235px] w-full">
-          <ComponentScreen />
+          {/* <ComponentScreen /> */}
         </div>
       </div>
     </div>
