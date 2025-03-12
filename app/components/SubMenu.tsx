@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRef, useLayoutEffect, useState, RefObject } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import React from 'react';
 
 interface SubMenuProps {
   menuData: { [key: string]: string[] };
@@ -45,11 +46,11 @@ export const SubMenu: React.FC<SubMenuProps> = ({
   }, [menuRef, subMenuRef, menuItemKey, containerRef]);
 
     const handleMouseLeaveWithAnimation = () => {
-        setIsMounted(false);
+        setIsMounted(false)
     }
 
-    // 테두리 애니메이션 variants
-    const borderVariants = {
+    // 테두리 및 구분선 애니메이션 variants
+    const lineVariants = {
         hidden: { scaleX: 0, originX: 0.5 },
         visible: { scaleX: 1, originX: 0.5, transition: { duration: 0.3, ease: "easeInOut" } },
         exit: { scaleX: 0, originX: 0.5, transition: { duration: 0.2, ease: "easeInOut" } }
@@ -64,14 +65,14 @@ export const SubMenu: React.FC<SubMenuProps> = ({
     <AnimatePresence>
       {isMounted && (
         <motion.div
-          className={`bg-white/50 backdrop-blur-md shadow-lg absolute ${
+          className={`bg-white/80 backdrop-blur-md shadow-lg absolute rounded-2xl ${ // rounded-xl로 변경
             cardMode ? "w-auto" : "left-0 right-0"
           } ${className}`}
           style={{ top: position.top, left: position.left, originY: 0, zIndex: 30 }}
           onMouseEnter={() => onHoverChange(true)}
-          onMouseLeave={()=>{
+          onMouseLeave={() => {
             handleMouseLeaveWithAnimation();
-            onHoverChange(false);
+            onHoverChange(false)
           }}
           ref={subMenuRef}
           initial={{ scaleY: 0, opacity: 0 }}
@@ -80,8 +81,8 @@ export const SubMenu: React.FC<SubMenuProps> = ({
           transition={{ duration: 0.2 }}
         >
           <motion.div
-            className="absolute top-0 left-0 w-full h-1 bg-blue-500"
-            variants={borderVariants}
+            className="absolute top-0 left-0 w-full h-1 bg-blue-500 rounded-t-xl" // rounded-t-xl로 변경
+            variants={lineVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
@@ -96,20 +97,31 @@ export const SubMenu: React.FC<SubMenuProps> = ({
                 key={mainMenuItem}
                 className={`flex flex-col ${
                   cardMode ? "p-8" : ""
-                } items-center justify-center`}
+                } items-center justify-center w-full`}
               >
                 <h4 className="font-bold text-gray-700 mb-4">
                   {cardMode ? "" : mainMenuItem}
                 </h4>
                 <div className="flex flex-col w-full">
-                  {subMenuItems.map((item) => (
-                    <Link
-                      key={item}
-                      href={"#"} // 실제 경로로 변경 필요
-                      className="text-gray-700 hover:text-blue-500 hover:underline whitespace-nowrap py-3 w-full text-center"
-                    >
-                      {item}
-                    </Link>
+                  {subMenuItems.map((item, index) => (
+                    <React.Fragment key={item}>
+                      <Link
+                        href={"#"}
+                        className="text-gray-700 hover:text-blue-500 hover:underline whitespace-nowrap py-3 w-full text-center"
+                      >
+                        {item}
+                      </Link>
+                      {/* 구분선 */}
+                      {index < subMenuItems.length - 1 && (
+                        <motion.div
+                          className="w-full h-px bg-gray-800" // 구분선 스타일 변경
+                          variants={lineVariants}
+                          initial="hidden"
+                          animate="visible"
+                          exit="exit"
+                        />
+                      )}
+                    </React.Fragment>
                   ))}
                 </div>
               </div>
