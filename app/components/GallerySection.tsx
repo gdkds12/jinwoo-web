@@ -1,5 +1,6 @@
+// app/components/GallerySection.tsx
 "use client";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react"; // useEffect 제거
 import { motion } from "framer-motion";
 import { IoChevronForward } from "react-icons/io5";
 
@@ -86,24 +87,8 @@ const GallerySection = () => {
 
   };
 
-  // wheel 이벤트 리스너 제거
-  // useEffect(() => {
-  //   const ref = scrollRef.current;
-  //   if (ref) {
-  //     const preventWheelScroll = (e: WheelEvent) => {
-  //       e.preventDefault();
-  //     };
-
-  //     ref.addEventListener("wheel", preventWheelScroll, { passive: false });
-
-  //     return () => {
-  //       ref.removeEventListener("wheel", preventWheelScroll);
-  //     };
-  //   }
-  // }, []);
-
     const smoothScroll = (scrollTarget: number) => {
-     if (!scrollRef.current) return;
+    if (!scrollRef.current) return;
 
     const start = scrollRef.current.scrollLeft;
     const change = scrollTarget - start;
@@ -123,7 +108,7 @@ const GallerySection = () => {
         requestAnimationFrame(animateScroll);
       }
     };
-     // Easing 함수 (easeInOutQuad)
+    // Easing 함수 (easeInOutQuad)
     const easeInOutQuad = (t: number, b: number, c: number, d: number) => {
       t /= d / 2;
       if (t < 1) return (c / 2) * t * t + b;
@@ -158,7 +143,7 @@ const GallerySection = () => {
           <button
             className="absolute left-0 top-1/2 -translate-y-1/2 z-10 rounded-full p-1 focus:outline-none"
             onClick={() => {
-               if (scrollRef.current) {
+            if (scrollRef.current) {
                 smoothScroll(scrollRef.current.scrollLeft - 300); // 부드러운 스크롤 적용
               }
             }}
@@ -171,7 +156,7 @@ const GallerySection = () => {
           <button
             className="absolute right-0 top-1/2 -translate-y-1/2 z-10 rounded-full p-1 focus:outline-none"
             onClick={() => {
-              if (scrollRef.current) {
+            if (scrollRef.current) {
                 smoothScroll(scrollRef.current.scrollLeft + 300); // 부드러운 스크롤 적용
               }
             }}
