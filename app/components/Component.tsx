@@ -1,8 +1,7 @@
-// app/components/Component.tsx
 "use client";
 import { useState, useRef } from "react";
 import { SubMenu } from "./SubMenu";
-import { menuData, MenuDataKey } from "./constants/menu"; // menuData import 경로 수정
+import { menuData, MenuDataKey } from "./constants/menu"; //  경로 확인
 
 interface ComponentProps {
   className?: string;
@@ -12,7 +11,7 @@ export const Component: React.FC<ComponentProps> = ({ className }) => {
   const baseClasses =
     "text-xl font-bold tracking-[-0.32px] whitespace-nowrap cursor-pointer";
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
-  const [isSubMenuHovered, setIsSubMenuHovered] = useState(false); // SubMenu hover 상태
+  const [isSubMenuHovered, setIsSubMenuHovered] = useState(false);
 
   const menuRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const containerRef = useRef<HTMLDivElement>(null);
@@ -21,22 +20,21 @@ export const Component: React.FC<ComponentProps> = ({ className }) => {
 
   const handleMouseEnter = (item: string) => {
     setHoveredItem(item);
-    setIsSubMenuHovered(true); // SubMenu 표시
+    setIsSubMenuHovered(true);
   };
 
   const handleMouseLeave = () => {
-    // SubMenu에 hover 중이 아니면 바로 false로, hover 중이면 SubMenu의 onMouseLeave에서 처리
     if (!isSubMenuHovered) {
       setHoveredItem(null);
     }
   };
 
   const handleSubMenuHoverChange = (isHovered: boolean) => {
-        setIsSubMenuHovered(isHovered); // SubMenu hover 상태 변경
-        if(!isHovered){
-          setHoveredItem(null);
-        }
-    };
+    setIsSubMenuHovered(isHovered);
+    if (!isHovered) {
+      setHoveredItem(null);
+    }
+  };
 
   return (
     <div className={`relative ${className}`} ref={containerRef}>
@@ -51,25 +49,24 @@ export const Component: React.FC<ComponentProps> = ({ className }) => {
             onMouseEnter={() => handleMouseEnter(item)}
             onMouseLeave={handleMouseLeave}
           >
-            <div
-              className={`${baseClasses} text-foreground`}
-            >
-              {item}
-            </div>
+            <div className={`${baseClasses} text-foreground`}>{item}</div>
           </div>
         ))}
       </div>
 
+      {/* SubMenu 표시 조건 변경 */}
       {hoveredItem && menuRefs.current[hoveredItem] && containerRef.current && (
         <SubMenu
           key={hoveredItem}
-          menuData={{ [hoveredItem]: menuData[hoveredItem as MenuDataKey] }}
+          // menuData가 비어있어도 SubMenu를 생성하도록 조건 변경
+          menuData={{ [hoveredItem]: menuData[hoveredItem as MenuDataKey] || [] }} // 빈 배열 추가
           className="absolute"
           cardMode={true}
           onHoverChange={handleSubMenuHoverChange}
           menuItemKey={hoveredItem}
           menuRef={menuRefs.current[hoveredItem]}
           containerRef={containerRef}
+          isEmpty={menuData[hoveredItem as MenuDataKey]?.length === 0} // 추가: 빈 메뉴 항목인지 확인
         />
       )}
     </div>
