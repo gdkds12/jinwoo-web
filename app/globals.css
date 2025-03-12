@@ -2,30 +2,29 @@
 @import "tailwindcss";
 
 :root {
-  /* 기본 (밝은) 테마 */
-  --background: #ffffff; /* 흰색 배경 */
-  --foreground: #333333; /* 진한 회색 글자색 (검은색에 가깝게) */
+  --background: #ffffff;
+  --foreground: #171717;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  /* --font-sans: var(--font-geist-sans);  폰트 관련 설정은 tailwind.config.js에서 하는 것이 좋습니다. */
+  /* --font-mono: var(--font-geist-mono); */
 }
 
-/* 다크 모드 (선택 사항) */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #121212; /* 아주 어두운 회색 배경 */
-    --foreground: #eeeeee; /* 밝은 회색 글자색 (흰색에 가깝게) */
+    --background: #0a0a0a;
+    --foreground: #ededed;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--color-background); /* var(--background) 대신 var(--color-background) 사용 */
+  color: var(--color-foreground);    /* var(--foreground) 대신 var(--color-foreground) 사용 */
   font-family: Arial, Helvetica, sans-serif;
 }
 
 @layer components {
   .all-\[unset\] {
     all: unset;
-  }
-  .text-foreground {
-    @apply text-[var(--foreground)];
   }
 }

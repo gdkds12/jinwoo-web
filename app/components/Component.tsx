@@ -1,8 +1,8 @@
 // components/Component.tsx
 "use client";
-// import { useState } from "react"; // useState 제거
-// import { SubMenu } from "./SubMenu"; // SubMenu 제거
-// import { AnimatePresence } from "framer-motion"; // AnimatePresence 제거
+import { useState } from "react";
+import { SubMenu } from "./SubMenu";
+import { AnimatePresence } from "framer-motion";
 
 interface ComponentProps {
   className?: string;
@@ -10,9 +10,9 @@ interface ComponentProps {
 
 export const Component: React.FC<ComponentProps> = ({ className }) => {
   const baseClasses =
-    "text-xl font-bold tracking-[-0.32px] whitespace-nowrap cursor-pointer";
-  // const [isHovered, setIsHovered] = useState(false); // 제거
-  // const [showSubMenu, setShowSubMenu] = useState(false); // 제거
+    "text-xl font-bold tracking-[-0.32px] whitespace-nowrap cursor-pointer"; // text-xl로 변경
+  const [isHovered, setIsHovered] = useState(false);
+  const [showSubMenu, setShowSubMenu] = useState(false);
 
   const menuData = {
     예배: ["예배 LIVE", "설교", "예배안내"],
@@ -28,28 +28,45 @@ export const Component: React.FC<ComponentProps> = ({ className }) => {
 
   const menuItems = Object.keys(menuData);
 
-  // const handleMouseEnter = () => { // 제거
-  //   setIsHovered(true);
-  //   setShowSubMenu(true);
-  // };
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    setShowSubMenu(true);
+  };
 
-  // const handleMouseLeave = () => { // 제거
-  //   setIsHovered(false);
-  //   setShowSubMenu(false);
-  // };
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    setShowSubMenu(false);
+  };
 
   return (
-    <div className={`relative ${className}`}>
-      <div className={`hidden lg:flex gap-16`}>
+    <div
+      className={`relative ${className}`}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+
+    >
+      <div className={`hidden lg:flex gap-22`}> {/* gap-16으로 변경 */}
         {menuItems.map((item) => (
           <div
             key={item}
             className="flex flex-col items-start relative flex-[0_0_auto]"
           >
-            <div className={`${baseClasses} text-foreground`}>{item}</div>
+            <div
+              className={`${baseClasses} ${
+                isHovered ? "" : ""
+              } text-foreground`}
+            >
+              {item}
+            </div>
           </div>
         ))}
       </div>
+
+      <AnimatePresence>
+        {showSubMenu && (
+          <SubMenu menuData={menuData} className="absolute top-full left-0" />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
