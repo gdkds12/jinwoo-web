@@ -1,13 +1,13 @@
-/* styles/globals.css */
+/* app/globals.css */
 @import "tailwindcss";
+@config "../tailwind.config.js"; /* 상대 경로 주의! */
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  /* --font-sans: var(--font-geist-sans);  폰트 관련 설정은 tailwind.config.js에서 하는 것이 좋습니다. */
-  /* --font-mono: var(--font-geist-mono); */
+  /* --font-pretendard, --font-geist-mono 변수는 layout.tsx에서 설정 */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -17,10 +17,14 @@
   }
 }
 
-body {
-  background: var(--color-background); /* var(--background) 대신 var(--color-background) 사용 */
-  color: var(--color-foreground);    /* var(--foreground) 대신 var(--color-foreground) 사용 */
-  font-family: Arial, Helvetica, sans-serif;
+
+/* @theme 블록 제거 */
+/* font-family는 tailwind.config.js에서 설정 */
+
+@layer base {
+  body {
+    @apply font-sans bg-[--color-background] text-[--color-foreground];
+  }
 }
 
 @layer components {

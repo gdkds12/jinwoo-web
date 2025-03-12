@@ -65,7 +65,7 @@ export const SubMenu: React.FC<SubMenuProps> = ({
     <AnimatePresence>
       {isMounted && (
         <motion.div
-          className={`bg-white/80 backdrop-blur-md shadow-lg absolute rounded-2xl ${ // rounded-xl로 변경
+          className={`bg-white/80 backdrop-blur-md shadow-lg absolute rounded-2xl ${ 
             cardMode ? "w-auto" : "left-0 right-0"
           } ${className}`}
           style={{ top: position.top, left: position.left, originY: 0, zIndex: 30 }}

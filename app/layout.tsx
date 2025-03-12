@@ -1,15 +1,21 @@
+// app/layout.tsx
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+// Pretendard 폰트 설정
+const pretendard = localFont({
+  src: "../public/fonts/PretendardVariable.woff2", //  public/fonts에 폰트 파일
+  display: "swap",
+  variable: "--font-pretendard",
 });
 
+// Geist Mono (기존 코드 유지)
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -24,9 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${pretendard.variable} ${geistMono.variable} antialiased`}>
         {children}
       </body>
     </html>
