@@ -7,8 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 interface SubMenuProps {
   menuData: { [key: string]: string[] };
   className?: string;
-  onMouseEnter?: () => void;
-  onMouseLeave?: () => void;
+  onHoverChange: (isHovered: boolean) => void; // 변경: 콜백 함수 prop 추가
   cardMode?: boolean;
   menuItemKey: string;
   menuRef: HTMLDivElement | null;
@@ -18,8 +17,7 @@ interface SubMenuProps {
 export const SubMenu: React.FC<SubMenuProps> = ({
   menuData,
   className,
-  onMouseEnter,
-  onMouseLeave,
+  onHoverChange, // 콜백 함수 prop
   cardMode,
   menuItemKey,
   menuRef,
@@ -47,18 +45,21 @@ export const SubMenu: React.FC<SubMenuProps> = ({
   }, [menuRef, subMenuRef, menuItemKey, containerRef]);
 
   const handleMouseLeaveWithAnimation = () => {
-    setIsMounted(false);
-    if (onMouseLeave) {
-      onMouseLeave();
-    }
-  };
+      setIsMounted(false)
+  }
 
-    // 테두리 애니메이션을 위한 variants
+
+    // 테두리 애니메이션 variants
     const borderVariants = {
-      hidden: { scaleX: 0, originX: 0.5 },
-      visible: { scaleX: 1, originX: 0.5, transition: { duration: 0.3, ease: "easeInOut" } },
-      exit: { scaleX: 0, originX: 0.5, transition: { duration: 0.2, ease: "easeInOut" } }
+        hidden: { scaleX: 0, originX: 0.5 },
+        visible: { scaleX: 1, originX: 0.5, transition: { duration: 0.3, ease: "easeInOut" } },
+        exit: { scaleX: 0, originX: 0.5, transition: { duration: 0.2, ease: "easeInOut" } }
     };
+
+  // menuData가 비어있지 않은 경우에만 렌더링
+  if (!menuData || Object.keys(menuData).length === 0 || menuData[Object.keys(menuData)[0]].length === 0) {
+    return null;
+  }
 
   return (
     <AnimatePresence>
@@ -67,16 +68,18 @@ export const SubMenu: React.FC<SubMenuProps> = ({
           className={`bg-white/50 backdrop-blur-md shadow-lg absolute ${
             cardMode ? "w-auto" : "left-0 right-0"
           } ${className}`}
-          style={{ top: position.top, left: position.left, originY: 0 }}
-          onMouseEnter={onMouseEnter}
-          onMouseLeave={handleMouseLeaveWithAnimation}
+          style={{ top: position.top, left: position.left, originY: 0, zIndex: 30 }}
+          onMouseEnter={() => onHoverChange(true)} // SubMenu 진입 시 콜백 호출
+          onMouseLeave={() => {
+              handleMouseLeaveWithAnimation() // 애니메이션 실행
+              onHoverChange(false)}
+          } // SubMenu 이탈 시 콜백 호출
           ref={subMenuRef}
           initial={{ scaleY: 0, opacity: 0 }}
           animate={{ scaleY: 1, opacity: 1 }}
           exit={{ scaleY: 0, opacity: 0 }}
           transition={{ duration: 0.2 }}
         >
-          {/* 상단 테두리 (애니메이션 적용) */}
           <motion.div
             className="absolute top-0 left-0 w-full h-1 bg-blue-500"
             variants={borderVariants}
@@ -84,11 +87,10 @@ export const SubMenu: React.FC<SubMenuProps> = ({
             animate="visible"
             exit="exit"
           />
-
           <div
             className={`${
               cardMode ? "" : "max-w-[1400px] mx-auto"
-            } px-4 py-4 flex flex-wrap gap-4 pt-5`} // pt-5 추가 (테두리 공간 확보)
+            } px-4 py-4 flex flex-wrap gap-4 pt-5`}
           >
             {Object.entries(menuData).map(([mainMenuItem, subMenuItems]) => (
               <div
@@ -104,7 +106,7 @@ export const SubMenu: React.FC<SubMenuProps> = ({
                   {subMenuItems.map((item) => (
                     <Link
                       key={item}
-                      href={"#"} // 실제 경로로 변경 필요
+                      href={"#"}
                       className="text-gray-700 hover:text-gray-900 whitespace-nowrap py-3 w-full text-center"
                     >
                       {item}

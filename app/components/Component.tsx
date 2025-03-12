@@ -2,6 +2,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import { SubMenu } from "./SubMenu";
+import { menuData, MenuDataKey } from "./constants/menu";
 
 interface ComponentProps {
   className?: string;
@@ -11,46 +12,61 @@ export const Component: React.FC<ComponentProps> = ({ className }) => {
   const baseClasses =
     "text-xl font-bold tracking-[-0.32px] whitespace-nowrap cursor-pointer";
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
-  const [isMouseOverMenuOrSubMenu, setIsMouseOverMenuOrSubMenu] =
-    useState(false);
+  const [isMouseOverMenuOrSubMenu, setIsMouseOverMenuOrSubMenu] = useState(false);
+  // isSubMenuHovered 상태 제거
 
   const menuRefs = useRef<Record<string, HTMLDivElement | null>>({});
-  const containerRef = useRef<HTMLDivElement>(null); // null을 허용하지 않는 타입으로 변경
-
-  const menuData = {
-    예배: ["예배 LIVE", "설교", "예배안내"],
-    성장: ["교회학교", "교육/훈련", "강좌"],
-    교제: ["소그룹", "교회부서", "봉사/행사"],
-    섬김: ["돌봄", "선교", "말씀나눔"],
-    미디어: ["영상", "갤러리", "행정서비스"],
-    소통: ["교회소식", "교우소식", "문의", "진우교회"],
-    교회: [],
-  };
-
-  type MenuDataKey = keyof typeof menuData;
+  const containerRef = useRef<HTMLDivElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null); // 추가: setTimeout ref
 
   const menuItems = Object.keys(menuData);
 
   const handleMouseEnter = (item: string) => {
+      if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+      }
     setHoveredItem(item);
     setIsMouseOverMenuOrSubMenu(true);
   };
 
   const handleMouseLeave = () => {
-    setIsMouseOverMenuOrSubMenu(false);
-    if (!isMouseOverMenuOrSubMenu) {
+      if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+      }
+    // setTimeout을 사용하여 지연 후 상태 변경 (SubMenu hover 상태와 무관하게)
+    timeoutRef.current = setTimeout(() => {
+      setIsMouseOverMenuOrSubMenu(false);
       setHoveredItem(null);
-    }
+    }, 100);
   };
 
-  const handleSubMenuMouseEnter = () => {
-    setIsMouseOverMenuOrSubMenu(true);
-  };
+  // SubMenu의 hover 상태를 업데이트하는 콜백 함수
+    const handleSubMenuHoverChange = (isHovered: boolean) => {
+        if (isHovered) {
+            if (timeoutRef.current) { // SubMenu 진입 시 타이머 해제
+                clearTimeout(timeoutRef.current);
+            }
+            setIsMouseOverMenuOrSubMenu(true);
+        } else {
+            // SubMenu에서 벗어났을 때  타이머 설정
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+            timeoutRef.current = setTimeout(() => {
+                setIsMouseOverMenuOrSubMenu(false);
+                setHoveredItem(null);
+            }, 100)
+        }
+    };
 
-  const handleSubMenuMouseLeave = () => {
-    setIsMouseOverMenuOrSubMenu(false);
-    setHoveredItem(null);
-  };
+  useEffect(() => {
+    // 컴포넌트 언마운트 시 타이머 정리
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className={`relative ${className}`} ref={containerRef}>
@@ -82,11 +98,10 @@ export const Component: React.FC<ComponentProps> = ({ className }) => {
           menuData={{ [hoveredItem]: menuData[hoveredItem as MenuDataKey] }}
           className="absolute"
           cardMode={true}
-          onMouseEnter={handleSubMenuMouseEnter}
-          onMouseLeave={handleSubMenuMouseLeave}
+          onHoverChange={handleSubMenuHoverChange} // 콜백 함수 전달
           menuItemKey={hoveredItem}
           menuRef={menuRefs.current[hoveredItem]}
-          containerRef={containerRef as React.RefObject<HTMLDivElement>} // RefObject<HTMLDivElement>로 타입 단언
+          containerRef={containerRef as React.RefObject<HTMLDivElement>}
         />
       )}
     </div>
