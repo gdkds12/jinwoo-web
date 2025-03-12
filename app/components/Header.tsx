@@ -1,6 +1,5 @@
 // components/Header.tsx
-"use client";
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ComponentScreen } from "./ComponentScreen";
@@ -31,12 +30,12 @@ export const Header = () => {
             <div className="relative w-[153px] h-[19px] flex items-center">
               <Link
                 href="https://www.youtube.com/@jinwoochurch"
-                className="font-medium text-[#00000066] text-[13px] tracking-[-0.32px] leading-[25px] whitespace-nowrap"
+                className="font-medium text-[#00000066]  text-[13px] tracking-[-0.32px] leading-[25px] whitespace-nowrap"
               >
                 진우교회 유튜브
               </Link>
-              <FaYoutube className="text-[#00000066] text-xl ml-1" />
-              <span className="font-medium text-[#00000066] text-[13px] tracking-[-0.32px] leading-[25px] whitespace-nowrap ml-2">
+              <FaYoutube className="text-[#00000066]  text-xl ml-1" />
+              <span className="font-medium text-[#00000066]  text-[13px] tracking-[-0.32px] leading-[25px] whitespace-nowrap ml-2">
                 |
               </span>
             </div>
@@ -45,25 +44,25 @@ export const Header = () => {
           <div className="flex items-start justify-end gap-1 flex-1">
             <Link
               href="/prayer-request"
-              className="font-medium text-[#00000066] text-[13px] tracking-[-0.32px] leading-[25px] whitespace-nowrap"
+              className="font-medium text-[#00000066]  text-[13px] tracking-[-0.32px] leading-[25px] whitespace-nowrap"
             >
               기도요청
             </Link>
-            <span className="font-medium text-[#00000066] text-[13px] tracking-[-0.32px] leading-[25px] whitespace-nowrap">
+            <span className="font-medium text-[#00000066]  text-[13px] tracking-[-0.32px] leading-[25px] whitespace-nowrap">
               ·
             </span>
             <Link
               href="/send-sms"
-              className="font-medium text-[#00000066] text-[13px] tracking-[-0.32px] leading-[25px] whitespace-nowrap"
+              className="font-medium text-[#00000066]  text-[13px] tracking-[-0.32px] leading-[25px] whitespace-nowrap"
             >
               문자발송
             </Link>
-            <span className="font-medium text-[#00000066] text-[13px] tracking-[-0.32px] leading-[25px] whitespace-nowrap">
+            <span className="font-medium text-[#00000066]  text-[13px] tracking-[-0.32px] leading-[25px] whitespace-nowrap">
               ·
             </span>
             <Link
               href="/register"
-              className="font-medium text-[#00000066] text-[13px] tracking-[-0.32px] leading-[25px] whitespace-nowrap"
+              className="font-medium text-[#00000066]  text-[13px] tracking-[-0.32px] leading-[25px] whitespace-nowrap"
             >
               회원가입
             </Link>
@@ -111,17 +110,6 @@ export const Header = () => {
             <ComponentScreen />
         </div>
       </div>
-      {/* AnimatedCard (메뉴 호버 시 나타남) */}
-      <AnimatePresence>
-        {isMenuHovered && (
-          <motion.div
-            className="absolute left-0 right-0 top-full z-10" // top-full로 변경
-
-          >
-            <AnimatedCard menuData={menuData} />
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 };

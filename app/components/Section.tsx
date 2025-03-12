@@ -8,7 +8,7 @@ export const Section = () => {
     <div className="flex w-full h-[1200px] items-end justify-center px-14 py-0 relative overflow-hidden">
       <div
         className="absolute w-full h-full top-0 left-0 bg-cover bg-center"
-        style={{ backgroundImage: "url(/main-home.jpg)" }}
+        style={{ backgroundImage: "url(images/main-home.jpg)" }}
       />
 
        {/* 이 div에 z-index가 있는지 확인 */}

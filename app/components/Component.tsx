@@ -45,7 +45,7 @@ export const Component: React.FC<ComponentProps> = ({ className }) => {
       onMouseLeave={handleMouseLeave}
 
     >
-      <div className={`hidden lg:flex gap-22`}> {/* gap-16으로 변경 */}
+      <div className={`hidden lg:flex gap-22`}> {/* gap-22으로 변경 */}
         {menuItems.map((item) => (
           <div
             key={item}
