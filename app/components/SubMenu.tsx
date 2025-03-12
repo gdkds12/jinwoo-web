@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 interface SubMenuProps {
   menuData: { [key: string]: string[] };
   className?: string;
-  onHoverChange: (isHovered: boolean) => void; // 변경: 콜백 함수 prop 추가
+  onHoverChange: (isHovered: boolean) => void;
   cardMode?: boolean;
   menuItemKey: string;
   menuRef: HTMLDivElement | null;
@@ -17,7 +17,7 @@ interface SubMenuProps {
 export const SubMenu: React.FC<SubMenuProps> = ({
   menuData,
   className,
-  onHoverChange, // 콜백 함수 prop
+  onHoverChange,
   cardMode,
   menuItemKey,
   menuRef,
@@ -44,10 +44,9 @@ export const SubMenu: React.FC<SubMenuProps> = ({
     }
   }, [menuRef, subMenuRef, menuItemKey, containerRef]);
 
-  const handleMouseLeaveWithAnimation = () => {
-      setIsMounted(false)
-  }
-
+    const handleMouseLeaveWithAnimation = () => {
+        setIsMounted(false);
+    }
 
     // 테두리 애니메이션 variants
     const borderVariants = {
@@ -69,11 +68,11 @@ export const SubMenu: React.FC<SubMenuProps> = ({
             cardMode ? "w-auto" : "left-0 right-0"
           } ${className}`}
           style={{ top: position.top, left: position.left, originY: 0, zIndex: 30 }}
-          onMouseEnter={() => onHoverChange(true)} // SubMenu 진입 시 콜백 호출
-          onMouseLeave={() => {
-              handleMouseLeaveWithAnimation() // 애니메이션 실행
-              onHoverChange(false)}
-          } // SubMenu 이탈 시 콜백 호출
+          onMouseEnter={() => onHoverChange(true)}
+          onMouseLeave={()=>{
+            handleMouseLeaveWithAnimation();
+            onHoverChange(false);
+          }}
           ref={subMenuRef}
           initial={{ scaleY: 0, opacity: 0 }}
           animate={{ scaleY: 1, opacity: 1 }}
@@ -106,8 +105,8 @@ export const SubMenu: React.FC<SubMenuProps> = ({
                   {subMenuItems.map((item) => (
                     <Link
                       key={item}
-                      href={"#"}
-                      className="text-gray-700 hover:text-gray-900 whitespace-nowrap py-3 w-full text-center"
+                      href={"#"} // 실제 경로로 변경 필요
+                      className="text-gray-700 hover:text-blue-500 hover:underline whitespace-nowrap py-3 w-full text-center"
                     >
                       {item}
                     </Link>
