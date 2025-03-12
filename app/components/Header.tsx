@@ -3,7 +3,6 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ComponentScreen } from "./ComponentScreen";
-import { FaYoutube } from "react-icons/fa";
 import { IoPersonOutline, IoSearchOutline } from "react-icons/io5";
 import jinwooLogo from "@/public/images/jinwoo-logo.png";
 import { MobileMenu } from "./MobileMenu";
@@ -18,13 +17,11 @@ export const Header = () => {
     소통: ["교회소식", "교우소식", "문의", "진우교회"],
     교회: [],
   };
-  // const menuItems = Object.keys(menuData); // 사용하지 않으면 주석 처리 또는 삭제
 
   return (
     <div className="flex flex-col w-full items-center">
-      {/* 상단 바 */}
-      <div className="flex flex-col items-center w-full border-b border-[#0000001f]">
-        {/* ... (상단 바 코드, 변경 없음) */}
+      {/* 상단 바 제거 */}
+      {/* <div className="flex flex-col items-center w-full border-b border-[#0000001f]">
         <div className="flex max-w-[1400px] w-full h-[42px] items-center px-0 py-2">
           <div className="flex items-center gap-1.5 flex-1">
             <div className="relative w-[153px] h-[19px] flex items-center">
@@ -68,7 +65,7 @@ export const Header = () => {
             </Link>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* 메인 헤더 영역 */}
       <div className="max-w-[1400px] w-full relative z-20 py-6">
