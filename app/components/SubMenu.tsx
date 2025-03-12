@@ -12,7 +12,7 @@ interface SubMenuProps {
   cardMode?: boolean;
   menuItemKey: string;
   menuRef: HTMLDivElement | null;
-  containerRef: RefObject<HTMLDivElement>;
+  containerRef: RefObject<HTMLDivElement | null>;
 }
 
 export const SubMenu: React.FC<SubMenuProps> = ({
