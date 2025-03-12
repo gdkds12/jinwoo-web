@@ -65,7 +65,7 @@ const GallerySection = () => {
     setIsDragging(true);
     setStartX(e.pageX - (scrollRef.current?.offsetLeft || 0));
     if (scrollRef.current) {
-       setScrollLeft(scrollRef.current.scrollLeft) // 현재 scrollLeft 값을 저장합니다.
+        setScrollLeft(scrollRef.current.scrollLeft)
       scrollRef.current.style.cursor = "grabbing";
     }
   };
@@ -81,25 +81,26 @@ const GallerySection = () => {
     if (!isDragging || !scrollRef.current) return;
 
     const x = e.pageX - (scrollRef.current.offsetLeft || 0);
-    const walk = (x - startX) * 1; // 드래그 감도 1로 복원
-     scrollRef.current.scrollLeft = scrollLeft - walk; // 저장해둔 scrollLeft값을 사용
+    const walk = (x - startX) * 1;
+    scrollRef.current.scrollLeft = scrollLeft - walk;
 
   };
 
-  useEffect(() => {
-    const ref = scrollRef.current;
-    if (ref) {
-      const preventWheelScroll = (e: WheelEvent) => {
-        e.preventDefault();
-      };
+  // wheel 이벤트 리스너 제거
+  // useEffect(() => {
+  //   const ref = scrollRef.current;
+  //   if (ref) {
+  //     const preventWheelScroll = (e: WheelEvent) => {
+  //       e.preventDefault();
+  //     };
 
-      ref.addEventListener("wheel", preventWheelScroll, { passive: false });
+  //     ref.addEventListener("wheel", preventWheelScroll, { passive: false });
 
-      return () => {
-        ref.removeEventListener("wheel", preventWheelScroll);
-      };
-    }
-  }, []);
+  //     return () => {
+  //       ref.removeEventListener("wheel", preventWheelScroll);
+  //     };
+  //   }
+  // }, []);
 
     const smoothScroll = (scrollTarget: number) => {
      if (!scrollRef.current) return;
@@ -154,18 +155,17 @@ const GallerySection = () => {
         </div>
 
         <div className="relative w-full">
-           {/* 좌/우 화살표 버튼 */}
           <button
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10  rounded-full p-1 focus:outline-none" // focus:outline-none, p-1로 변경
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 rounded-full p-1 focus:outline-none"
             onClick={() => {
-              if (scrollRef.current) {
+               if (scrollRef.current) {
                 smoothScroll(scrollRef.current.scrollLeft - 300); // 부드러운 스크롤 적용
               }
             }}
             aria-label="이전"
           >
             <IoChevronForward
-              className="text-4xl text-gray-800 rotate-180" // 아이콘, 크기, 색상, 회전 변경
+              className="text-4xl text-gray-800 rotate-180"
             />
           </button>
           <button
