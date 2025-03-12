@@ -1,47 +1,149 @@
-// app/components/GallerySection.tsx
-import React from "react";
-// import { IoArrowForward } from "react-icons/io5"; // 아이콘 필요하면 주석 해제
+"use client";
+import React, { useRef, useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { IoChevronForward } from "react-icons/io5";
 
 interface GalleryItemProps {
   title: string;
   date: string;
+  isHovered: boolean;
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
 }
 
-const GalleryItem: React.FC<GalleryItemProps> = ({ title, date }) => {
+const GalleryItem: React.FC<GalleryItemProps> = ({
+  title,
+  date,
+  isHovered,
+  onMouseEnter,
+  onMouseLeave,
+}) => {
   return (
-    <div className="flex flex-col w-[264px] items-start justify-center pt-0 pb-[5px] px-0 relative self-stretch">
-      <div className="flex flex-col h-[404.52px] items-start relative self-stretch w-full">
-        <div className="flex flex-col self-stretch w-full items-start relative flex-[0_0_auto]">
-          {/* 이미지 대신 빈 박스 */}
-          <div className="relative self-stretch w-full h-[338.52px] bg-gray-200"></div>
+    <motion.div
+      className="flex flex-col items-center justify-center min-w-[200px] md:min-w-[264px] shrink-0 px-2 cursor-pointer"
+      style={{ margin: "0" }}
+      whileHover={{ scale: 1.2 }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
+      <div className="relative w-full aspect-[264/338] bg-gray-200"></div>
 
-          <div className="flex flex-col items-start pt-4 pb-0 px-0 relative self-stretch w-full flex-[0_0_auto]">
-            <div className="self-stretch text-[#333333] text-base leading-[25px] relative mt-[-1.00px] tracking-[-0.32px]">
-              {title}
-            </div>
-          </div>
-
-          <div className="flex flex-col items-start relative self-stretch w-full flex-[0_0_auto]">
-            <div className="relative self-stretch mt-[-1.00px] text-[#777777] text-sm tracking-[-0.32px] leading-[25px]">
-              {date}
-            </div>
-          </div>
-        </div>
+      <div className="flex flex-col items-center pt-4 pb-6">
+        <motion.div
+          className="text-center text-base leading-[25px] tracking-[-0.32px] whitespace-nowrap"
+          style={{
+            color: isHovered ? "#a28869" : "#333333",
+            transition: "color 0.3s ease",
+          }}
+        >
+          {title}
+        </motion.div>
+        <motion.div
+          className="text-center text-sm tracking-[-0.32px] leading-[25px] whitespace-nowrap"
+          style={{
+            color: isHovered ? "#a28869" : "#777777",
+            transition: "color 0.3s ease",
+          }}
+        >
+          {date}
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
+const GallerySection = () => {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+    const [scrollLeft, setScrollLeft] = useState(0); // 현재 스크롤 위치 상태
 
-const GallerySection = () => {  // export 제거.
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setStartX(e.pageX - (scrollRef.current?.offsetLeft || 0));
+    if (scrollRef.current) {
+       setScrollLeft(scrollRef.current.scrollLeft) // 현재 scrollLeft 값을 저장합니다.
+      scrollRef.current.style.cursor = "grabbing";
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    if (scrollRef.current) {
+      scrollRef.current.style.cursor = "grab";
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !scrollRef.current) return;
+
+    const x = e.pageX - (scrollRef.current.offsetLeft || 0);
+    const walk = (x - startX) * 1; // 드래그 감도 1로 복원
+     scrollRef.current.scrollLeft = scrollLeft - walk; // 저장해둔 scrollLeft값을 사용
+
+  };
+
+  useEffect(() => {
+    const ref = scrollRef.current;
+    if (ref) {
+      const preventWheelScroll = (e: WheelEvent) => {
+        e.preventDefault();
+      };
+
+      ref.addEventListener("wheel", preventWheelScroll, { passive: false });
+
+      return () => {
+        ref.removeEventListener("wheel", preventWheelScroll);
+      };
+    }
+  }, []);
+
+    const smoothScroll = (scrollTarget: number) => {
+     if (!scrollRef.current) return;
+
+    const start = scrollRef.current.scrollLeft;
+    const change = scrollTarget - start;
+    const duration = 500; // 이동 시간 (ms)
+    let startTime: number | null = null;
+
+    const animateScroll = (currentTime: number) => {
+      if (!startTime) startTime = currentTime;
+      const timeElapsed = currentTime - startTime;
+      const easedScroll = easeInOutQuad(timeElapsed, start, change, duration); // easing 함수 적용
+
+      if(scrollRef.current){
+        scrollRef.current.scrollLeft = easedScroll;
+      }
+
+      if (timeElapsed < duration) {
+        requestAnimationFrame(animateScroll);
+      }
+    };
+     // Easing 함수 (easeInOutQuad)
+    const easeInOutQuad = (t: number, b: number, c: number, d: number) => {
+      t /= d / 2;
+      if (t < 1) return (c / 2) * t * t + b;
+      t--;
+      return (-c / 2) * (t * (t - 2) - 1) + b;
+    };
+
+    requestAnimationFrame(animateScroll);
+
+  };
+
+  const tempGalleryItems = Array.from({ length: 10 }).map((_, index) => ({
+    title: `Title ${index + 1}`,
+    date: `2025.0${index + 1}.01`,
+  }));
+
   return (
     <div className="flex flex-col w-full items-center py-[130px] px-4 md:px-10 lg:px-60 relative">
-      {/* px-4는 모바일, md:px-10은 태블릿, lg:px-60은 데스크탑 뷰 */}
-      <div className="relative max-w-[1440px] w-full">
-        <div className="flex flex-col w-full items-center px-[591.81px] py-0">
-          {/* px를 제거하고 max-w-full을 추가하여 화면 너비에 맞게 조정 */}
-          <p className="w-fit text-transparent text-[40px] md:text-[55px] text-center leading-[60px] md:leading-[82.5px] whitespace-nowrap relative mt-[-1.00px] tracking-[-0.32px]">
-          {/*  text-[40px]는 모바일 뷰에서 텍스트 크기, md:text-[55px]는 태블릿 뷰 이상에서 텍스트 크기 */}
+      <div className="max-w-[1440px] w-full">
+        <div className="flex flex-col w-full items-center mb-8">
+          <p className="w-fit text-transparent text-[40px] md:text-[55px] text-center leading-[60px] md:leading-[82.5px] whitespace-nowrap tracking-[-0.32px]">
             <span className="font-extralight text-[#333333] tracking-[-0.18px]">
               진우{" "}
             </span>
@@ -51,32 +153,57 @@ const GallerySection = () => {  // export 제거.
           </p>
         </div>
 
-        {/* 전체보기 버튼 */}
-        <div className="flex flex-col w-full items-end mt-8 md:mt-10"> {/* mt-8은 모바일 뷰에서 상단 여백, md:mt-10은 태블릿 뷰 이상에서 상단 여백 */}
-          <div className="inline-flex justify-end items-center relative">
-            {/* 아이콘 사용 시 주석 해제 */}
-            {/* <IoArrowForward className="text-[#666666] text-xl" /> */}
+        <div className="relative w-full">
+           {/* 좌/우 화살표 버튼 */}
+          <button
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10  rounded-full p-1 focus:outline-none" // focus:outline-none, p-1로 변경
+            onClick={() => {
+              if (scrollRef.current) {
+                smoothScroll(scrollRef.current.scrollLeft - 300); // 부드러운 스크롤 적용
+              }
+            }}
+            aria-label="이전"
+          >
+            <IoChevronForward
+              className="text-4xl text-gray-800 rotate-180" // 아이콘, 크기, 색상, 회전 변경
+            />
+          </button>
+          <button
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 rounded-full p-1 focus:outline-none"
+            onClick={() => {
+              if (scrollRef.current) {
+                smoothScroll(scrollRef.current.scrollLeft + 300); // 부드러운 스크롤 적용
+              }
+            }}
+            aria-label="다음"
+          >
+            <IoChevronForward className="text-4xl text-gray-800" />
+          </button>
 
-            <div className="text-[#666666] text-sm md:text-base text-right leading-[25px] whitespace-nowrap relative mt-[-1.00px] tracking-[-0.32px]">
-            {/* text-sm은 모바일 뷰에서 텍스트 크기, md:text-base는 태블릿 뷰 이상에서 텍스트 크기 */}
-              전체보기
-            </div>
+          <div
+            ref={scrollRef}
+            className="flex overflow-x-scroll gap-4 md:gap-6 pb-5 scrollbar-hide select-none"
+            style={{ scrollbarWidth: "none", cursor: "grab" }}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseUp}
+          >
+            {tempGalleryItems.map((item, index) => (
+              <GalleryItem
+                key={index}
+                title={item.title}
+                date={item.date}
+                isHovered={hoveredIndex === index}
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(null)}
+              />
+            ))}
           </div>
-        </div>
-
-        {/* 갤러리 아이템들 */}
-        <div className="flex flex-col md:flex-row w-full items-start justify-between mt-[40px] md:mt-[50px] lg:mt-[60px] gap-4 md:gap-6 lg:gap-8">
-           {/* mt-[40px]는 모바일 뷰에서 상단 여백, md:mt-[50px]는 태블릿 뷰에서, lg:mt-[60px]는 데스크탑 뷰에서 상단 여백 */}
-          {/* gap-4는 모바일 뷰에서 아이템 간 간격, md:gap-6은 태블릿 뷰에서, lg:gap-8은 데스크탑 뷰에서 간격 */}
-          <GalleryItem title="수여예배" date="2025.03.02" />
-          <GalleryItem title="대학부 겨울 수련회" date="2025.02.27" />
-          <GalleryItem title="부르심 캠프" date="2025.02.23" />
-          <GalleryItem title="2025년 치유를 위한 성찬 예배" date="2025.02.20" />
-          <GalleryItem title="청년부 태국 해외선교" date="2025.02.19" />
         </div>
       </div>
     </div>
   );
 };
 
-export default GallerySection; // default로 export
+export default GallerySection;

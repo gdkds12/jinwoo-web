@@ -17,7 +17,6 @@
   }
 }
 
-
 /* @theme 블록 제거 */
 /* font-family는 tailwind.config.js에서 설정 */
 
@@ -30,5 +29,15 @@
 @layer components {
   .all-\[unset\] {
     all: unset;
+  }
+    /* Hide scrollbar for Chrome, Safari and Opera */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
   }
 }
