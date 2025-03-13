@@ -110,7 +110,9 @@ export const Section = () => {
             className="object-cover object-center"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 70vw, 95vw"
             priority
-            quality={90}
+            quality={100}
+            placeholder="blur"
+            blurDataURL="/images/main-home.jpg"
             style={{
                 borderRadius: isMobile ? 0 : `${borderRadius.get()}px`,
             }}
