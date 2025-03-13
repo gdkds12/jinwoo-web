@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { IoArrowForward } from "react-icons/io5";
 import Image from 'next/image';
@@ -69,7 +69,6 @@ export const Section = () => {
   const paddingTop = useTransform(scale, (currentScale) => {
     if (isMobile || initialCardTop === null) return 0;
     const scaledHeight = cardHeight * currentScale;
-    const unscaledTop = initialCardTop - window.scrollY;
     const calculatedPadding = (cardHeight - scaledHeight) * paddingMultiplier.get();
     return Math.max(0, calculatedPadding);
   });
