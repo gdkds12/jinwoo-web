@@ -8,11 +8,7 @@ import jinwooLogo from "@/public/images/jinwoo-logo.png";
 import { menuData, MenuDataKey } from "./constants/menu"; // MenuDataKey import
 import React from "react";
 
-interface MobileMenuProps {
-  // menuData prop 제거됨
-}
-
-export const MobileMenu: React.FC<MobileMenuProps> = () => {
+export const MobileMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   // menuItems를 MenuDataKey[] 타입으로 명시

@@ -6,7 +6,6 @@ import Link from "next/link";
 import { ComponentScreen } from "./ComponentScreen";
 import jinwooLogo from "@/public/images/jinwoo-logo.png";
 import { MobileMenu } from "./MobileMenu";
-import { menuData } from "./constants/menu";
 
 export const Header = () => {
   return (

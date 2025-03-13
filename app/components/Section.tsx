@@ -64,18 +64,13 @@ export const Section = () => {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [imageHeight, initialCardTop, cardHeight]);
-
-  const clampedScale = useMemo(() => {
-    return Math.max(0.65, scale.get());
-  }, [scale]);
+  }, [imageHeight, initialCardTop, cardHeight, scale]);
 
   const paddingTop = useTransform(scale, (currentScale) => {
     if (isMobile || initialCardTop === null) return 0;
     const scaledHeight = cardHeight * currentScale;
     const unscaledTop = initialCardTop - window.scrollY;
-    const scaledTop = unscaledTop;
-    let calculatedPadding = (cardHeight - scaledHeight) * paddingMultiplier.get(); // paddingMultiplier 사용
+    const calculatedPadding = (cardHeight - scaledHeight) * paddingMultiplier.get();
     return Math.max(0, calculatedPadding);
   });
 
