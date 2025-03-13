@@ -23,6 +23,11 @@ export const Section = () => {
   const scale = useTransform(scrollYProgress, [0, 0.3], [1, 0.65]);
   const borderRadius = useTransform(scrollYProgress, [0, 0.001, 0.3], [0, 50, 50]);
 
+  const containerHeight = useTransform(scale, (currentScale) => {
+    if (isMobile) return '100%';
+    return `${100 * currentScale}%`;
+  });
+
   useEffect(() => {
     const handleResize = () => {
       if (cardRef.current) {
@@ -92,7 +97,12 @@ export const Section = () => {
         }}
         className="relative w-full bg-white overflow-hidden"
       >
-        <div className="relative w-full aspect-[3/4] md:aspect-[20/9] image-container">
+        <motion.div 
+          className="relative w-full aspect-[3/4] md:aspect-[20/9] image-container"
+          style={{
+            height: containerHeight
+          }}
+        >
           <Image
             src="/images/main-home.jpg"
             alt="Main Image"
@@ -106,28 +116,24 @@ export const Section = () => {
             }}
           />
           <div className="absolute inset-0 flex items-end md:items-start">
-            <div 
-              className="w-full px-4 md:px-8 lg:px-12 py-4 md:py-6 lg:py-8 md:w-auto" 
-              style={{ 
-                marginTop: isMobile ? 0 : '25%',
-                marginBottom: isMobile ? '25%' : 0
-              }}
-            >
-              <h1 className="text-white text-3xl md:text-5xl lg:text-6xl font-semibold md:font-semibold leading-tight tracking-[-0.32px] md:relative md:ml-42">
-                진우교회에 오신<br />
-                여러분을 환영합니다.
-              </h1>
+            <div className="w-full px-4 md:px-8 lg:px-12 py-4 md:py-6 lg:py-8 mb-[15%] md:mt-[10%]">
+              <div className="md:ml-[15%] lg:ml-[20%]">
+                <h1 className="text-white text-4xl md:text-6xl lg:text-7xl font-semibold md:font-semibold leading-tight tracking-[-0.32px]">
+                  진우교회에 오신<br />
+                  여러분을 환영합니다.
+                </h1>
 
-              <Link
-                href="/worship-info"
-                className="hidden md:inline-flex items-center px-8 py-4 bg-white text-[#333333] text-lg font-medium tracking-[-0.32px] rounded-md hover:bg-opacity-50 focus:outline-none focus:ring-2 focus:ring-blue-500 md:mt-8 md:ml-42"
-              >
-                <span className="mr-2">예배 안내</span>
-                <IoArrowForward className="text-2xl" />
-              </Link>
+                <Link
+                  href="/worship-info"
+                  className="hidden md:inline-flex items-center px-8 py-4 bg-white text-[#333333] text-lg font-medium tracking-[-0.32px] rounded-md hover:bg-opacity-50 focus:outline-none focus:ring-2 focus:ring-blue-500 mt-8"
+                >
+                  <span className="mr-2">예배 안내</span>
+                  <IoArrowForward className="text-2xl" />
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </motion.div>
       {!isSticky && !isMobile && (
         <motion.div style={{ height: paddingTop }}></motion.div>
