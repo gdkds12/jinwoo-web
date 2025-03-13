@@ -1,6 +1,5 @@
-// app/components/Section.tsx
 "use client";
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { IoArrowForward } from "react-icons/io5";
 import Image from 'next/image';
@@ -8,18 +7,42 @@ import { motion, useScroll, useTransform } from "framer-motion";
 
 export const Section = () => {
   const { scrollYProgress } = useScroll();
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
-  const y = useTransform(scrollYProgress, [0, 1], [0, 100]);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [cardHeight, setCardHeight] = useState(0);
+
+  // 스크롤에 따른 scale 값 조정 (더 빠르게, 최소 0.65)
+  const scale = useTransform(scrollYProgress, [0, 0.3], [1, 0.65]); // 변경된 부분
+
+  // 카드 높이 측정
+  useEffect(() => {
+    if (cardRef.current) {
+      setCardHeight(cardRef.current.offsetHeight);
+    }
+  }, []);
+
+  // padding-top 계산 (최소 scale 값 0.65에 맞춤)
+  const paddingTop = useTransform(
+    scrollYProgress,
+    [0, 1],
+    [0, cardHeight * 0.35] // 변경 (1 - 0.65 = 0.35)
+  );
+
 
   return (
-    <motion.div
-      style={{ scale, y }}
-      className="flex w-full items-center justify-center pt-0 min-h-screen" // px-4 제거
+    <div
+      className="flex w-full items-center justify-center min-h-screen"
     >
-      {/* 카드 컨테이너 - max-w-[1500px] 제거 또는 max-w-full, max-w-screen-2xl 등으로 변경 */}
-      <div className="relative w-full bg-white shadow-xl overflow-hidden">
+      <motion.div
+        ref={cardRef}
+        style={{
+          transformOrigin: "top center",
+          scale,
+          paddingTop,
+        }}
+        className="relative w-full bg-white shadow-xl overflow-hidden"
+      >
         {/* 이미지 컨테이너 */}
-        <div className="relative w-full aspect-[19/9]">
+        <div className="relative w-full aspect-[20/9]">
           <Image
             src="/images/main-home.jpg"
             alt="Main Image"
@@ -52,7 +75,7 @@ export const Section = () => {
             </Link>
           </div>
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 };
