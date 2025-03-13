@@ -1,20 +1,22 @@
-// components/MobileMenu.tsx
+// app/components/MobileMenu.tsx
 "use client";
 import { useState } from "react";
 import { IoMenu, IoClose } from "react-icons/io5";
 import Link from "next/link";
-import Image from "next/image"; // next/image import
-import jinwooLogo from "@/public/images/jinwoo-logo.png"; // 로고 이미지 import
+import Image from "next/image";
+import jinwooLogo from "@/public/images/jinwoo-logo.png";
+import { menuData, MenuDataKey } from "./constants/menu"; // MenuDataKey import
 import React from "react";
 
 interface MobileMenuProps {
-  menuData: { [key: string]: string[] };
+  // menuData prop 제거됨
 }
 
-export const MobileMenu: React.FC<MobileMenuProps> = ({ menuData }) => {
+export const MobileMenu: React.FC<MobileMenuProps> = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const menuItems = Object.keys(menuData);
+  // menuItems를 MenuDataKey[] 타입으로 명시
+  const menuItems: MenuDataKey[] = Object.keys(menuData) as MenuDataKey[];
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -24,15 +26,13 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ menuData }) => {
     setIsOpen(false);
   };
 
-  // CSS 클래스 변수
   const menuItemClasses = "py-3 border-b border-gray-200";
   const subMenuItemClasses = "py-1";
   const linkClasses = "text-foreground";
   const closeButtonClasses = "absolute top-4 right-4 p-2";
 
   return (
-    <div className="lg:hidden">
-      {/* 햄버거 메뉴 버튼 */}
+    <div className="">
       <button
         onClick={toggleMenu}
         className="p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -44,50 +44,41 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ menuData }) => {
         )}
       </button>
 
-      {/* 메뉴 목록 (isOpen 상태에 따라 표시/숨김) */}
       {isOpen && (
-        <div
-          className="fixed top-0 left-0 w-screen h-screen bg-white z-[50] overflow-y-auto" // z-[50] 사용
-        >
+        <div className="fixed top-0 left-0 w-screen h-screen bg-white z-[50] overflow-y-auto">
           <div className="p-4">
-            {/* 닫기 버튼 */}
             <button onClick={closeMenu} className={closeButtonClasses}>
               <IoClose className="text-2xl" />
             </button>
 
-            {/* 로고 */}
-            <Link href="/">
-                <div className="flex items-center justify-center mb-4" onClick={closeMenu}>
-                    <Image src={jinwooLogo} alt="Jinwoo logo"  />
-                </div>
+            <Link href="/" onClick={closeMenu}>
+              <div className="flex items-center justify-center mb-4">
+                <Image src={jinwooLogo} alt="Jinwoo logo" width={121} height={68} />
+              </div>
             </Link>
 
-            {/* 메뉴 목록 */}
             <ul>
               {menuItems.map((item) => (
-                <React.Fragment key={item}>
-                  <li className={menuItemClasses}>
-                    <Link href={`#`} onClick={closeMenu}>
-                        <div className="font-bold text-lg text-foreground">{item}</div>
-                    </Link>
+                <li key={item} className={menuItemClasses}>
+                  <Link href={`#`} onClick={closeMenu}>
+                    <div className="font-bold text-lg text-foreground">{item}</div>
+                  </Link>
 
-                    {/* 서브메뉴 */}
-                    {menuData[item] && menuData[item].length > 0 && (
-                      <ul className="mt-2 ml-4">
-                        {menuData[item].map((subItem) => (
-                          <li key={subItem} className={subMenuItemClasses}>
-                            <Link href={`#`} onClick={closeMenu}>
-                                <div className="text-foreground">{subItem}</div>
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </li>
-                </React.Fragment>
+                  {/* menuData[item] 접근 시 타입 안전성 확보 */}
+                  {menuData[item] && menuData[item].length > 0 && (
+                    <ul className="mt-2 ml-4">
+                      {menuData[item].map((subItem: string) => ( // subItem 타입 명시
+                        <li key={subItem} className={subMenuItemClasses}>
+                          <Link href={`#`} onClick={closeMenu}>
+                            <div className="text-foreground">{subItem}</div>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
               ))}
-              {/* 로그인, 회원가입 버튼 */}
-              <li className="py-3">
+               <li className="py-3">
                 <Link href="/login" onClick={closeMenu}>
                     <div className={linkClasses}>로그인</div>
                 </Link>
@@ -101,6 +92,14 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ menuData }) => {
           </div>
         </div>
       )}
+       <style jsx>{`
+        @media (max-width: 767px) {
+
+          :global(.header-container) {
+            background-color: transparent;
+          }
+        }
+      `}</style>
     </div>
   );
 };
