@@ -133,7 +133,7 @@ const GallerySection = () => {
             <span className="font-extralight text-[#333333] tracking-[-0.18px]">
               진우{" "}
             </span>
-            <span className="font-bold text-[#a28869] tracking-[-0.18px]">
+            <span className="font-bold text-[#333333] tracking-[-0.18px]">
               갤러리
             </span>
           </p>

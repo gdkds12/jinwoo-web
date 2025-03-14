@@ -13,19 +13,52 @@ export const Section = () => {
   const [isSticky, setIsSticky] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [initialCardTop, setInitialCardTop] = useState<number | null>(null);
-  const paddingMultiplier = useMotionValue(2); // paddingMultiplier는 여전히 사용하지만 UI는 제거
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
+    // @ts-ignore - framer-motion의 타입 정의에 enabled가 없지만 실제로는 지원됨
+    enabled: !isMobile
   });
 
-  const scale = useTransform(scrollYProgress, [0, 0.3], [1, 0.65]);
-  const borderRadius = useTransform(scrollYProgress, [0, 0.001, 0.3], [0, 50, 50]);
+  const scale = useTransform(scrollYProgress, 
+    [0, 0.16, 0.33, 0.5], 
+    [1, 0.95, 0.8, 0.65]
+  );
+
+  const borderRadius = useTransform(
+    scrollYProgress, 
+    [0, 0.001, 0.16, 0.33, 0.5], 
+    [0, 50, 50, 50, 50]
+  );
+
+  const paddingTop = useTransform(scale, (currentScale) => {
+    if (isMobile || initialCardTop === null) return 0;
+    // 원본 높이와 축소된 높이의 차이를 직접 계산
+    const originalHeight = cardHeight;
+    const scaledHeight = cardHeight * currentScale;
+    const heightDifference = originalHeight - scaledHeight;
+    
+    // 기본 패딩 계산
+    let padding = heightDifference * 6;
+    
+    // 스케일이 최소값(0.65)에 도달했을 때 추가 패딩 적용
+    const minScale = 0.65;
+    const threshold = 0.73; // 부드러운 전환을 위한 임계값
+    
+    if (currentScale <= threshold) {
+      // 임계값에서 최소 스케일까지 추가 패딩을 점진적으로 적용
+      const transitionFactor = (threshold - currentScale) / (threshold - minScale);
+      const additionalPadding = 1280 * transitionFactor; // 추가 패딩 1250px로 변경
+      padding += additionalPadding; // 기존 패딩에 추가
+    }
+    
+    return padding;
+  });
 
   const containerHeight = useTransform(scale, (currentScale) => {
     if (isMobile) return '100%';
-    return `${100 * currentScale}%`;
+    return `${cardHeight * currentScale}px`;
   });
 
   useEffect(() => {
@@ -41,7 +74,8 @@ export const Section = () => {
           setInitialCardTop(rect.top + window.scrollY);
         }
       }
-      setIsMobile(window.innerWidth < 768);
+      // PC 해상도 기준을 1024px로 설정 (lg 브레이크포인트)
+      setIsMobile(window.innerWidth < 1024);
     };
 
     handleResize();
@@ -51,6 +85,8 @@ export const Section = () => {
   }, []);
 
   useEffect(() => {
+    if (isMobile) return;
+    
     if (containerRef.current && initialCardTop === null) {
       const rect = containerRef.current.getBoundingClientRect();
       setInitialCardTop(rect.top + window.scrollY);
@@ -64,37 +100,31 @@ export const Section = () => {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [imageHeight, initialCardTop, cardHeight, scale]);
-
-  const paddingTop = useTransform(scale, (currentScale) => {
-    if (isMobile || initialCardTop === null) return 0;
-    const scaledHeight = cardHeight * currentScale;
-    const calculatedPadding = (cardHeight - scaledHeight) * paddingMultiplier.get();
-    return Math.max(0, calculatedPadding);
-  });
-
+  }, [imageHeight, initialCardTop, cardHeight, scale, isMobile]);
 
   return (
-    <div
+    <motion.div
       ref={containerRef}
       className="flex w-full items-center justify-center relative"
+      style={{ height: isMobile ? 'auto' : containerHeight }}
     >
       <motion.div
         ref={cardRef}
         style={{
           transformOrigin: "top center",
           scale: isMobile ? 1 : scale,
-          position: isSticky ? "sticky" : "relative",
-          top: isSticky ? 0 : "auto",
-          zIndex: isSticky ? 10 : 1,
+          position: isMobile ? "relative" : (isSticky ? "sticky" : "relative"),
+          top: isMobile ? "auto" : (isSticky ? 0 : "auto"),
+          zIndex: isMobile ? 1 : (isSticky ? 10 : 1),
           paddingTop: isMobile ? 0 : paddingTop,
         }}
         className="relative w-full bg-white overflow-hidden"
       >
         <motion.div 
-          className="relative w-full aspect-[3/4] md:aspect-[20/9] image-container"
+          className="relative w-full aspect-[3/4] md:aspect-[20/9] image-container overflow-hidden"
           style={{
-            height: containerHeight
+            height: '100%',
+            borderRadius: isMobile ? 0 : borderRadius // 이미지 컨테이너에도 borderRadius 적용
           }}
         >
           <Image
@@ -107,9 +137,6 @@ export const Section = () => {
             quality={100}
             placeholder="blur"
             blurDataURL="/images/main-home.jpg"
-            style={{
-                borderRadius: isMobile ? 0 : `${borderRadius.get()}px`,
-            }}
           />
           <div className="absolute inset-0 flex items-end md:items-start">
             <div className="w-full px-4 md:px-8 lg:px-12 py-4 md:py-6 lg:py-8 mb-[15%] md:mt-[10%]">
@@ -131,9 +158,6 @@ export const Section = () => {
           </div>
         </motion.div>
       </motion.div>
-      {!isSticky && !isMobile && (
-        <motion.div style={{ height: paddingTop }}></motion.div>
-      )}
-    </div>
+    </motion.div>
   );
 };
