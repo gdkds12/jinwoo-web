@@ -17,7 +17,7 @@ export const Section = () => {
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
-    // @ts-ignore - framer-motion의 타입 정의에 enabled가 없지만 실제로는 지원됨
+    // @ts-expect-error - framer-motion의 타입 정의에 enabled가 없지만 실제로는 지원됨
     enabled: !isMobile
   });
 
