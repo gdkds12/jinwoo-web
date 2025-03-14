@@ -2,16 +2,6 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-// 메뉴 아이템 타입 정의
-type MenuItem = {
-  title: string;
-  imageName: string;
-  link: string;
-  width: number;
-  height: number;
-  gridArea: string;
-};
-
 const MobileMenuSection = () => {
   // 메뉴 아이템 데이터
   const menuItems = [

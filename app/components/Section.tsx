@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { IoArrowForward } from "react-icons/io5";
 import Image from 'next/image';
-import { motion, useScroll, useTransform, useMotionValue } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 export const Section = () => {
   const containerRef = useRef<HTMLDivElement>(null);
