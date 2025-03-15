@@ -8,19 +8,13 @@ import MenuSection from "./components/MenuSection";
 import { FadeInSection, AnimatedSection } from "./components/AnimatedSection";
 import { useEffect, useState } from "react";
 
-// 컴포넌트 로딩 상태를 위한 간단한 스켈레톤 컴포넌트
-const SkeletonSection = ({ height }: { height: string }) => (
-  <div className={`w-full ${height} bg-gray-50`}></div>
-);
+// SkeletonSection 컴포넌트는 사용되지 않으므로 제거
+// 필요한 경우 나중에 다시 추가할 수 있습니다
 
 export default function Home() {
-  // 페이지 로딩 상태 관리
-  const [isLoaded, setIsLoaded] = useState(false);
+  // isLoaded 변수는 사용되지 않으므로 제거
   
   useEffect(() => {
-    // 페이지 로드 후 상태 업데이트
-    setIsLoaded(true);
-    
     // 페이지 로드 시 body 스타일 설정
     document.body.style.width = "100%";
     document.body.style.maxWidth = "100%";

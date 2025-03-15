@@ -14,7 +14,6 @@ export const Section = () => {
   const [isMobile, setIsMobile] = useState(true);
   const [initialCardTop, setInitialCardTop] = useState<number | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
-  const [paddingTop, setPaddingTop] = useState("0px");
   const [containerHeight, setContainerHeight] = useState("100vh");
 
   // 스크롤 관련 설정 - 성능 최적화를 위한 옵션 추가
@@ -58,11 +57,6 @@ export const Section = () => {
     return padding;
   });
 
-  const containerHeightValue = useTransform(scale, (currentScale) => {
-    if (isMobile) return '100vh';
-    return `${cardHeight * currentScale}px`;
-  });
-
   // 윈도우 리사이즈 핸들러 최적화 - useCallback 적용
   const handleResize = useCallback(() => {
     if (cardRef.current) {
@@ -86,14 +80,12 @@ export const Section = () => {
     
     // 레이아웃 설정 통합
     if (newIsMobile) {
-      setPaddingTop("0px");
       setContainerHeight("100vh");
       
       // 모바일에서 기본 스크롤 허용
       document.body.style.overflow = "auto";
       document.documentElement.style.overflow = "auto";
     } else {
-      setPaddingTop("0px");
       setContainerHeight("100vh");
     }
   }, []);

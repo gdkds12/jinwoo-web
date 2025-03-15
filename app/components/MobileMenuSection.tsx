@@ -22,7 +22,6 @@ const MobileMenuSection = () => {
   const MID_CARD_HEIGHT = 30; // 중간 카드 높이(%)
   const BOTTOM_CARD_WIDTH = 31.67; // 하단 카드 너비(%)
   const BOTTOM_CARD_HEIGHT = 30; // 하단 카드 높이(%)
-  const VERTICAL_GAP = 3; // 상하 카드 사이 간격(%)
   const BOTTOM_CARDS_OFFSET = 4.5; // 하단 카드 상향 이동 값(%)
 
   // 애니메이션 변수 - 최적화
