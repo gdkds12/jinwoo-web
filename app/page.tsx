@@ -24,18 +24,31 @@ export default function Home() {
     // 새로고침 시 페이지 상단으로 스크롤
     window.scrollTo(0, 0);
     
-    // 페이지 로드 시 스크롤 가능하도록 body 스타일 설정
-    document.body.style.overflow = "auto";
-    document.body.style.overscrollBehavior = "auto";
+    // 페이지 로드 시 body 스타일 설정
+    document.body.style.width = "100%";
+    document.body.style.maxWidth = "100%";
+    document.body.style.margin = "0";
+    document.body.style.padding = "0";
+    document.body.style.overflowX = "hidden";
+    document.body.style.overflowY = "auto";
+    document.body.style.boxSizing = "border-box";
+    document.body.style.position = "relative";
     
     return () => {
-      document.body.style.overflow = "";
-      document.body.style.overscrollBehavior = "";
+      // 컴포넌트 언마운트 시 스타일 초기화
+      document.body.style.width = "";
+      document.body.style.maxWidth = "";
+      document.body.style.margin = "";
+      document.body.style.padding = "";
+      document.body.style.overflowX = "";
+      document.body.style.overflowY = "";
+      document.body.style.boxSizing = "";
+      document.body.style.position = "";
     };
   }, []);
 
   return (
-    <div className="min-h-[200vh] max-w-[100vw]">
+    <div className="min-h-[200vh] w-full mx-auto">
       <FadeInSection delay={0}>
         <Header />
       </FadeInSection>
@@ -57,21 +70,56 @@ export default function Home() {
         <Footer />
       </AnimatedSection>
       
-      <style jsx>{`
+      <style jsx global>{`
+        html {
+          margin: 0;
+          padding: 0;
+          width: 100%;
+          overflow-x: hidden;
+        }
+        
+        body {
+          margin: 0 !important;
+          padding: 0 !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          overflow-x: hidden !important;
+          box-sizing: border-box !important;
+          position: relative !important;
+        }
+        
+        #__next {
+          width: 100%;
+          max-width: 100%;
+          overflow-x: hidden;
+          box-sizing: border-box;
+        }
+        
         @media (max-width: 767px) {
+          body {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+          }
+          
           .main-container {
             display: flex;
             flex-direction: column;
             width: 100%;
-            max-width: 100vw;
+            max-width: 100%;
+            box-sizing: border-box;
+            overflow-x: hidden;
           }
+          
           .content-container {
             margin-top: 0;
             background-color: #f9fafb; /* gray-50 */
             position: relative;
             z-index: 2;
             width: 100%;
-            max-width: 100vw;
+            max-width: 100%;
+            box-sizing: border-box;
+            overflow-x: hidden;
           }
         }
       `}</style>
