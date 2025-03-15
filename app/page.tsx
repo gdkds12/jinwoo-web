@@ -6,7 +6,7 @@ import { Footer } from "./components/Footer";
 import GallerySection from "./components/GallerySection";
 import MenuSection from "./components/MenuSection";
 import { FadeInSection, AnimatedSection } from "./components/AnimatedSection";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 // SkeletonSection 컴포넌트는 사용되지 않으므로 제거
 // 필요한 경우 나중에 다시 추가할 수 있습니다
