@@ -35,7 +35,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-[200vh]">
+    <div className="min-h-[200vh] max-w-[100vw]">
       <FadeInSection delay={0}>
         <Header />
       </FadeInSection>
@@ -62,12 +62,16 @@ export default function Home() {
           .main-container {
             display: flex;
             flex-direction: column;
+            width: 100%;
+            max-width: 100vw;
           }
           .content-container {
             margin-top: 0;
             background-color: #f9fafb; /* gray-50 */
             position: relative;
             z-index: 2;
+            width: 100%;
+            max-width: 100vw;
           }
         }
       `}</style>

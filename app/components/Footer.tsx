@@ -6,7 +6,7 @@ import { BiLink } from "react-icons/bi";
 
 export const Footer = () => {
   return (
-    <div className="flex flex-col w-full items-start">
+    <div className="flex flex-col w-full items-start max-w-[100vw]">
       <div className="pt-9 pb-12 px-10 bg-[#3a4148] flex flex-col items-center w-full">
         <div className="flex max-w-[1400px] w-full items-start">
           <div className="flex flex-col items-start gap-7 flex-1 self-stretch">

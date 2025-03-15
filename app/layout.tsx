@@ -21,7 +21,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "진우교회",
   description: "진우교회 홈페이지",
-  viewport: "width=device-width, initial-scale=1.0, maximum-scale=1.0",
+  viewport: "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no",
 };
 
 export default function RootLayout({
@@ -31,7 +31,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className={`${pretendard.variable} ${geistMono.variable}`}>
-      <body className="font-sans">
+      <body className="font-sans w-full">
         {children}
       </body>
     </html>
