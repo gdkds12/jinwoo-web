@@ -15,60 +15,49 @@ const MobileMenuSection = () => {
 
   return (
     <div className="w-full max-w-[413px] mx-auto">
-      <div className="relative w-full bg-gray-50" style={{ height: "310px" }}>
+      <div className="relative w-full bg-gray-50 pb-[75%]">
         {/* 예배 안내 - 왼쪽 상단 큰 카드 */}
         <Link href={menuItems[0].link}>
-          <div className="absolute top-0 left-0 w-[200px] h-[200px] bg-white shadow-lg rounded-2xl hover:shadow-xl transition-shadow duration-300 cursor-pointer">
-            <div className="absolute top-[15px] left-[15px] font-semibold text-black text-lg tracking-[-0.32px] leading-normal">
+          <div className="absolute top-0 left-0 w-[48%] h-[64%] bg-white shadow-lg rounded-2xl hover:shadow-xl transition-shadow duration-300 cursor-pointer">
+            <div className="absolute top-[5%] left-[7%] font-semibold text-black tracking-[-0.32px] leading-normal text-[3.8vw] md:text-lg">
               {menuItems[0].title}
             </div>
-            <div className="absolute right-[10px] top-1/2 transform -translate-y-1/2">
+            <div className="absolute right-[5%] top-1/2 transform -translate-y-1/2 w-[40%]">
               <Image
                 src={`/images/menu/${menuItems[0].imageName}`}
                 alt={menuItems[0].title}
                 width={110}
                 height={110}
-                className="object-contain"
+                className="object-contain w-full h-auto"
               />
             </div>
           </div>
         </Link>
 
-        {/* 주보 - 오른쪽 상단 첫 번째 카드 */}
-        <Link href={menuItems[1].link}>
-          <div className="absolute top-0 left-[205px] w-[200px] h-[95px] bg-white shadow-lg rounded-2xl hover:shadow-xl transition-shadow duration-300 cursor-pointer">
-            <div className="absolute top-[15px] left-[15px] font-semibold text-black text-lg tracking-[-0.32px] leading-normal">
-              {menuItems[1].title}
+        {/* 주보 & 교회 소식 - 오른쪽 상단 카드들 */}
+        {menuItems.slice(1, 3).map((item, index) => (
+          <Link href={item.link} key={index}>
+            <div className="absolute w-[48%] h-[30%] bg-white shadow-lg rounded-2xl hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+                 style={{
+                   top: `${index * 32}%`,
+                   left: '50%',
+                   marginLeft: '2%'
+                 }}>
+              <div className="absolute top-[15%] left-[7%] font-semibold text-black tracking-[-0.32px] leading-normal text-[3.5vw] md:text-lg">
+                {item.title}
+              </div>
+              <div className="absolute right-[5%] top-1/2 transform -translate-y-1/2 w-[35%]">
+                <Image
+                  src={`/images/menu/${item.imageName}`}
+                  alt={item.title}
+                  width={75}
+                  height={75}
+                  className="object-contain w-full h-auto"
+                />
+              </div>
             </div>
-            <div className="absolute right-[10px] top-1/2 transform -translate-y-1/2">
-              <Image
-                src={`/images/menu/${menuItems[1].imageName}`}
-                alt={menuItems[1].title}
-                width={75}
-                height={75}
-                className="object-contain"
-              />
-            </div>
-          </div>
-        </Link>
-
-        {/* 교회 소식 - 오른쪽 상단 두 번째 카드 */}
-        <Link href={menuItems[2].link}>
-          <div className="absolute top-[100px] left-[205px] w-[200px] h-[95px] bg-white shadow-lg rounded-2xl hover:shadow-xl transition-shadow duration-300 cursor-pointer">
-            <div className="absolute top-[15px] left-[15px] font-semibold text-black text-lg tracking-[-0.32px] leading-normal">
-              {menuItems[2].title}
-            </div>
-            <div className="absolute right-[10px] top-1/2 transform -translate-y-1/2">
-              <Image
-                src={`/images/menu/${menuItems[2].imageName}`}
-                alt={menuItems[2].title}
-                width={75}
-                height={75}
-                className="object-contain"
-              />
-            </div>
-          </div>
-        </Link>
+          </Link>
+        ))}
 
         {/* 하단 3개 카드 */}
         {menuItems.slice(3).map((item, index) => (
@@ -76,22 +65,22 @@ const MobileMenuSection = () => {
             <div 
               className="absolute bg-white shadow-lg rounded-2xl hover:shadow-xl transition-shadow duration-300 cursor-pointer"
               style={{
-                top: "215px",
-                left: `${index * 135}px`,
-                width: "130px",
-                height: "95px"
+                bottom: '0',
+                left: `${index * 33.33}%`,
+                width: '31%',
+                height: '30%'
               }}
             >
-              <div className="absolute top-[10px] left-[15px] font-semibold text-black text-lg tracking-[-0.32px] leading-normal">
+              <div className="absolute top-[10%] left-[7%] font-semibold text-black tracking-[-0.32px] leading-normal text-[3.2vw] md:text-lg">
                 {item.title}
               </div>
-              <div className="absolute right-[10px] bottom-[5px]">
+              <div className="absolute right-[5%] bottom-[5%] w-[35%]">
                 <Image
                   src={`/images/menu/${item.imageName}`}
                   alt={item.title}
                   width={65}
                   height={65}
-                  className="object-contain"
+                  className="object-contain w-full h-auto"
                 />
               </div>
             </div>
