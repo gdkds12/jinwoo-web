@@ -88,8 +88,8 @@ const MenuSection = () => {
   );
 
   return (
-    <section id="menu-section" className="flex flex-col w-full items-center pt-20 md:pt-[400px] pb-16 md:pb-20 lg:pb-24 px-6 md:px-12 lg:px-60 bg-gray-50 max-w-[100vw]">
-      <div className="max-w-[1440px] w-full flex flex-col items-center gap-6 pb-10">
+    <section id="menu-section" className="flex flex-col w-full items-center pt-20 md:pt-[400px] pb-16 md:pb-20 lg:pb-24 px-6 md:px-12 lg:px-60 bg-gray-50">
+      <div className="max-w-[1440px] w-full flex flex-col items-center gap-6">
         <motion.div 
           className="w-full flex flex-col items-center"
           initial="hidden"
@@ -124,7 +124,7 @@ const MenuSection = () => {
         </div>
 
         {/* 모바일 메뉴 그리드 (md 미만에서만 표시) */}
-        <div className="md:hidden w-full mt-4 pb-16">
+        <div className="md:hidden w-full mt-4">
           <MobileMenuSection />
         </div>
       </div>

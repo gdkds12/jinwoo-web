@@ -101,27 +101,6 @@ const GallerySection = () => {
     scrollRef.current.scrollLeft = scrollLeft - walk;
   };
 
-  // 터치 이벤트 핸들러 추가 - 모바일에서 스크롤 가능하도록
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (!scrollRef.current) return;
-    setIsDragging(true);
-    setStartX(e.touches[0].clientX - (scrollRef.current.offsetLeft || 0));
-    setScrollLeft(scrollRef.current.scrollLeft);
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging || !scrollRef.current) return;
-    
-    // preventDefault 제거하고 수평 스크롤만 처리
-    const x = e.touches[0].clientX - (scrollRef.current.offsetLeft || 0);
-    const walk = (x - startX) * 1;
-    scrollRef.current.scrollLeft = scrollLeft - walk;
-  };
-
-  const handleTouchEnd = () => {
-    setIsDragging(false);
-  };
-
   // 부드러운 스크롤 함수
   const smoothScroll = (targetPosition: number) => {
     if (!scrollRef.current) return;
@@ -182,7 +161,7 @@ const GallerySection = () => {
   );
 
   return (
-    <div className="flex flex-col w-full items-center py-[100px] px-4 md:px-10 lg:px-60 relative max-w-[100vw]">
+    <div className="flex flex-col w-full items-center py-[100px] px-4 md:px-10 lg:px-60 relative">
       <div className="max-w-[1440px] w-full">
         <motion.div 
           className="flex flex-col w-full items-center mb-8"
@@ -229,22 +208,15 @@ const GallerySection = () => {
 
           <div
             ref={scrollRef}
-            className="flex space-x-4 overflow-x-auto hide-scrollbar py-2 scroll-x-auto"
-            style={{ 
-              cursor: "grab",
-              overflowX: "auto",
-              WebkitOverflowScrolling: "touch" 
-            }}
+            className="flex space-x-4 overflow-x-auto hide-scrollbar py-2"
+            style={{ cursor: "grab" }}
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
             onMouseMove={handleMouseMove}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
           >
             <motion.div 
-              className="flex gap-5 pl-1 pr-12 overflow-visible"
+              className="flex gap-5 pl-1 pr-12" 
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
