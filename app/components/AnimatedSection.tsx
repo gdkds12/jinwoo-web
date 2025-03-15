@@ -17,8 +17,7 @@ export const AnimatedSection: React.FC<AnimatedSectionProps> = ({
   const ref = useRef(null);
   const isInView = useInView(ref, { 
     once: true, 
-    amount: 0.1,
-    fallback: true // 뷰포트 감지 실패해도 렌더링을 진행
+    amount: 0.1
   });
 
   // DOM 요소 등장 시 콘텐츠가 미리 렌더링되도록 처리
