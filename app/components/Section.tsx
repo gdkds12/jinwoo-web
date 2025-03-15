@@ -11,14 +11,18 @@ export const Section = () => {
   const [cardHeight, setCardHeight] = useState(0);
   const [imageHeight, setImageHeight] = useState(0);
   const [isSticky, setIsSticky] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(true); // 기본값을 모바일로 설정하여 초기 로딩에 최적화
   const [initialCardTop, setInitialCardTop] = useState<number | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [paddingTop, setPaddingTop] = useState("0px");
+  const [containerHeight, setContainerHeight] = useState("100vh");
 
+  // 스크롤 관련 설정
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
     // @ts-expect-error - framer-motion의 타입 정의에 enabled가 없지만 실제로는 지원됨
-    enabled: !isMobile
+    enabled: !isMobile && isInitialized
   });
 
   const scale = useTransform(scrollYProgress, 
@@ -32,34 +36,42 @@ export const Section = () => {
     [0, 50, 50, 50, 50]
   );
 
-  const paddingTop = useTransform(scale, (currentScale) => {
+  const paddingTopValue = useTransform(scale, (currentScale) => {
     if (isMobile || initialCardTop === null) return 0;
-    // 원본 높이와 축소된 높이의 차이를 직접 계산
+    
     const originalHeight = cardHeight;
     const scaledHeight = cardHeight * currentScale;
     const heightDifference = originalHeight - scaledHeight;
     
-    // 기본 패딩 계산
     let padding = heightDifference * 6;
     
-    // 스케일이 최소값(0.65)에 도달했을 때 추가 패딩 적용
     const minScale = 0.65;
-    const threshold = 0.73; // 부드러운 전환을 위한 임계값
+    const threshold = 0.73;
     
     if (currentScale <= threshold) {
-      // 임계값에서 최소 스케일까지 추가 패딩을 점진적으로 적용
       const transitionFactor = (threshold - currentScale) / (threshold - minScale);
-      const additionalPadding = 1280 * transitionFactor; // 추가 패딩 1250px로 변경
-      padding += additionalPadding; // 기존 패딩에 추가
+      const additionalPadding = 1280 * transitionFactor;
+      padding += additionalPadding;
     }
     
     return padding;
   });
 
-  const containerHeight = useTransform(scale, (currentScale) => {
-    if (isMobile) return '100vh'; // 모바일에서 전체 화면 높이
+  const containerHeightValue = useTransform(scale, (currentScale) => {
+    if (isMobile) return '100vh';
     return `${cardHeight * currentScale}px`;
   });
+
+  useEffect(() => {
+    // 초기화 플래그 설정 - 컴포넌트가 마운트된 후에만 애니메이션 계산 활성화
+    const timer = setTimeout(() => {
+      setIsInitialized(true);
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -74,11 +86,35 @@ export const Section = () => {
           setInitialCardTop(rect.top + window.scrollY);
         }
       }
+      
       // PC 해상도 기준을 1024px로 설정 (lg 브레이크포인트)
-      setIsMobile(window.innerWidth < 1024);
+      const newIsMobile = window.innerWidth < 1024;
+      setIsMobile(newIsMobile);
+      
+      // 모바일 모드에서는 스크롤을 허용하도록 처리
+      if (newIsMobile) {
+        document.body.style.overflow = "auto";
+        document.documentElement.style.overflow = "auto";
+      }
+      
+      // 브라우저 크기에 따라 모바일 여부 결정
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      
+      // 모바일/데스크탑에 따른 레이아웃 조정
+      if (mobile) {
+        setPaddingTop("0px");
+        setContainerHeight("100vh");
+      } else {
+        setPaddingTop("0px");
+        setContainerHeight("100vh");
+      }
     };
 
     handleResize();
+    
+    // 즉시 한 번 더 실행하여 값을 확실히 설정
+    setTimeout(handleResize, 0);
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -91,6 +127,7 @@ export const Section = () => {
       const rect = containerRef.current.getBoundingClientRect();
       setInitialCardTop(rect.top + window.scrollY);
     }
+    
     const handleScroll = () => {
       if (containerRef.current) {
         const containerRect = containerRef.current.getBoundingClientRect();
@@ -102,21 +139,32 @@ export const Section = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [imageHeight, initialCardTop, cardHeight, scale, isMobile]);
 
+  const scrollToMenu = () => {
+    // 스크롤 화살표를 탭하면 메뉴 섹션으로 스크롤
+    window.scrollTo({
+      top: window.innerHeight,
+      behavior: 'smooth'
+    });
+  };
+
   return (
     <motion.div
       ref={containerRef}
       className="flex w-full items-center justify-center relative"
-      style={{ height: isMobile ? '100vh' : containerHeight }} // 모바일에서 전체 화면 높이로 설정
+      style={{ 
+        height: isMobile ? '100vh' : containerHeight,
+        minHeight: '100vh', // 최소 높이 설정으로 스크롤 가능하게 함
+      }}
     >
       <motion.div
         ref={cardRef}
         style={{
           transformOrigin: "top center",
           scale: isMobile ? 1 : scale,
-          position: isMobile ? "relative" : (isSticky ? "sticky" : "relative"),
+          position: isMobile ? "relative" : (isSticky ? "fixed" : "relative"),
           top: isMobile ? "auto" : (isSticky ? 0 : "auto"),
           zIndex: isMobile ? 1 : (isSticky ? 10 : 1),
-          paddingTop: isMobile ? 0 : paddingTop,
+          paddingTop: isMobile ? 0 : paddingTopValue,
         }}
         className="relative w-full bg-white overflow-hidden"
       >
@@ -132,11 +180,11 @@ export const Section = () => {
             alt="Main Image"
             fill
             className="object-cover object-center"
-            sizes="100vw" // 모바일에서 항상 전체 화면 너비 사용
+            sizes="100vw"
             priority
-            quality={100}
-            placeholder="blur"
-            blurDataURL="/images/main-home.jpg"
+            quality={80}
+            loading="eager"
+            fetchPriority="high"
           />
           <div className="absolute inset-0 md:flex md:justify-start md:items-start">
             <div className="welcome-message absolute left-0 right-0 top-[20%] md:static md:w-full px-4 md:px-8 lg:px-12 py-4 md:py-6 lg:py-8 md:mt-[10%]">
@@ -157,8 +205,8 @@ export const Section = () => {
             </div>
           </div>
           
-          {/* 스크롤 유도 화살표 */}
-          <div className="scroll-arrow absolute bottom-28 left-1/2 transform -translate-x-1/2 text-white hidden md:hidden">
+          {/* 스크롤 유도 화살표 - 스크롤을 유도하는 역할 강화 */}
+          <div className="scroll-arrow absolute bottom-28 left-1/2 transform -translate-x-1/2 text-white hidden md:hidden z-10">
             <motion.div
               animate={{
                 y: [0, 10, 0]
@@ -167,6 +215,14 @@ export const Section = () => {
                 duration: 1.5,
                 repeat: Infinity,
                 repeatType: "loop"
+              }}
+              whileTap={{ scale: 1.2 }}
+              onClick={() => {
+                // 스크롤 화살표를 탭하면 메뉴 섹션으로 스크롤
+                window.scrollTo({
+                  top: window.innerHeight,
+                  behavior: 'smooth'
+                });
               }}
             >
               <IoChevronDown className="text-4xl" />

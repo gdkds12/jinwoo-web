@@ -2,9 +2,13 @@
 @import "tailwindcss";
 @config "../tailwind.config.js"; /* 상대 경로 주의! */
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --foreground-rgb: 0, 0, 0;
+  --background-rgb: 255, 255, 255;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   /* --font-pretendard, --font-geist-mono 변수는 layout.tsx에서 설정 */
@@ -27,7 +31,7 @@
     padding: 0;
     overflow-x: hidden;
   }
-  
+
   body {
     @apply font-sans bg-[--color-background] text-[--color-foreground];
     position: relative;
@@ -47,13 +51,5 @@
   .scrollbar-hide {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
-  }
-}
-
-/* 모바일 화면 관련 추가 스타일 */
-@media screen and (max-width: 767px) {
-  #__next, main {
-    width: 100%;
-    overflow-x: hidden;
   }
 }

@@ -12,7 +12,7 @@ export const Header = () => {
     <div className="flex flex-col w-full items-center">
       <div className="max-w-5xl w-full relative z-20 md:py-0 header-container mx-auto">
         {/* justify-between 제거, flex items-center 유지, gap-4 추가 (또는 원하는 값) */}
-        <div className="flex items-center gap-0">
+        <div className="flex items-center justify-between px-5 md:px-0">
           <Link href="/">
             <Image
               src={jinwooLogo}

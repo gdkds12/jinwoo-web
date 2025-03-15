@@ -36,7 +36,7 @@ export const MobileMenu = () => {
   const closeButtonClasses = "absolute top-4 right-4 p-2";
 
   return (
-    <div className="mobile-menu-container">
+    <div className="mobile-menu-container w-full md:w-auto">
       <button
         onClick={toggleMenu}
         className="p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -96,25 +96,6 @@ export const MobileMenu = () => {
           </div>
         </div>
       )}
-       <style jsx>{`
-        @media (max-width: 767px) {
-          :global(body) {
-            width: 100%;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-          }
-          
-          :global(.header-container) {
-            background-color: transparent;
-            width: 100%;
-          }
-          
-          .mobile-menu-container {
-            width: 100%;
-          }
-        }
-      `}</style>
     </div>
   );
 };
