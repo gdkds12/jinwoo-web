@@ -21,8 +21,16 @@
 /* font-family는 tailwind.config.js에서 설정 */
 
 @layer base {
+  html, body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+  
   body {
     @apply font-sans bg-[--color-background] text-[--color-foreground];
+    position: relative;
   }
 }
 
@@ -39,5 +47,13 @@
   .scrollbar-hide {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
+  }
+}
+
+/* 모바일 화면 관련 추가 스타일 */
+@media screen and (max-width: 767px) {
+  #__next, main {
+    width: 100%;
+    overflow-x: hidden;
   }
 }

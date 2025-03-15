@@ -42,11 +42,11 @@ const MenuSection = () => {
   );
 
   return (
-    <section className="flex flex-col w-full items-center pt-[400px] pb-16 md:pb-20 lg:pb-24 px-6 md:px-12 lg:px-60 bg-white">
+    <section className="flex flex-col w-full items-center pt-20 md:pt-[400px] pb-16 md:pb-20 lg:pb-24 px-6 md:px-12 lg:px-60 bg-gray-50">
       <div className="max-w-[1440px] w-full flex flex-col items-center gap-6">
         <div className="w-full flex flex-col items-center">
-          <h2 className="text-[#333333] text-[35px] md:text-[35px] text-center tracking-[-0.32px] leading-[52.5px] font-semibold">
-            복음의 생명으로 세상을 아름답게 하는 성령의 교회
+          <h2 className="text-[#333333] text-[32px] md:text-[35px] text-center tracking-[-0.32px] leading-[48px] md:leading-[52.5px] font-semibold">
+            복음의 생명으로 세상을<br /> 아름답게 하는 성령의 교회
           </h2>
         </div>
 

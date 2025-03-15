@@ -16,10 +16,18 @@ export const MobileMenu = () => {
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+    if (!isOpen) {
+      // 메뉴가 열릴 때 body에 overflow: hidden 추가
+      document.body.style.overflow = "hidden";
+    } else {
+      // 메뉴가 닫힐 때 overflow 스타일 제거
+      document.body.style.overflow = "";
+    }
   };
 
   const closeMenu = () => {
     setIsOpen(false);
+    document.body.style.overflow = "";
   };
 
   const menuItemClasses = "py-3 border-b border-gray-200";
@@ -28,7 +36,7 @@ export const MobileMenu = () => {
   const closeButtonClasses = "absolute top-4 right-4 p-2";
 
   return (
-    <div className="">
+    <div className="mobile-menu-container">
       <button
         onClick={toggleMenu}
         className="p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -41,7 +49,7 @@ export const MobileMenu = () => {
       </button>
 
       {isOpen && (
-        <div className="fixed top-0 left-0 w-screen h-screen bg-white z-[50] overflow-y-auto">
+        <div className="fixed top-0 left-0 w-full h-screen bg-white z-[50] overflow-y-auto">
           <div className="p-4">
             <button onClick={closeMenu} className={closeButtonClasses}>
               <IoClose className="text-2xl" />
@@ -90,9 +98,20 @@ export const MobileMenu = () => {
       )}
        <style jsx>{`
         @media (max-width: 767px) {
-
+          :global(body) {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+          }
+          
           :global(.header-container) {
             background-color: transparent;
+            width: 100%;
+          }
+          
+          .mobile-menu-container {
+            width: 100%;
           }
         }
       `}</style>
