@@ -28,15 +28,15 @@ export const Section = () => {
 
   // 스케일 변환 최적화 - 키프레임 개수 축소
   const scale = useTransform(scrollYProgress, 
-    [0, 0.25, 0.5], 
-    [1, 0.85, 0.65]
+    [0, 0.3, 0.6], 
+    [1, 0.8, 0.6]
   );
 
   // 경계 반경 변환 최적화
   const borderRadius = useTransform(
     scrollYProgress, 
-    [0, 0.1, 0.5], 
-    [0, 50, 50]
+    [0, 0.2, 0.6], 
+    [0, 30, 30]
   );
 
   // paddingTopValue 계산 최적화 - 불필요한 계산 제거
@@ -44,13 +44,13 @@ export const Section = () => {
     if (isMobile || initialCardTop === null) return 0;
     
     const heightDifference = cardHeight * (1 - currentScale);
-    let padding = heightDifference * 6;
+    let padding = heightDifference * 4;
     
-    const threshold = 0.73;
+    const threshold = 0.8;
     
     if (currentScale <= threshold) {
-      const transitionFactor = (threshold - currentScale) / (threshold - 0.65);
-      const additionalPadding = 1280 * transitionFactor;
+      const transitionFactor = (threshold - currentScale) / (threshold - 0.6);
+      const additionalPadding = 800 * transitionFactor;
       padding += additionalPadding;
     }
     
@@ -191,6 +191,7 @@ export const Section = () => {
       style={{ 
         height: isMobile ? '100vh' : containerHeight,
         minHeight: '100vh',
+        marginTop: '0', // 헤더 바로 아래에서 시작하도록 변경
       }}
     >
       <motion.div
@@ -204,6 +205,7 @@ export const Section = () => {
           paddingTop: isMobile ? 0 : paddingTopValue,
           // 하드웨어 가속 활성화로 애니메이션 성능 향상
           willChange: "transform, padding-top",
+          marginTop: '0', // 상단 여백 제거
         }}
         className="relative w-full bg-white overflow-hidden"
       >
@@ -214,6 +216,7 @@ export const Section = () => {
             borderRadius: isMobile ? 0 : borderRadius,
             // 하드웨어 가속 활성화로 애니메이션 성능 향상
             willChange: "border-radius",
+            marginTop: '0', // 상단 여백 제거
           }}
         >
           <Image
