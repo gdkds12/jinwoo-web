@@ -12,6 +12,12 @@ interface Notice {
   department: string;
 }
 
+// 전역 상태 관리를 위한 이벤트 관리
+export const openNoticeFullScreen = () => {
+  const event = new CustomEvent('openNoticeFullScreen');
+  document.dispatchEvent(event);
+};
+
 // 예시 공지사항 데이터
 const noticeData: Notice[] = [
   {
@@ -55,8 +61,29 @@ export const NoticeSection = () => {
   const [showFullScreen, setShowFullScreen] = useState(false);
   const [expandedNotices, setExpandedNotices] = useState<number[]>([]);
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [isInitialized, setIsInitialized] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const contentHeights = useRef<Record<number, number>>({});
+  
+  // 컴포넌트 초기화 확인
+  useEffect(() => {
+    setIsInitialized(true);
+  }, []);
+  
+  // 이벤트 리스너 등록
+  useEffect(() => {
+    const handleOpenFullScreen = () => {
+      if (!showFullScreen) {
+        setScrollPosition(window.scrollY);
+        setShowFullScreen(true);
+      }
+    };
+    
+    document.addEventListener('openNoticeFullScreen', handleOpenFullScreen);
+    return () => {
+      document.removeEventListener('openNoticeFullScreen', handleOpenFullScreen);
+    };
+  }, [showFullScreen]);
   
   // 전체 화면 모드 토글
   const toggleFullScreen = () => {
@@ -82,6 +109,8 @@ export const NoticeSection = () => {
   
   // 스크롤 제어
   useEffect(() => {
+    if (!isInitialized) return;
+    
     if (showFullScreen) {
       // 전체 화면 모드일 때 스크롤 방지 및 위치 저장
       document.body.style.overflow = 'hidden';
@@ -110,7 +139,7 @@ export const NoticeSection = () => {
         window.scrollTo(0, scrollPosition);
       }
     };
-  }, [showFullScreen, scrollPosition]);
+  }, [showFullScreen, scrollPosition, isInitialized]);
   
   // 컨테이너 애니메이션
   const containerVariants = {
@@ -193,11 +222,13 @@ export const NoticeSection = () => {
 
   return (
     <motion.div 
-      className="w-full mt-8"
+      id="notice-section"
+      className="w-full mt-4 relative"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
+      ref={containerRef}
     >
       {/* 제목 섹션 */}
       <div 
