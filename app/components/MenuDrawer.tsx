@@ -166,7 +166,7 @@ export const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
                 className="mb-6"
                 variants={itemVariants}
               >
-                <h3 className="text-lg font-semibold mb-3 pl-2">{section.title}</h3>
+                <h3 className="text-2xl font-semibold mb-4 pl-2">{section.title}</h3>
                 <div className="space-y-2">
                   {section.items.map((item, itemIndex) => (
                     <motion.div
