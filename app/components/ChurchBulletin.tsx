@@ -2,7 +2,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { IoIosArrowBack } from "react-icons/io";
-import { FaCross, FaPray, FaMusic, FaBookOpen, FaHandHoldingHeart, FaBullhorn } from "react-icons/fa";
+import { FaCross, FaPray, FaMusic, FaBookOpen, FaBullhorn } from "react-icons/fa";
 
 type ChurchBulletinProps = {
   onClose: () => void;
@@ -74,7 +74,7 @@ export const ChurchBulletin: React.FC<ChurchBulletinProps> = ({ onClose }) => {
           <h2 className="text-2xl font-bold text-gray-800">{bulletinData.churchName}</h2>
           <div className="text-sm text-gray-600">{bulletinData.date} {bulletinData.title}</div>
           <div className="mt-4 px-6 py-3 bg-gray-50 rounded-lg italic text-gray-700 text-sm">
-            "{bulletinData.mainVerse}"
+            &ldquo;{bulletinData.mainVerse}&rdquo;
           </div>
         </motion.div>
 

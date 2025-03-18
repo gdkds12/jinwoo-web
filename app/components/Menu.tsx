@@ -67,7 +67,7 @@ const MenuSection: React.FC<MenuSectionProps> = ({ title, items }) => {
 };
 
 export const Menu = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen] = useState(true);
 
   const handleShowWorshipTime = () => {
     const event = new CustomEvent('showWorshipTime');

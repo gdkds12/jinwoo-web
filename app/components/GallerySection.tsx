@@ -1,8 +1,9 @@
 // app/components/GallerySection.tsx
 "use client";
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { IoIosArrowForward, IoIosArrowBack, IoMdClose, IoMdCalendar } from "react-icons/io";
+import { IoIosArrowForward, IoIosArrowBack, IoMdCalendar } from "react-icons/io";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
+import Image from "next/image";
 
 // 갤러리 이미지 인터페이스
 interface GalleryImage {
@@ -316,7 +317,7 @@ export const GallerySection = () => {
         window.scrollTo(0, scrollPosition);
       }
     };
-  }, [showFullScreen, scrollPosition]);
+  }, [showFullScreen, scrollPosition, handleWheel]);
   
   const containerVariants = {
     hidden: { x: "100%" },
@@ -381,10 +382,12 @@ export const GallerySection = () => {
               whileTap={{ scale: 0.98 }}
             >
               <div className="absolute inset-0 bg-black opacity-30"></div>
-              <img 
+              <Image 
                 src={image.imageUrl} 
                 alt={image.title} 
-                className="w-full h-full object-cover"
+                className="object-cover"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
               />
               <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
                 <h3 className="text-white text-lg font-medium">{image.title}</h3>
@@ -583,10 +586,12 @@ export const GallerySection = () => {
                                     resetImagePosition();
                                   }}
                                 >
-                                  <img 
+                                  <Image 
                                     src={image.imageUrl} 
                                     alt={image.title} 
-                                    className="w-full h-full object-cover"
+                                    className="object-cover"
+                                    fill
+                                    sizes="(max-width: 768px) 20vw, 10vw"
                                   />
                                 </div>
                               ))}
