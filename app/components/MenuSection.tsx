@@ -3,11 +3,21 @@ import React from "react";
 import { motion } from "framer-motion";
 
 export const MenuSection = () => {
+  const handleShowWorshipTime = () => {
+    const event = new CustomEvent('showWorshipTime');
+    document.dispatchEvent(event);
+  };
+
+  const handleShowBulletin = () => {
+    const event = new CustomEvent('showBulletin');
+    document.dispatchEvent(event);
+  };
+  
   const menuItems = [
-    "예배 시간",
-    "주보",
-    "오시는 길",
-    "헌금안내"
+    { text: "예배 시간", onClick: handleShowWorshipTime },
+    { text: "주보", onClick: handleShowBulletin },
+    { text: "오시는 길", onClick: () => {} },
+    { text: "헌금안내", onClick: () => {} }
   ];
 
   return (
@@ -27,8 +37,21 @@ export const MenuSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
+            onClick={item.onClick}
+            whileHover={{ 
+              scale: 1.05,
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)" 
+            }}
+            whileTap={{ scale: 0.95 }}
           >
-            <span className="text-xs font-medium whitespace-nowrap absolute left-1/2 -translate-x-1/2">{item}</span>
+            <motion.span 
+              className="text-xs font-medium whitespace-nowrap absolute left-1/2 -translate-x-1/2"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}
+            >
+              {item.text}
+            </motion.span>
           </motion.div>
         ))}
       </div>

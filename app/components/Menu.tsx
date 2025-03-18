@@ -14,15 +14,17 @@ type MenuItemProps = {
 
 const MenuItem: React.FC<MenuItemProps> = ({ icon, text, onClick }) => {
   return (
-    <div 
+    <motion.div 
       className="flex items-center py-3 cursor-pointer" 
       onClick={onClick}
+      whileHover={{ x: 5 }}
+      transition={{ duration: 0.2 }}
     >
-      <div className="w-8 h-8 bg-white rounded-full shadow-sm flex items-center justify-center mr-4">
+      <div className="w-8 h-8 flex items-center justify-center mr-4">
         {icon}
       </div>
       <span className="text-base font-medium">{text}</span>
-    </div>
+    </motion.div>
   );
 };
 
@@ -31,28 +33,63 @@ type MenuSectionProps = {
   items: {
     icon: React.ReactNode;
     text: string;
+    onClick?: () => void;
   }[];
 };
 
 const MenuSection: React.FC<MenuSectionProps> = ({ title, items }) => {
   return (
-    <div className="mb-6">
+    <motion.div 
+      className="mb-6"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <h3 className="text-lg font-bold mb-2">{title}</h3>
       <div className="pl-2">
         {items.map((item, index) => (
-          <MenuItem key={index} icon={item.icon} text={item.text} />
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3, delay: index * 0.1 }}
+          >
+            <MenuItem 
+              icon={item.icon} 
+              text={item.text} 
+              onClick={item.onClick}
+            />
+          </motion.div>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
 export const Menu = () => {
   const [isOpen, setIsOpen] = useState(true);
 
+  const handleShowWorshipTime = () => {
+    const event = new CustomEvent('showWorshipTime');
+    document.dispatchEvent(event);
+  };
+
+  const handleShowBulletin = () => {
+    const event = new CustomEvent('showBulletin');
+    document.dispatchEvent(event);
+  };
+
   const mainMenuItems = [
-    { icon: <FaClock size={16} className="text-gray-600" />, text: "예배 시간" },
-    { icon: <FaNewspaper size={16} className="text-gray-600" />, text: "주보" },
+    { 
+      icon: <FaClock size={16} className="text-gray-600" />, 
+      text: "예배 시간",
+      onClick: handleShowWorshipTime
+    },
+    { 
+      icon: <FaNewspaper size={16} className="text-gray-600" />, 
+      text: "주보",
+      onClick: handleShowBulletin
+    },
     { icon: <FaMapMarkerAlt size={16} className="text-gray-600" />, text: "오시는 길" },
     { icon: <FaMoneyBillWave size={16} className="text-gray-600" />, text: "헌금 안내" },
     { icon: <FaSchool size={16} className="text-gray-600" />, text: "교회학교" },
@@ -88,7 +125,7 @@ export const Menu = () => {
 
   return (
     <motion.div 
-      className="fixed top-0 left-0 right-0 bottom-0 bg-[#F2F2F2] z-50 p-5 overflow-y-auto"
+      className="fixed top-0 left-0 right-0 bottom-0 bg-white z-50 p-5 overflow-y-auto"
       initial="closed"
       animate={isOpen ? "open" : "closed"}
       variants={menuVariants}
@@ -96,7 +133,7 @@ export const Menu = () => {
     >
       <div className="flex items-center justify-between mb-6">
         <Link href="/">
-          <div className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center cursor-pointer">
+          <div className="w-10 h-10 flex items-center cursor-pointer">
             <IoIosArrowBack size={20} className="text-gray-600" />
           </div>
         </Link>

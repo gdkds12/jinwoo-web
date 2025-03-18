@@ -65,12 +65,24 @@ export const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
     }
   };
 
+  const handleShowWorshipTime = () => {
+    onClose();
+    const event = new CustomEvent('showWorshipTime');
+    document.dispatchEvent(event);
+  };
+
+  const handleShowBulletin = () => {
+    onClose();
+    const event = new CustomEvent('showBulletin');
+    document.dispatchEvent(event);
+  };
+
   const menuItems = [
     {
       title: "주요 메뉴",
       items: [
-        { name: "예배 시간", icon: FaClock, href: "/worship-time" },
-        { name: "주보", icon: FaNewspaper, href: "/bulletin" },
+        { name: "예배 시간", icon: FaClock, onClick: handleShowWorshipTime },
+        { name: "주보", icon: FaNewspaper, onClick: handleShowBulletin },
         { name: "오시는 길", icon: FaMapMarkerAlt, href: "/location" },
         { name: "헌금안내", icon: FaHandHoldingHeart, href: "/offering" },
         { name: "교회학교", icon: FaGraduationCap, href: "/sunday-school" },
@@ -173,16 +185,28 @@ export const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
                       key={itemIndex}
                       variants={itemVariants}
                     >
-                      <Link
-                        href={item.href}
-                        className="flex items-center p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                        onClick={onClose}
-                      >
-                        <div className="w-8 h-8 bg-[#F9F9F9] rounded-md flex items-center justify-center mr-3">
-                          <item.icon className="text-black" />
+                      {item.onClick ? (
+                        <div
+                          className="flex items-center p-2 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
+                          onClick={item.onClick}
+                        >
+                          <div className="w-8 h-8 bg-[#F9F9F9] rounded-md flex items-center justify-center mr-3">
+                            <item.icon className="text-black" />
+                          </div>
+                          <span className="text-black font-semibold">{item.name}</span>
                         </div>
-                        <span className="text-black font-semibold">{item.name}</span>
-                      </Link>
+                      ) : (
+                        <Link
+                          href={item.href || '#'}
+                          className="flex items-center p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                          onClick={onClose}
+                        >
+                          <div className="w-8 h-8 bg-[#F9F9F9] rounded-md flex items-center justify-center mr-3">
+                            <item.icon className="text-black" />
+                          </div>
+                          <span className="text-black font-semibold">{item.name}</span>
+                        </Link>
+                      )}
                     </motion.div>
                   ))}
                 </div>

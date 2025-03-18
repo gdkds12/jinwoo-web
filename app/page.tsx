@@ -7,9 +7,15 @@ import { WordSection } from "./components/WordSection";
 import { MenuSection } from "./components/MenuSection";
 import { NoticeSection } from "./components/NoticeSection";
 import { GallerySection } from "./components/GallerySection";
-import { useEffect } from "react";
+import ChurchBulletin from "./components/ChurchBulletin";
+import WorshipTime from "./components/WorshipTime";
+import { useState, useEffect } from "react";
+import { AnimatePresence } from "framer-motion";
 
 export default function Home() {
+  const [showBulletin, setShowBulletin] = useState(false);
+  const [showWorshipTime, setShowWorshipTime] = useState(false);
+
   useEffect(() => {
     // 페이지 로드 시 공지사항 이벤트 상태 확인
     const checkNoticeEventQueuedInStorage = () => {
@@ -21,6 +27,19 @@ export default function Home() {
         }, 500);
       }
     };
+    
+    // 주보 이벤트 처리를 위한 이벤트 리스너 등록
+    const handleShowBulletin = () => {
+      setShowBulletin(true);
+    };
+
+    // 예배 시간 이벤트 처리를 위한 이벤트 리스너 등록
+    const handleShowWorshipTime = () => {
+      setShowWorshipTime(true);
+    };
+
+    document.addEventListener('showBulletin', handleShowBulletin);
+    document.addEventListener('showWorshipTime', handleShowWorshipTime);
     
     // 페이지 로드 시 body 스타일 설정
     document.body.style.backgroundColor = "#F2F2F2";
@@ -36,6 +55,8 @@ export default function Home() {
       // 컴포넌트 언마운트 시 스타일 초기화 및 이벤트 리스너 제거
       document.body.style.backgroundColor = "";
       window.removeEventListener('load', checkNoticeEventQueuedInStorage);
+      document.removeEventListener('showBulletin', handleShowBulletin);
+      document.removeEventListener('showWorshipTime', handleShowWorshipTime);
     };
   }, []);
 
@@ -60,6 +81,18 @@ export default function Home() {
       </main>
       
       <Footer />
+
+      <AnimatePresence mode="wait">
+        {showBulletin && (
+          <ChurchBulletin key="church-bulletin" onClose={() => setShowBulletin(false)} />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence mode="wait">
+        {showWorshipTime && (
+          <WorshipTime key="worship-time" onClose={() => setShowWorshipTime(false)} />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
