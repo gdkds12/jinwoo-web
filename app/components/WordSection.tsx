@@ -341,7 +341,7 @@ export const WordSection = () => {
 
             {/* 말씀 목록 */}
             <div className="flex-1 p-4 pb-24">
-              {scriptureData.map((scripture, index) => (
+              {scriptureData.map((scripture) => (
                 <motion.div 
                   key={scripture.id} 
                   className="mb-10 pb-6 border-b border-gray-100"

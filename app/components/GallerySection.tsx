@@ -128,7 +128,7 @@ export const GallerySection = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [hideUI, setHideUI] = useState(false);
   const [selectedYear, setSelectedYear] = useState<string | null>(null);
-  const [zoomLevel, setZoomLevel] = useState(1);
+  const [, setZoomLevel] = useState(1);
   const [isDragging, setIsDragging] = useState(false);
   const thumbnailContainerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
@@ -245,7 +245,7 @@ export const GallerySection = () => {
     }
   };
 
-  const handleDragClick = (e: React.MouseEvent) => {
+  const handleDragClick = () => {
     // 이미지 드래그 중이 아닐 때만 UI 토글
     if (!isDragging) {
       toggleUI();

@@ -114,10 +114,6 @@ export const Menu = () => {
     { icon: <FaSitemap size={16} className="text-gray-600" />, text: "교회 부서" },
   ];
 
-  const handleClose = () => {
-    setIsOpen(false);
-  };
-
   const menuVariants = {
     open: { x: 0, opacity: 1 },
     closed: { x: "100%", opacity: 0 }

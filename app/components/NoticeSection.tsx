@@ -114,8 +114,6 @@ export const NoticeSection = () => {
   const [showFullScreen, setShowFullScreen] = useState(false);
   const [expandedNotices, setExpandedNotices] = useState<number[]>([]);
   const [scrollPosition, setScrollPosition] = useState(0);
-  const [isInitialized, setIsInitialized] = useState(false);
-  const [isReady, setIsReady] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
   const contentHeights = useRef<Record<number, number>>({});
@@ -135,8 +133,6 @@ export const NoticeSection = () => {
   // 컴포넌트 초기화 - 즉시 실행되도록 수정
   useEffect(() => {
     console.log('NoticeSection 컴포넌트 마운트됨');
-    setIsInitialized(true);
-    setIsReady(true);
     
     // 전역 인스턴스 설정
     noticeInstanceReady = true;
@@ -288,7 +284,9 @@ export const NoticeSection = () => {
     }, [notice.id]);
     
     useEffect(() => {
-      !isPresent && setTimeout(safeToRemove, 300);
+      if (!isPresent) {
+        setTimeout(safeToRemove, 300);
+      }
     }, [isPresent, safeToRemove]);
 
     return (
@@ -428,7 +426,7 @@ export const NoticeSection = () => {
             
             {/* 공지사항 목록 */}
             <div className="flex-1 p-4 pb-24">
-              {noticeData.map((notice, index) => (
+              {noticeData.map((notice) => (
                 <motion.div
                   key={notice.id}
                   className="mb-4 overflow-hidden"
