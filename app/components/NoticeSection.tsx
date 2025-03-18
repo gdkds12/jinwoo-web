@@ -13,8 +13,6 @@ interface Notice {
 }
 
 // 전역 변수로 상태 관리
-let noticeEventQueued = false;
-// 전역 상태로 공지사항 모달 인스턴스를 관리
 let noticeInstanceReady = false;
 let noticeInstanceShowFn: (() => void) | null = null;
 
@@ -37,11 +35,7 @@ export const openNoticeFullScreen = () => {
     // 이벤트 발생 - 문서 상태와 무관하게 항상 이벤트 발생
     const event = new CustomEvent('openNoticeFullScreen');
     document.dispatchEvent(event);
-    
-    // 전역 변수로 상태 저장
-    noticeEventQueued = true;
   }
-  noticeEventQueued = true;
 };
 
 // 문서 로드 완료 감지 - 모든 경우에 이벤트 체크

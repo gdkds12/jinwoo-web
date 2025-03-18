@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { IoIosArrowForward, IoIosArrowBack, IoIosSunny } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoMdClose } from "react-icons/io";
+import Image from "next/image";
 
 // 말씀 데이터 인터페이스
 interface Scripture {
@@ -200,12 +201,6 @@ export const WordSection = () => {
     );
   };
 
-  // 참조에서 절 정보 추출
-  const extractVerseInfo = (reference: string) => {
-    const match = reference.match(/\d+:\d+(-\d+)?/);
-    return match ? match[0] : "";
-  };
-
   return (
     <motion.div 
       className="w-full mt-8"
@@ -237,10 +232,12 @@ export const WordSection = () => {
           >
             <div className="absolute inset-0 z-0">
               <div className="absolute inset-0 bg-black opacity-50"></div>
-              <img 
+              <Image 
                 src="/images/background/image1.jpg" 
                 alt="배경 이미지" 
-                className="w-full h-full object-cover"
+                className="object-cover"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
               />
             </div>
             <div className="flex flex-col items-end mb-2 relative z-10">
@@ -269,7 +266,7 @@ export const WordSection = () => {
               >
                 <div className="absolute inset-0 z-0">
                   <div className="absolute inset-0 bg-black opacity-70"></div>
-                  <img 
+                  <Image 
                     src="/images/background/image1.jpg" 
                     alt="배경 이미지" 
                     className="w-full h-full object-cover"

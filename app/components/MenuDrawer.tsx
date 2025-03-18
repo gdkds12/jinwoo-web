@@ -4,7 +4,6 @@ import { IoIosArrowBack } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { 
-  FaChurch, 
   FaClock, 
   FaNewspaper, 
   FaMapMarkerAlt, 
