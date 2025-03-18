@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { IoIosArrowForward, IoIosArrowBack, IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import { motion, AnimatePresence, usePresence } from "framer-motion";
+import { motion, AnimatePresence, usePresence, useInView } from "framer-motion";
 
 // 공지사항 인터페이스
 interface Notice {
@@ -12,11 +12,70 @@ interface Notice {
   department: string;
 }
 
+// 전역 변수로 상태 관리
+let noticeEventQueued = false;
+// 전역 상태로 공지사항 모달 인스턴스를 관리
+let noticeInstanceReady = false;
+let noticeInstanceShowFn: (() => void) | null = null;
+
 // 전역 상태 관리를 위한 이벤트 관리
 export const openNoticeFullScreen = () => {
-  const event = new CustomEvent('openNoticeFullScreen');
-  document.dispatchEvent(event);
+  // 이미 인스턴스가 준비되었으면 바로 함수 호출
+  if (noticeInstanceReady && noticeInstanceShowFn) {
+    console.log('인스턴스가 준비됨, 공지사항 표시');
+    noticeInstanceShowFn();
+    return;
+  }
+  
+  console.log('인스턴스가 준비되지 않음, 상태 저장 및 이벤트 발생');
+  
+  // 인스턴스가 준비되지 않았으면 localStorage에 상태 저장
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('noticeEventQueued', 'true');
+    localStorage.setItem('noticeQueuedTime', Date.now().toString());
+    
+    // 이벤트 발생 - 문서 상태와 무관하게 항상 이벤트 발생
+    const event = new CustomEvent('openNoticeFullScreen');
+    document.dispatchEvent(event);
+    
+    // 전역 변수로 상태 저장
+    noticeEventQueued = true;
+  }
+  noticeEventQueued = true;
 };
+
+// 문서 로드 완료 감지 - 모든 경우에 이벤트 체크
+if (typeof window !== 'undefined') {
+  // 페이지가 이미 로드되었는지 확인
+  if (document.readyState === 'complete') {
+    // 이미 로드된 경우 즉시 확인
+    const queuedEvent = localStorage.getItem('noticeEventQueued');
+    if (queuedEvent === 'true') {
+      console.log('즉시 이벤트 발생 (페이지 이미 로드됨)');
+      // 약간의 지연을 두고 이벤트 발생 (DOM이 완전히 로드된 후)
+      setTimeout(() => {
+        const event = new CustomEvent('openNoticeFullScreen');
+        document.dispatchEvent(event);
+      }, 100);
+    }
+  }
+  
+  // DOMContentLoaded와 load 이벤트 모두 사용
+  ['DOMContentLoaded', 'load'].forEach(eventType => {
+    window.addEventListener(eventType, () => {
+      // localStorage 확인
+      const queuedEvent = localStorage.getItem('noticeEventQueued');
+      if (queuedEvent === 'true') {
+        console.log(`이벤트 발생 (${eventType})`);
+        // 약간의 지연을 두고 이벤트 발생 (DOM이 완전히 로드된 후)
+        setTimeout(() => {
+          const event = new CustomEvent('openNoticeFullScreen');
+          document.dispatchEvent(event);
+        }, 100);
+      }
+    });
+  });
+}
 
 // 예시 공지사항 데이터
 const noticeData: Notice[] = [
@@ -62,28 +121,76 @@ export const NoticeSection = () => {
   const [expandedNotices, setExpandedNotices] = useState<number[]>([]);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
   const contentHeights = useRef<Record<number, number>>({});
   
-  // 컴포넌트 초기화 확인
+  // 인뷰 상태 확인
+  const isTitleInView = useInView(titleRef, { once: true });
+  
+  // 각 카드의 참조 생성
+  const cardRef1 = useRef<HTMLDivElement>(null);
+  const cardRef2 = useRef<HTMLDivElement>(null);
+  const cardRef3 = useRef<HTMLDivElement>(null);
+  
+  const isCard1InView = useInView(cardRef1, { once: true });
+  const isCard2InView = useInView(cardRef2, { once: true });
+  const isCard3InView = useInView(cardRef3, { once: true });
+  
+  // 컴포넌트 초기화 - 즉시 실행되도록 수정
   useEffect(() => {
+    console.log('NoticeSection 컴포넌트 마운트됨');
     setIsInitialized(true);
-  }, []);
+    setIsReady(true);
+    
+    // 전역 인스턴스 설정
+    noticeInstanceReady = true;
+    noticeInstanceShowFn = () => {
+      setScrollPosition(window.scrollY);
+      setShowFullScreen(true);
+    };
+
+    // localStorage에 저장된 이벤트가 있다면 실행
+    if (typeof window !== 'undefined') {
+      const queuedEvent = localStorage.getItem('noticeEventQueued');
+      if (queuedEvent === 'true') {
+        console.log('마운트 시 큐에 저장된 이벤트 실행');
+        localStorage.removeItem('noticeEventQueued');
+        setScrollPosition(window.scrollY);
+        setShowFullScreen(true);
+      }
+    }
+    
+    return () => {
+      console.log('NoticeSection 컴포넌트 언마운트됨');
+      noticeInstanceReady = false;
+      noticeInstanceShowFn = null;
+    };
+  }, []); // 의존성 배열을 비워서 컴포넌트 마운트 시 한 번만 실행되도록 함
   
   // 이벤트 리스너 등록
   useEffect(() => {
     const handleOpenFullScreen = () => {
-      if (!showFullScreen) {
-        setScrollPosition(window.scrollY);
-        setShowFullScreen(true);
+      console.log('openNoticeFullScreen 이벤트 감지됨');
+      setScrollPosition(window.scrollY);
+      setShowFullScreen(true);
+      
+      // 이벤트 처리 후 localStorage 제거
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('noticeEventQueued');
+        localStorage.removeItem('noticeQueuedTime');
       }
     };
     
+    console.log('이벤트 리스너 등록됨');
     document.addEventListener('openNoticeFullScreen', handleOpenFullScreen);
+    
     return () => {
+      console.log('이벤트 리스너 제거됨');
       document.removeEventListener('openNoticeFullScreen', handleOpenFullScreen);
     };
-  }, [showFullScreen]);
+  }, []); // 의존성 배열을 비워서 컴포넌트 마운트 시 한 번만 실행되도록 함
   
   // 전체 화면 모드 토글
   const toggleFullScreen = () => {
@@ -109,7 +216,7 @@ export const NoticeSection = () => {
   
   // 스크롤 제어
   useEffect(() => {
-    if (!isInitialized) return;
+    console.log('스크롤 제어 useEffect 실행됨, showFullScreen:', showFullScreen);
     
     if (showFullScreen) {
       // 전체 화면 모드일 때 스크롤 방지 및 위치 저장
@@ -139,7 +246,7 @@ export const NoticeSection = () => {
         window.scrollTo(0, scrollPosition);
       }
     };
-  }, [showFullScreen, scrollPosition, isInitialized]);
+  }, [showFullScreen, scrollPosition]);
   
   // 컨테이너 애니메이션
   const containerVariants = {
@@ -224,42 +331,76 @@ export const NoticeSection = () => {
     <motion.div 
       id="notice-section"
       className="w-full mt-4 relative"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
+      initial={{ opacity: 1 }}
+      animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
       ref={containerRef}
     >
       {/* 제목 섹션 */}
-      <div 
+      <motion.div 
         className="flex items-center justify-between px-4 mb-4"
         onClick={toggleFullScreen}
+        ref={titleRef}
+        initial={{ opacity: 0, y: 20 }}
+        animate={isTitleInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+        transition={{ duration: 0.5 }}
       >
         <h2 className="text-2xl font-semibold cursor-pointer">공지사항</h2>
         <IoIosArrowForward className="text-xl cursor-pointer" />
-      </div>
+      </motion.div>
 
       {/* 카드 섹션 - 메인 페이지 */}
       <div className="flex flex-col gap-3 px-4">
-        {noticeData.slice(0, 3).map((notice, index) => (
-          <motion.div 
-            key={notice.id}
-            className="w-full aspect-[5/1] bg-white rounded-xl p-3 flex flex-col justify-between cursor-pointer"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            onClick={toggleFullScreen}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <h3 className="text-sm font-medium">{notice.title}</h3>
-            <div className="flex justify-between items-center">
-              <span className="text-xs text-gray-500">{notice.date}</span>
-              <span className="text-xs text-blue-500">{notice.department}</span>
-            </div>
-          </motion.div>
-        ))}
+        <motion.div 
+          className="w-full aspect-[5/1] bg-white rounded-xl p-3 flex flex-col justify-between cursor-pointer"
+          ref={cardRef1}
+          initial={{ opacity: 0, y: 20 }}
+          animate={isCard1InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.5 }}
+          onClick={toggleFullScreen}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <h3 className="text-sm font-medium">{noticeData[0].title}</h3>
+          <div className="flex justify-between items-center">
+            <span className="text-xs text-gray-500">{noticeData[0].date}</span>
+            <span className="text-xs text-blue-500">{noticeData[0].department}</span>
+          </div>
+        </motion.div>
+        
+        <motion.div 
+          className="w-full aspect-[5/1] bg-white rounded-xl p-3 flex flex-col justify-between cursor-pointer"
+          ref={cardRef2}
+          initial={{ opacity: 0, y: 20 }}
+          animate={isCard2InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          onClick={toggleFullScreen}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <h3 className="text-sm font-medium">{noticeData[1].title}</h3>
+          <div className="flex justify-between items-center">
+            <span className="text-xs text-gray-500">{noticeData[1].date}</span>
+            <span className="text-xs text-blue-500">{noticeData[1].department}</span>
+          </div>
+        </motion.div>
+        
+        <motion.div 
+          className="w-full aspect-[5/1] bg-white rounded-xl p-3 flex flex-col justify-between cursor-pointer"
+          ref={cardRef3}
+          initial={{ opacity: 0, y: 20 }}
+          animate={isCard3InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          onClick={toggleFullScreen}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <h3 className="text-sm font-medium">{noticeData[2].title}</h3>
+          <div className="flex justify-between items-center">
+            <span className="text-xs text-gray-500">{noticeData[2].date}</span>
+            <span className="text-xs text-blue-500">{noticeData[2].department}</span>
+          </div>
+        </motion.div>
       </div>
       
       {/* 전체 화면 모드 */}

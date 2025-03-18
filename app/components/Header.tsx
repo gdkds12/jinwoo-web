@@ -1,6 +1,6 @@
 // app/components/Header.tsx
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaBell } from "react-icons/fa";
@@ -11,29 +11,15 @@ import { openNoticeFullScreen } from "./NoticeSection";
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [noticeEventTriggered, setNoticeEventTriggered] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
   const handleNoticeClick = () => {
-    // 상태 설정을 통해 알림 클릭을 기록하고, 이벤트는 아래 useEffect에서 발생시킵니다
-    setNoticeEventTriggered(true);
+    // 바로 공지사항 이벤트 발생
+    openNoticeFullScreen();
   };
-  
-  // 알림 이벤트를 처리하는 useEffect
-  useEffect(() => {
-    if (noticeEventTriggered) {
-      // 약간의 지연 후 이벤트 발생
-      const timer = setTimeout(() => {
-        openNoticeFullScreen();
-        setNoticeEventTriggered(false);
-      }, 100);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [noticeEventTriggered]);
 
   return (
     <>
