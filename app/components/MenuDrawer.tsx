@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -28,16 +28,42 @@ interface MenuDrawerProps {
 }
 
 export const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
+  const menuRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
     }
+    
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
     };
   }, [isOpen]);
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    const menuElement = menuRef.current;
+    if (!menuElement) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = menuElement;
+    const isAtTop = scrollTop === 0;
+    const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
+
+    if ((isAtTop && e.touches[0].clientY > 0) || 
+        (isAtBottom && e.touches[0].clientY < 0)) {
+      e.preventDefault();
+    }
+  };
 
   const menuItems = [
     {
@@ -63,8 +89,8 @@ export const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
       items: [
         { name: "담임 목사", icon: FaUserTie, href: "/pastor" },
         { name: "장로", icon: FaUserGraduate, href: "/elders" },
-        { name: "권사", icon: FaUsers, href: "/deaconesses" },
-        { name: "집사", icon: FaUserFriends, href: "/deacons" },
+        { name: "권사", icon: FaUserFriends, href: "/deaconesses" },
+        { name: "집사", icon: FaUsers, href: "/deacons" },
       ],
     },
     {
@@ -108,11 +134,18 @@ export const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
     <AnimatePresence>
       {isOpen && (
         <motion.div
+          ref={menuRef}
           variants={containerVariants}
           initial="hidden"
           animate="visible"
           exit="exit"
-          className="fixed inset-0 bg-white z-50 overflow-y-auto"
+          className="fixed inset-0 bg-white z-50 overflow-y-auto overscroll-none"
+          style={{ 
+            overscrollBehavior: 'contain',
+            WebkitOverflowScrolling: 'touch',
+            touchAction: 'pan-y'
+          }}
+          onTouchMove={handleTouchMove}
         >
           <motion.div 
             variants={itemVariants}
@@ -126,14 +159,14 @@ export const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
             </div>
           </motion.div>
           
-          <div className="p-4">
+          <div className="p-4 pb-24">
             {menuItems.map((section, sectionIndex) => (
               <motion.div 
                 key={sectionIndex} 
                 className="mb-6"
                 variants={itemVariants}
               >
-                <h3 className="text-lg font-semibold mb-3">{section.title}</h3>
+                <h3 className="text-lg font-semibold mb-3 pl-2">{section.title}</h3>
                 <div className="space-y-2">
                   {section.items.map((item, itemIndex) => (
                     <motion.div
@@ -145,7 +178,7 @@ export const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
                         className="flex items-center p-2 hover:bg-gray-100 rounded-lg transition-colors"
                         onClick={onClose}
                       >
-                        <div className="w-8 h-8 bg-[#F2F2F2] rounded-md flex items-center justify-center mr-3">
+                        <div className="w-8 h-8 bg-[#F9F9F9] rounded-md flex items-center justify-center mr-3">
                           <item.icon className="text-black" />
                         </div>
                         <span className="text-black font-semibold">{item.name}</span>
