@@ -1,14 +1,15 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { FaUserTie, FaUsers, FaUserFriends } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
 import Link from "next/link";
 
-export default function MinistryPage() {
+// 클라이언트 컴포넌트로 분리
+function MinistryContent() {
   const searchParams = useSearchParams();
 
-  useEffect(() => {
+  React.useEffect(() => {
     const section = searchParams.get('section');
     if (section) {
       const element = document.getElementById(section);
@@ -19,14 +20,7 @@ export default function MinistryPage() {
   }, [searchParams]);
 
   return (
-    <div className="min-h-screen bg-white p-4">
-      {/* 뒤로가기 버튼 */}
-      <div className="sticky top-0 bg-white z-10 py-4">
-        <Link href="/" className="inline-block">
-          <IoIosArrowBack className="text-2xl" />
-        </Link>
-      </div>
-      
+    <>
       <h1 className="text-3xl font-bold text-center my-6">섬기는 사람들</h1>
       
       {/* 담임목사 섹션 */}
@@ -104,6 +98,30 @@ export default function MinistryPage() {
           ))}
         </div>
       </section>
+    </>
+  );
+}
+
+// 로딩 상태 컴포넌트
+function Loading() {
+  return <div className="text-center py-10">로딩 중...</div>;
+}
+
+export default function MinistryPage() {
+  return (
+    <div className="min-h-screen bg-white p-4">
+      {/* 뒤로가기 버튼 */}
+      <div className="sticky top-0 bg-white z-10 py-4">
+        <Link href="/" className="inline-block">
+          <IoIosArrowBack className="text-2xl" />
+        </Link>
+      </div>
+      
+      <div className="max-w-4xl mx-auto">
+        <Suspense fallback={<Loading />}>
+          <MinistryContent />
+        </Suspense>
+      </div>
     </div>
   );
 } 
