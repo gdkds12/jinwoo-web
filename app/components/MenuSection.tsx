@@ -12,12 +12,22 @@ export const MenuSection = () => {
     const event = new CustomEvent('showBulletin');
     document.dispatchEvent(event);
   };
+
+  const handleShowLocation = () => {
+    const event = new CustomEvent('showLocation');
+    document.dispatchEvent(event);
+  };
+
+  const handleShowOffering = () => {
+    const event = new CustomEvent('showOffering');
+    document.dispatchEvent(event);
+  };
   
   const menuItems = [
     { text: "예배 시간", onClick: handleShowWorshipTime },
     { text: "주보", onClick: handleShowBulletin },
-    { text: "오시는 길", onClick: () => {} },
-    { text: "헌금안내", onClick: () => {} }
+    { text: "오시는 길", onClick: handleShowLocation },
+    { text: "헌금안내", onClick: handleShowOffering }
   ];
 
   return (

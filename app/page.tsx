@@ -9,12 +9,16 @@ import { NoticeSection } from "./components/NoticeSection";
 import { GallerySection } from "./components/GallerySection";
 import ChurchBulletin from "./components/ChurchBulletin";
 import WorshipTime from "./components/WorshipTime";
+import ChurchLocation from "./components/ChurchLocation";
+import OfferingGuide from "./components/OfferingGuide";
 import { useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
 
 export default function Home() {
   const [showBulletin, setShowBulletin] = useState(false);
   const [showWorshipTime, setShowWorshipTime] = useState(false);
+  const [showLocation, setShowLocation] = useState(false);
+  const [showOffering, setShowOffering] = useState(false);
 
   useEffect(() => {
     // 페이지 로드 시 공지사항 이벤트 상태 확인
@@ -38,8 +42,20 @@ export default function Home() {
       setShowWorshipTime(true);
     };
 
+    // 오시는 길 이벤트 처리를 위한 이벤트 리스너 등록
+    const handleShowLocation = () => {
+      setShowLocation(true);
+    };
+
+    // 헌금 안내 이벤트 처리를 위한 이벤트 리스너 등록
+    const handleShowOffering = () => {
+      setShowOffering(true);
+    };
+
     document.addEventListener('showBulletin', handleShowBulletin);
     document.addEventListener('showWorshipTime', handleShowWorshipTime);
+    document.addEventListener('showLocation', handleShowLocation);
+    document.addEventListener('showOffering', handleShowOffering);
     
     // 페이지 로드 시 body 스타일 설정
     document.body.style.backgroundColor = "#F2F2F2";
@@ -57,6 +73,8 @@ export default function Home() {
       window.removeEventListener('load', checkNoticeEventQueuedInStorage);
       document.removeEventListener('showBulletin', handleShowBulletin);
       document.removeEventListener('showWorshipTime', handleShowWorshipTime);
+      document.removeEventListener('showLocation', handleShowLocation);
+      document.removeEventListener('showOffering', handleShowOffering);
     };
   }, []);
 
@@ -91,6 +109,18 @@ export default function Home() {
       <AnimatePresence mode="wait">
         {showWorshipTime && (
           <WorshipTime key="worship-time" onClose={() => setShowWorshipTime(false)} />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence mode="wait">
+        {showLocation && (
+          <ChurchLocation key="church-location" onClose={() => setShowLocation(false)} />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence mode="wait">
+        {showOffering && (
+          <OfferingGuide key="offering-guide" onClose={() => setShowOffering(false)} />
         )}
       </AnimatePresence>
     </div>

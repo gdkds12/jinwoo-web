@@ -79,6 +79,16 @@ export const Menu = () => {
     document.dispatchEvent(event);
   };
 
+  const handleShowLocation = () => {
+    const event = new CustomEvent('showLocation');
+    document.dispatchEvent(event);
+  };
+
+  const handleShowOffering = () => {
+    const event = new CustomEvent('showOffering');
+    document.dispatchEvent(event);
+  };
+
   const mainMenuItems = [
     { 
       icon: <FaClock size={16} className="text-gray-600" />, 
@@ -90,8 +100,16 @@ export const Menu = () => {
       text: "주보",
       onClick: handleShowBulletin
     },
-    { icon: <FaMapMarkerAlt size={16} className="text-gray-600" />, text: "오시는 길" },
-    { icon: <FaMoneyBillWave size={16} className="text-gray-600" />, text: "헌금 안내" },
+    { 
+      icon: <FaMapMarkerAlt size={16} className="text-gray-600" />, 
+      text: "오시는 길",
+      onClick: handleShowLocation
+    },
+    { 
+      icon: <FaMoneyBillWave size={16} className="text-gray-600" />, 
+      text: "헌금 안내",
+      onClick: handleShowOffering
+    },
     { icon: <FaSchool size={16} className="text-gray-600" />, text: "교회학교" },
     { icon: <FaPhotoVideo size={16} className="text-gray-600" />, text: "미디어" },
   ];

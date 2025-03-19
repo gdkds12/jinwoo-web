@@ -76,14 +76,26 @@ export const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
     document.dispatchEvent(event);
   };
 
+  const handleShowLocation = () => {
+    onClose();
+    const event = new CustomEvent('showLocation');
+    document.dispatchEvent(event);
+  };
+
+  const handleShowOffering = () => {
+    onClose();
+    const event = new CustomEvent('showOffering');
+    document.dispatchEvent(event);
+  };
+
   const menuItems = [
     {
       title: "주요 메뉴",
       items: [
         { name: "예배 시간", icon: FaClock, onClick: handleShowWorshipTime },
         { name: "주보", icon: FaNewspaper, onClick: handleShowBulletin },
-        { name: "오시는 길", icon: FaMapMarkerAlt, href: "/location" },
-        { name: "헌금안내", icon: FaHandHoldingHeart, href: "/offering" },
+        { name: "오시는 길", icon: FaMapMarkerAlt, onClick: handleShowLocation },
+        { name: "헌금안내", icon: FaHandHoldingHeart, onClick: handleShowOffering },
         { name: "교회학교", icon: FaGraduationCap, href: "/sunday-school" },
         { name: "미디어", icon: FaVideo, href: "/media" },
       ],
