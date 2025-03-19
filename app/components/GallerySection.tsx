@@ -134,11 +134,9 @@ export const GallerySection = ({ onClose, isOverlay = false }: GallerySectionPro
   const [currentImage, setCurrentImage] = useState<GalleryImage | null>(null);
   const [hideUI, setHideUI] = useState(false);
   const [selectedYear, setSelectedYear] = useState<string | null>(null);
-  const [zoomLevel, setZoomLevel] = useState(1);
   const thumbnailContainerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const swipeThreshold = 50;
   
   const imagesByYear = useMemo(() => {
     const grouped: Record<string, GalleryImage[]> = {};
@@ -155,11 +153,6 @@ export const GallerySection = ({ onClose, isOverlay = false }: GallerySectionPro
     return Object.keys(imagesByYear).sort((a, b) => Number(b) - Number(a));
   }, [imagesByYear]);
   
-  // 이미지 위치 초기화
-  const resetImagePosition = useCallback(() => {
-    setZoomLevel(1);
-  }, []);
-  
   const toggleFullScreen = useCallback((image?: GalleryImage) => {
     if (!showFullScreen) {
       if (image) {
@@ -169,11 +162,10 @@ export const GallerySection = ({ onClose, isOverlay = false }: GallerySectionPro
         setCurrentImage(galleryData[0]);
         setSelectedYear(galleryData[0].year);
       }
-      resetImagePosition();
     }
     setShowFullScreen(!showFullScreen);
     setHideUI(false);
-  }, [showFullScreen, resetImagePosition]);
+  }, [showFullScreen]);
   
   const toggleUI = useCallback(() => {
     setHideUI(!hideUI);
@@ -267,7 +259,7 @@ export const GallerySection = ({ onClose, isOverlay = false }: GallerySectionPro
         document.body.style.overflow = '';
       };
     }
-  }, [showFullScreen, currentImage]);
+  }, [showFullScreen, currentImage, prevImage, nextImage]);
 
   // 갤러리 리스트 컴포넌트
   const GalleryList = () => (
