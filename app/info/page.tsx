@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { IoIosArrowBack } from "react-icons/io";
 import Link from "next/link";
 import { IoLocationOutline, IoCallOutline, IoMailOutline, IoTimeOutline } from "react-icons/io5";
-import { FaSitemap, FaPeopleCarry, FaMusic, FaChalkboardTeacher, FaHandsHelping } from "react-icons/fa";
+import { FaPeopleCarry, FaMusic, FaChalkboardTeacher, FaHandsHelping } from "react-icons/fa";
 
 export default function InfoPage() {
   const searchParams = useSearchParams();

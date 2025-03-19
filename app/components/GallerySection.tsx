@@ -1,8 +1,8 @@
 // app/components/GallerySection.tsx
 "use client";
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { IoIosArrowForward, IoIosArrowBack, IoMdCalendar, IoIosClose } from "react-icons/io";
-import { motion, AnimatePresence, PanInfo } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
 // 갤러리 이미지 인터페이스
@@ -132,11 +132,9 @@ const galleryData: GalleryImage[] = [
 export const GallerySection = ({ onClose, isOverlay = false }: GallerySectionProps = {}) => {
   const [showFullScreen, setShowFullScreen] = useState(false);
   const [currentImage, setCurrentImage] = useState<GalleryImage | null>(null);
-  const [scrollPosition, setScrollPosition] = useState(0);
   const [hideUI, setHideUI] = useState(false);
   const [selectedYear, setSelectedYear] = useState<string | null>(null);
-  const [, setZoomLevel] = useState(1);
-  const [isDragging, setIsDragging] = useState(false);
+  const [zoomLevel, setZoomLevel] = useState(1);
   const thumbnailContainerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -158,13 +156,12 @@ export const GallerySection = ({ onClose, isOverlay = false }: GallerySectionPro
   }, [imagesByYear]);
   
   // 이미지 위치 초기화
-  const resetImagePosition = () => {
+  const resetImagePosition = useCallback(() => {
     setZoomLevel(1);
-  };
+  }, []);
   
-  const toggleFullScreen = (image?: GalleryImage) => {
+  const toggleFullScreen = useCallback((image?: GalleryImage) => {
     if (!showFullScreen) {
-      setScrollPosition(window.scrollY);
       if (image) {
         setCurrentImage(image);
         setSelectedYear(image.year);
@@ -176,33 +173,31 @@ export const GallerySection = ({ onClose, isOverlay = false }: GallerySectionPro
     }
     setShowFullScreen(!showFullScreen);
     setHideUI(false);
-  };
+  }, [showFullScreen, resetImagePosition]);
   
-  const toggleUI = () => {
-    if (!isDragging) {
-      setHideUI(!hideUI);
-    }
-  };
+  const toggleUI = useCallback(() => {
+    setHideUI(!hideUI);
+  }, [hideUI]);
   
-  const prevImage = () => {
+  const prevImage = useCallback(() => {
     if (!currentImage) return;
     
     const currentIndex = galleryData.findIndex(img => img.id === currentImage.id);
     const prevIndex = (currentIndex - 1 + galleryData.length) % galleryData.length;
     setCurrentImage(galleryData[prevIndex]);
     setSelectedYear(galleryData[prevIndex].year);
-  };
+  }, [currentImage]);
   
-  const nextImage = () => {
+  const nextImage = useCallback(() => {
     if (!currentImage) return;
     
     const currentIndex = galleryData.findIndex(img => img.id === currentImage.id);
     const nextIndex = (currentIndex + 1) % galleryData.length;
     setCurrentImage(galleryData[nextIndex]);
     setSelectedYear(galleryData[nextIndex].year);
-  };
+  }, [currentImage]);
 
-  const scrollToYear = (year: string) => {
+  const scrollToYear = useCallback((year: string) => {
     if (thumbnailContainerRef.current && selectedYear !== year) {
       const yearElements = thumbnailContainerRef.current.querySelectorAll(`[data-year="${year}"]`);
       if (yearElements.length > 0) {
@@ -211,25 +206,10 @@ export const GallerySection = ({ onClose, isOverlay = false }: GallerySectionPro
       }
       setSelectedYear(year);
     }
-  };
-  
-  // 드래그 관련 함수들
-  const handleDragStart = () => {
-    setIsDragging(true);
-  };
-
-  const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-    setIsDragging(false);
-    
-    if (info.offset.x > swipeThreshold) {
-      prevImage();
-    } else if (info.offset.x < -swipeThreshold) {
-      nextImage();
-    }
-  };
+  }, [selectedYear]);
   
   // 스크롤 이벤트 처리
-  const handleWheel = (e: WheelEvent) => {
+  const handleWheel = useCallback((e: WheelEvent) => {
     if (!showFullScreen) return;
     e.preventDefault();
     
@@ -241,16 +221,29 @@ export const GallerySection = ({ onClose, isOverlay = false }: GallerySectionPro
     } else if (delta < 0) {
       prevImage();
     }
-  };
+  }, [showFullScreen, nextImage, prevImage]);
   
-  // 터치 이벤트 - 핀치 줌 완전 비활성화
-  const handleTouchStart = (e: React.TouchEvent) => {
-    // 핀치 줌은 완전히 비활성화 (두 손가락 터치 무시)
-    if (e.touches.length > 1) {
-      e.preventDefault();
-      return;
+  useEffect(() => {
+    const checkImagesLoaded = () => {
+      // ... existing code ...
+    };
+    
+    checkImagesLoaded();
+    
+    // 이벤트 리스너 등록
+    const currentContainerRef = containerRef.current;
+    
+    if (currentContainerRef) {
+      currentContainerRef.addEventListener('wheel', handleWheel);
     }
-  };
+    
+    // 정리 함수
+    return () => {
+      if (currentContainerRef) {
+        currentContainerRef.removeEventListener('wheel', handleWheel);
+      }
+    };
+  }, [handleWheel]);
 
   useEffect(() => {
     if (showFullScreen) {
@@ -268,15 +261,9 @@ export const GallerySection = ({ onClose, isOverlay = false }: GallerySectionPro
       };
       
       window.addEventListener('keydown', handleKeyDown);
-      if (containerRef.current) {
-        containerRef.current.addEventListener('wheel', handleWheel as EventListener, { passive: false });
-      }
       
       return () => {
         window.removeEventListener('keydown', handleKeyDown);
-        if (containerRef.current) {
-          containerRef.current.removeEventListener('wheel', handleWheel as EventListener);
-        }
         document.body.style.overflow = '';
       };
     }

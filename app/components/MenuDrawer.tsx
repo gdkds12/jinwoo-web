@@ -8,8 +8,6 @@ import {
   FaNewspaper, 
   FaMapMarkerAlt, 
   FaHandHoldingHeart,
-  FaGraduationCap,
-  FaVideo,
   FaHistory,
   FaEye,
   FaUsers,
@@ -99,12 +97,6 @@ export const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
   const handleShowOffering = () => {
     onClose();
     const event = new CustomEvent('showOffering');
-    document.dispatchEvent(event);
-  };
-
-  const handleShowGallery = () => {
-    onClose();
-    const event = new CustomEvent('showGallery');
     document.dispatchEvent(event);
   };
 

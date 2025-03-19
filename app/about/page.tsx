@@ -69,8 +69,8 @@ export default function AboutPage() {
             <div className="border border-gray-200 p-6 rounded-lg">
               <h3 className="text-xl font-semibold mb-4">우리의 비전</h3>
               <p className="text-gray-700 leading-relaxed">
-                "하나님의 말씀으로 세워지는 믿음의 공동체, 
-                그리스도의 사랑으로 섬기는 교회"
+                &ldquo;하나님의 말씀으로 세워지는 믿음의 공동체, 
+                그리스도의 사랑으로 섬기는 교회&rdquo;
               </p>
             </div>
             
