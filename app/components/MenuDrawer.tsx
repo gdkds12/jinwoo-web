@@ -20,6 +20,20 @@ import {
   FaPhone,
   FaSitemap
 } from "react-icons/fa";
+import { IconType } from "react-icons";
+
+interface MenuItem {
+  title: string;
+  href: string;
+  icon?: IconType;
+  onClick?: () => void;
+  subItems?: {
+    title: string;
+    href: string;
+    icon?: IconType;
+    onClick?: () => void;
+  }[];
+}
 
 interface MenuDrawerProps {
   isOpen: boolean;
@@ -88,40 +102,49 @@ export const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
     document.dispatchEvent(event);
   };
 
-  const menuItems = [
+  const handleShowGallery = () => {
+    onClose();
+    const event = new CustomEvent('showGallery');
+    document.dispatchEvent(event);
+  };
+
+  const menuItems: MenuItem[] = [
     {
       title: "주요 메뉴",
-      items: [
-        { name: "예배 시간", icon: FaClock, onClick: handleShowWorshipTime },
-        { name: "주보", icon: FaNewspaper, onClick: handleShowBulletin },
-        { name: "오시는 길", icon: FaMapMarkerAlt, onClick: handleShowLocation },
-        { name: "헌금안내", icon: FaHandHoldingHeart, onClick: handleShowOffering },
-        { name: "교회학교", icon: FaGraduationCap, href: "/sunday-school" },
-        { name: "미디어", icon: FaVideo, href: "/media" },
+      href: "/",
+      subItems: [
+        { title: "예배 시간", href: "/worship-time", icon: FaClock, onClick: handleShowWorshipTime },
+        { title: "교회 소식", href: "/bulletin", icon: FaNewspaper, onClick: handleShowBulletin },
+        { title: "오시는 길", href: "/location", icon: FaMapMarkerAlt, onClick: handleShowLocation },
+        { title: "헌금 안내", href: "/offering", icon: FaHandHoldingHeart, onClick: handleShowOffering },
       ],
     },
     {
       title: "교회 안내",
-      items: [
-        { name: "역사", icon: FaHistory, href: "/history" },
-        { name: "비전", icon: FaEye, href: "/vision" },
+      href: "/about",
+      subItems: [
+        { title: "역사", href: "/about?section=history", icon: FaHistory },
+        { title: "비전", href: "/about?section=vision", icon: FaEye },
       ],
     },
     {
       title: "섬기는 사람들",
-      items: [
-        { name: "담임 목사", icon: FaUserTie, href: "/pastor" },
-        { name: "장로", icon: FaUserGraduate, href: "/elders" },
-        { name: "권사", icon: FaUserFriends, href: "/deaconesses" },
-        { name: "집사", icon: FaUsers, href: "/deacons" },
+      href: "/ministry",
+      subItems: [
+        { title: "담임 목사", href: "/ministry?section=pastors", icon: FaUserTie },
+        { title: "원로 목사", href: "/ministry?section=seniorpastors", icon: FaUserTie },
+        { title: "장로", href: "/ministry?section=elders", icon: FaUserGraduate },
+        { title: "권사", href: "/ministry?section=deaconesses", icon: FaUserFriends },
+        { title: "집사", href: "/ministry?section=deacons", icon: FaUsers },
       ],
     },
     {
       title: "교회 정보",
-      items: [
-        { name: "교회 시설", icon: FaBuilding, href: "/facilities" },
-        { name: "교회 전화번호", icon: FaPhone, href: "/contact" },
-        { name: "교회 부서", icon: FaSitemap, href: "/departments" },
+      href: "/info",
+      subItems: [
+        { title: "교회 시설", href: "/info?section=facilities", icon: FaBuilding },
+        { title: "교회 전화번호", href: "/info?section=contact", icon: FaPhone },
+        { title: "교회 부서", href: "/info?section=departments", icon: FaSitemap },
       ],
     },
   ];
@@ -191,7 +214,7 @@ export const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
               >
                 <h3 className="text-2xl font-semibold mb-4 pl-2">{section.title}</h3>
                 <div className="space-y-2">
-                  {section.items.map((item, itemIndex) => (
+                  {section.subItems?.map((item, itemIndex) => (
                     <motion.div
                       key={itemIndex}
                       variants={itemVariants}
@@ -202,20 +225,20 @@ export const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
                           onClick={item.onClick}
                         >
                           <div className="w-8 h-8 bg-[#F9F9F9] rounded-md flex items-center justify-center mr-3">
-                            <item.icon className="text-black" />
+                            {item.icon && <item.icon className="text-black" />}
                           </div>
-                          <span className="text-black font-semibold">{item.name}</span>
+                          <span className="text-black font-semibold">{item.title}</span>
                         </div>
                       ) : (
                         <Link
-                          href={item.href || '#'}
+                          href={item.href}
                           className="flex items-center p-2 hover:bg-gray-100 rounded-lg transition-colors"
                           onClick={onClose}
                         >
                           <div className="w-8 h-8 bg-[#F9F9F9] rounded-md flex items-center justify-center mr-3">
-                            <item.icon className="text-black" />
+                            {item.icon && <item.icon className="text-black" />}
                           </div>
-                          <span className="text-black font-semibold">{item.name}</span>
+                          <span className="text-black font-semibold">{item.title}</span>
                         </Link>
                       )}
                     </motion.div>

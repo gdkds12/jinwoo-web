@@ -32,17 +32,17 @@ export const MenuSection = () => {
 
   return (
     <motion.div 
-      className="w-full mt-8"
+      className="w-full mt-4"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
     >
-      <div className="flex gap-2 px-4">
+      <div className="flex gap-3 px-6 mb-2">
         {menuItems.map((item, index) => (
           <motion.div 
             key={index}
-            className="flex-1 aspect-[7/3] bg-white rounded-md flex items-center cursor-pointer relative"
+            className="flex-1 aspect-[5/2.5] bg-transparent border border-black border-opacity-20 rounded-xl flex items-center cursor-pointer relative"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

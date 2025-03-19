@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { IoIosArrowBack } from "react-icons/io";
 import { FaHandHoldingHeart, FaPray, FaChurch, FaGraduationCap, FaCross, FaHeart } from "react-icons/fa";
@@ -53,111 +53,133 @@ export const OfferingGuide: React.FC<OfferingGuideProps> = ({ onClose }) => {
     closed: { x: "100%", opacity: 0 }
   };
 
+  useEffect(() => {
+    // 오버레이가 열릴 때 body 스크롤 방지
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+    document.body.style.height = '100%';
+    document.body.style.top = '0';
+    
+    return () => {
+      // 컴포넌트가 언마운트될 때 body 스크롤 복구
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.height = '';
+      document.body.style.top = '';
+    };
+  }, []);
+
   return (
     <motion.div
-      className="fixed top-0 left-0 right-0 bottom-0 bg-white z-[60] p-5 overflow-y-auto"
+      className="fixed top-0 left-0 right-0 bottom-0 bg-white z-[60] overflow-hidden"
       initial="closed"
       animate="open"
       exit="closed"
       variants={offeringVariants}
       transition={{ type: "tween", ease: "easeInOut", duration: 0.3 }}
     >
-      <div className="flex items-center justify-between mb-6">
-        <div 
-          className="w-10 h-10 flex items-center cursor-pointer"
-          onClick={onClose}
-        >
-          <IoIosArrowBack size={20} className="text-gray-600" />
+      <div className="h-full flex flex-col">
+        <div className="flex items-center justify-between p-5">
+          <div 
+            className="w-10 h-10 flex items-center cursor-pointer"
+            onClick={onClose}
+          >
+            <IoIosArrowBack size={20} className="text-gray-600" />
+          </div>
+          <h1 className="text-xl font-bold">헌금 안내</h1>
+          <div className="w-10"></div>
         </div>
-        <h1 className="text-xl font-bold">헌금 안내</h1>
-        <div className="w-10"></div>
+
+        <div className="flex-1 overflow-y-auto px-5 pb-5">
+          <motion.div
+            className="mt-4 space-y-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            {/* 헌금 안내 메시지 */}
+            <motion.div
+              className="text-center space-y-2 mb-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              <h2 className="text-2xl font-bold text-gray-800">진우교회 헌금 안내</h2>
+              <div className="mt-4 px-6 py-3 bg-yellow-50 rounded-lg italic text-gray-700 text-sm">
+                &ldquo;각각 그 마음에 정한 대로 할 것이요 인색함으로나 억지로 하지 말지니 하나님은 즐겨 내는 자를 사랑하시느니라&rdquo; (고린도후서 9:7)
+              </div>
+            </motion.div>
+
+            {/* 헌금 계좌 정보 */}
+            <motion.div
+              className="rounded-lg p-4 bg-gray-50"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <h3 className="text-lg font-bold mb-2 text-gray-800">헌금 계좌 안내</h3>
+              <p className="text-gray-700 font-medium">{offeringData.bankAccount}</p>
+            </motion.div>
+
+            {/* 헌금 종류 */}
+            <motion.div
+              className="rounded-lg p-4 bg-gray-50"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              <h3 className="text-lg font-bold mb-4 border-b pb-2">헌금 종류</h3>
+              <div className="space-y-4">
+                {offeringData.offeringTypes.map((item, index) => (
+                  <motion.div
+                    key={index}
+                    className="flex items-start"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: 0.4 + index * 0.1 }}
+                  >
+                    <div className="w-8 h-8 flex items-center justify-center text-gray-600 mr-3 mt-0.5">
+                      {item.icon}
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-medium">{item.name}</div>
+                      <div className="text-sm text-gray-600">{item.description}</div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* 온라인 헌금 안내 */}
+            <motion.div
+              className="rounded-lg p-4 bg-blue-50"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.7 }}
+            >
+              <h3 className="text-lg font-bold mb-2 text-blue-700">온라인 헌금 안내</h3>
+              <p className="text-sm text-gray-700 leading-relaxed">
+                {offeringData.onlineGuide}
+              </p>
+            </motion.div>
+
+            {/* 오프라인 헌금 안내 */}
+            <motion.div
+              className="rounded-lg p-4 bg-green-50 mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.8 }}
+            >
+              <h3 className="text-lg font-bold mb-2 text-green-700">주일 헌금 안내</h3>
+              <p className="text-sm text-gray-700 leading-relaxed">
+                {offeringData.offlineGuide}
+              </p>
+            </motion.div>
+          </motion.div>
+        </div>
       </div>
-
-      <motion.div
-        className="mt-4 space-y-6"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        {/* 헌금 안내 메시지 */}
-        <motion.div
-          className="text-center space-y-2 mb-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          <h2 className="text-2xl font-bold text-gray-800">진우교회 헌금 안내</h2>
-          <div className="mt-4 px-6 py-3 bg-yellow-50 rounded-lg italic text-gray-700 text-sm">
-            &ldquo;각각 그 마음에 정한 대로 할 것이요 인색함으로나 억지로 하지 말지니 하나님은 즐겨 내는 자를 사랑하시느니라&rdquo; (고린도후서 9:7)
-          </div>
-        </motion.div>
-
-        {/* 헌금 계좌 정보 */}
-        <motion.div
-          className="rounded-lg p-4 bg-gray-50"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <h3 className="text-lg font-bold mb-2 text-gray-800">헌금 계좌 안내</h3>
-          <p className="text-gray-700 font-medium">{offeringData.bankAccount}</p>
-        </motion.div>
-
-        {/* 헌금 종류 */}
-        <motion.div
-          className="rounded-lg p-4 bg-gray-50"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-        >
-          <h3 className="text-lg font-bold mb-4 border-b pb-2">헌금 종류</h3>
-          <div className="space-y-4">
-            {offeringData.offeringTypes.map((item, index) => (
-              <motion.div
-                key={index}
-                className="flex items-start"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: 0.4 + index * 0.1 }}
-              >
-                <div className="w-8 h-8 flex items-center justify-center text-gray-600 mr-3 mt-0.5">
-                  {item.icon}
-                </div>
-                <div className="flex-1">
-                  <div className="font-medium">{item.name}</div>
-                  <div className="text-sm text-gray-600">{item.description}</div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* 온라인 헌금 안내 */}
-        <motion.div
-          className="rounded-lg p-4 bg-blue-50"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.7 }}
-        >
-          <h3 className="text-lg font-bold mb-2 text-blue-700">온라인 헌금 안내</h3>
-          <p className="text-sm text-gray-700 leading-relaxed">
-            {offeringData.onlineGuide}
-          </p>
-        </motion.div>
-
-        {/* 오프라인 헌금 안내 */}
-        <motion.div
-          className="rounded-lg p-4 bg-green-50 mb-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.8 }}
-        >
-          <h3 className="text-lg font-bold mb-2 text-green-700">주일 헌금 안내</h3>
-          <p className="text-sm text-gray-700 leading-relaxed">
-            {offeringData.offlineGuide}
-          </p>
-        </motion.div>
-      </motion.div>
     </motion.div>
   );
 };

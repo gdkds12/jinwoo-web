@@ -19,6 +19,7 @@ export default function Home() {
   const [showWorshipTime, setShowWorshipTime] = useState(false);
   const [showLocation, setShowLocation] = useState(false);
   const [showOffering, setShowOffering] = useState(false);
+  const [showGallery, setShowGallery] = useState(false);
 
   useEffect(() => {
     // 페이지 로드 시 공지사항 이벤트 상태 확인
@@ -52,10 +53,16 @@ export default function Home() {
       setShowOffering(true);
     };
 
+    // 갤러리 이벤트 처리를 위한 이벤트 리스너 등록
+    const handleShowGallery = () => {
+      setShowGallery(true);
+    };
+
     document.addEventListener('showBulletin', handleShowBulletin);
     document.addEventListener('showWorshipTime', handleShowWorshipTime);
     document.addEventListener('showLocation', handleShowLocation);
     document.addEventListener('showOffering', handleShowOffering);
+    document.addEventListener('showGallery', handleShowGallery);
     
     // 페이지 로드 시 body 스타일 설정
     document.body.style.backgroundColor = "#F2F2F2";
@@ -75,6 +82,7 @@ export default function Home() {
       document.removeEventListener('showWorshipTime', handleShowWorshipTime);
       document.removeEventListener('showLocation', handleShowLocation);
       document.removeEventListener('showOffering', handleShowOffering);
+      document.removeEventListener('showGallery', handleShowGallery);
     };
   }, []);
 
@@ -87,7 +95,7 @@ export default function Home() {
         <NoticeSection />
       </div>
       
-      <main className="w-full max-w-6xl mx-auto pt-4">
+      <main className="w-full max-w-6xl mx-auto pt-2">
         <MainBanner />
         <MenuSection />
         <WordSection />
@@ -121,6 +129,12 @@ export default function Home() {
       <AnimatePresence mode="wait">
         {showOffering && (
           <OfferingGuide key="offering-guide" onClose={() => setShowOffering(false)} />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence mode="wait">
+        {showGallery && (
+          <GallerySection key="gallery-section" isOverlay={true} onClose={() => setShowGallery(false)} />
         )}
       </AnimatePresence>
     </div>

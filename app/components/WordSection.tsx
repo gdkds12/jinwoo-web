@@ -203,7 +203,7 @@ export const WordSection = () => {
 
   return (
     <motion.div 
-      className="w-full mt-8"
+      className="w-full mt-4"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -231,7 +231,6 @@ export const WordSection = () => {
             whileTap={{ scale: 0.98 }}
           >
             <div className="absolute inset-0 z-0">
-              <div className="absolute inset-0 bg-black opacity-50"></div>
               <Image 
                 src="/images/background/image1.jpg" 
                 alt="배경 이미지" 
@@ -239,6 +238,7 @@ export const WordSection = () => {
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
+              <div className="absolute inset-0 bg-black/40 z-10"></div>
             </div>
             <div className="flex flex-col items-end mb-2 relative z-10">
               <h3 className="text-white text-lg font-medium">이번주 말씀</h3>
@@ -265,12 +265,14 @@ export const WordSection = () => {
                 transition={{ duration: 0.4, ease: "easeInOut" }}
               >
                 <div className="absolute inset-0 z-0">
-                  <div className="absolute inset-0 bg-black opacity-70"></div>
                   <Image 
                     src="/images/background/image1.jpg" 
                     alt="배경 이미지" 
                     className="w-full h-full object-cover"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                   />
+                  <div className="absolute inset-0 bg-black/60 z-10"></div>
                 </div>
                 <div className="flex justify-end w-full p-4 mb-6 relative z-10">
                   <IoMdClose 
