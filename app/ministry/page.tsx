@@ -30,7 +30,7 @@ function MinistryContent() {
           <div className="w-24 h-24 mb-4 flex items-center justify-center bg-gray-100 rounded-full">
             <FaUserTie size={48} className="text-gray-600" />
           </div>
-          <h3 className="text-xl font-bold">김근수</h3>
+          <h3 className="text-xl font-bold">배학기</h3>
           <p className="text-gray-600">담임목사</p>
         </div>
         <div className="w-full h-px bg-gray-200 my-6"></div>
