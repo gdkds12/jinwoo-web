@@ -400,7 +400,7 @@ export const NoticeSection = () => {
         {showFullScreen && (
           <motion.div
             ref={containerRef}
-            className="fixed inset-0 z-[9999] bg-white flex flex-col w-screen h-screen overflow-y-auto"
+            className="fixed inset-0 z-[9999] bg-white flex justify-center"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
@@ -411,59 +411,61 @@ export const NoticeSection = () => {
               touchAction: 'pan-y'
             }}
           >
-            {/* 헤더 */}
-            <motion.div 
-              variants={cardVariants}
-              className="p-4 sticky top-0 bg-white z-10"
-            >
-              <div className="flex items-center justify-center">
-                <button onClick={toggleFullScreen} className="absolute left-2 p-2">
-                  <IoIosArrowBack className="text-2xl" />
-                </button>
-                <h1 className="text-xl font-semibold">공지사항</h1>
-              </div>
-            </motion.div>
-            
-            {/* 공지사항 목록 */}
-            <div className="flex-1 p-4 pb-24">
-              {noticeData.map((notice) => (
-                <motion.div
-                  key={notice.id}
-                  className="mb-4 overflow-hidden"
-                  variants={cardVariants}
-                >
-                  <div 
-                    className="w-full bg-white rounded-xl p-4 cursor-pointer"
-                    onClick={(e) => toggleNoticeExpand(notice.id, e)}
+            <div className="w-full max-w-[550px] h-screen flex flex-col overflow-y-auto">
+              {/* 헤더 */}
+              <motion.div 
+                variants={cardVariants}
+                className="p-4 sticky top-0 bg-white z-10"
+              >
+                <div className="flex items-center justify-center">
+                  <button onClick={toggleFullScreen} className="absolute left-2 p-2">
+                    <IoIosArrowBack className="text-2xl" />
+                  </button>
+                  <h1 className="text-xl font-semibold">공지사항</h1>
+                </div>
+              </motion.div>
+              
+              {/* 공지사항 목록 */}
+              <div className="flex-1 p-4 pb-24">
+                {noticeData.map((notice) => (
+                  <motion.div
+                    key={notice.id}
+                    className="mb-4 overflow-hidden"
+                    variants={cardVariants}
                   >
-                    <div className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <h3 className="text-base font-semibold mb-1">{notice.title}</h3>
-                        <div className="flex items-center gap-2 text-sm">
-                          <span className="text-gray-500">{notice.date}</span>
-                          <span className="text-blue-500">{notice.department}</span>
+                    <div 
+                      className="w-full bg-white rounded-xl p-4 cursor-pointer"
+                      onClick={(e) => toggleNoticeExpand(notice.id, e)}
+                    >
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <h3 className="text-base font-semibold mb-1">{notice.title}</h3>
+                          <div className="flex items-center gap-2 text-sm">
+                            <span className="text-gray-500">{notice.date}</span>
+                            <span className="text-blue-500">{notice.department}</span>
+                          </div>
                         </div>
+                        <button 
+                          className="p-2 text-gray-500"
+                          onClick={(e) => toggleNoticeExpand(notice.id, e)}
+                        >
+                          {expandedNotices.includes(notice.id) 
+                            ? <IoIosArrowUp className="text-xl" /> 
+                            : <IoIosArrowDown className="text-xl" />
+                          }
+                        </button>
                       </div>
-                      <button 
-                        className="p-2 text-gray-500"
-                        onClick={(e) => toggleNoticeExpand(notice.id, e)}
-                      >
-                        {expandedNotices.includes(notice.id) 
-                          ? <IoIosArrowUp className="text-xl" /> 
-                          : <IoIosArrowDown className="text-xl" />
-                        }
-                      </button>
+                      
+                      {/* 확장된 내용 */}
+                      <AnimatePresence>
+                        {expandedNotices.includes(notice.id) && (
+                          <ExpandableContent notice={notice} key={`content-${notice.id}`} />
+                        )}
+                      </AnimatePresence>
                     </div>
-                    
-                    {/* 확장된 내용 */}
-                    <AnimatePresence>
-                      {expandedNotices.includes(notice.id) && (
-                        <ExpandableContent notice={notice} key={`content-${notice.id}`} />
-                      )}
-                    </AnimatePresence>
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </motion.div>
         )}

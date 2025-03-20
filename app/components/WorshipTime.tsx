@@ -33,14 +33,14 @@ export const WorshipTime: React.FC<WorshipTimeProps> = ({ onClose }) => {
 
   return (
     <motion.div
-      className="fixed top-0 left-0 right-0 bottom-0 bg-white z-[60] overflow-hidden"
+      className="fixed top-0 left-0 right-0 bottom-0 bg-white z-[60] overflow-hidden flex justify-center"
       initial="closed"
       animate="open"
       exit="closed"
       variants={worshipTimeVariants}
       transition={{ type: "tween", ease: "easeInOut", duration: 0.3 }}
     >
-      <div className="h-full flex flex-col">
+      <div className="w-full max-w-[550px] h-full flex flex-col">
         <div className="flex items-center justify-between p-5">
           <div 
             className="w-10 h-10 flex items-center cursor-pointer"

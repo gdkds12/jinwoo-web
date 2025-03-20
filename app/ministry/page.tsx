@@ -52,7 +52,7 @@ function MinistryContent() {
       {/* 장로 섹션 */}
       <section id="elders" className="py-6">
         <h2 className="text-2xl font-bold mb-4 text-center">장로</h2>
-        <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
+        <div className="grid grid-cols-2 gap-4 mx-auto">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="text-center p-2">
               <div className="w-16 h-16 mx-auto mb-2 flex items-center justify-center bg-gray-100 rounded-full">
@@ -69,7 +69,7 @@ function MinistryContent() {
       {/* 권사 섹션 */}
       <section id="deaconesses" className="py-6">
         <h2 className="text-2xl font-bold mb-4 text-center">권사</h2>
-        <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
+        <div className="grid grid-cols-2 gap-4 mx-auto">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="text-center p-2">
               <div className="w-16 h-16 mx-auto mb-2 flex items-center justify-center bg-gray-100 rounded-full">
@@ -86,7 +86,7 @@ function MinistryContent() {
       {/* 집사 섹션 */}
       <section id="deacons" className="py-6">
         <h2 className="text-2xl font-bold mb-4 text-center">집사</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-lg mx-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mx-auto">
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={i} className="text-center p-2">
               <div className="w-16 h-16 mx-auto mb-2 flex items-center justify-center bg-gray-100 rounded-full">
@@ -109,15 +109,15 @@ function Loading() {
 
 export default function MinistryPage() {
   return (
-    <div className="min-h-screen bg-white p-4">
-      {/* 뒤로가기 버튼 */}
-      <div className="sticky top-0 bg-white z-10 py-4">
-        <Link href="/" className="inline-block">
-          <IoIosArrowBack className="text-2xl" />
-        </Link>
-      </div>
-      
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-white p-4 flex justify-center">
+      <div className="w-full max-w-[550px]">
+        {/* 뒤로가기 버튼 */}
+        <div className="sticky top-0 bg-white z-10 py-4">
+          <Link href="/" className="inline-block">
+            <IoIosArrowBack className="text-2xl" />
+          </Link>
+        </div>
+        
         <Suspense fallback={<Loading />}>
           <MinistryContent />
         </Suspense>

@@ -95,15 +95,16 @@ export default function Home() {
         <NoticeSection />
       </div>
       
-      <main className="w-full max-w-6xl mx-auto pt-2">
-        <MainBanner />
-        <MenuSection />
-        <WordSection />
-        <NoticeSection />
-        <GallerySection />
-        
-        {/* 여기에 다른 섹션 추가 */}
-        
+      <main className="w-full flex justify-center">
+        <div className="w-full max-w-[550px] mx-auto pt-2">
+          <MainBanner />
+          <MenuSection />
+          <WordSection />
+          <NoticeSection />
+          <GallerySection />
+          
+          {/* 여기에 다른 섹션 추가 */}
+        </div>
       </main>
       
       <Footer />

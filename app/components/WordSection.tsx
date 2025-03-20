@@ -258,53 +258,55 @@ export const WordSection = () => {
           <AnimatePresence>
             {isExpanded && (
               <motion.div 
-                className="fixed inset-0 z-[9999] flex flex-col w-screen h-screen"
+                className="fixed inset-0 z-[9999] flex justify-center"
                 initial={{ borderRadius: "0.75rem", opacity: 0, scale: 0.9 }}
                 animate={{ borderRadius: 0, opacity: 1, scale: 1 }}
                 exit={{ borderRadius: "0.75rem", opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.4, ease: "easeInOut" }}
               >
-                <div className="absolute inset-0 z-0">
-                  <Image 
-                    src="/images/background/image1.jpg" 
-                    alt="배경 이미지" 
-                    className="w-full h-full object-cover"
-                    fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
-                  <div className="absolute inset-0 bg-black/60 z-10"></div>
+                <div className="w-full max-w-[550px] h-screen flex flex-col">
+                  <div className="absolute inset-0 z-0">
+                    <Image 
+                      src="/images/background/image1.jpg" 
+                      alt="배경 이미지" 
+                      className="w-full h-full object-cover"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
+                    <div className="absolute inset-0 bg-black/60 z-10"></div>
+                  </div>
+                  <div className="flex justify-end w-full p-4 mb-6 relative z-10">
+                    <IoMdClose 
+                      className="text-3xl text-white cursor-pointer" 
+                      onClick={toggleExpand}
+                    />
+                  </div>
+                  
+                  <AnimatePresence>
+                    {showExpandedText && (
+                      <motion.div 
+                        className="flex-1 flex flex-col items-end justify-center p-4 relative z-10"
+                        variants={textVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="hidden"
+                      >
+                        <div className="flex flex-col items-end mb-4">
+                          <h3 className="text-white text-2xl font-medium">이번주 말씀</h3>
+                          <p className="text-white/80 text-base">요한복음 1:1 KOERV</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-white text-2xl font-medium leading-relaxed">
+                            맨 처음, 세상이 시작되기 전에<br />
+                            말씀이 계셨다. 그 말씀은<br />
+                            하나님과 함께 계셨고<br />
+                            말씀이 곧 하나님이셨다.
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
-                <div className="flex justify-end w-full p-4 mb-6 relative z-10">
-                  <IoMdClose 
-                    className="text-3xl text-white cursor-pointer" 
-                    onClick={toggleExpand}
-                  />
-                </div>
-                
-                <AnimatePresence>
-                  {showExpandedText && (
-                    <motion.div 
-                      className="flex-1 flex flex-col items-end justify-center p-4 relative z-10"
-                      variants={textVariants}
-                      initial="hidden"
-                      animate="visible"
-                      exit="hidden"
-                    >
-                      <div className="flex flex-col items-end mb-4">
-                        <h3 className="text-white text-2xl font-medium">이번주 말씀</h3>
-                        <p className="text-white/80 text-base">요한복음 1:1 KOERV</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-white text-2xl font-medium leading-relaxed">
-                          맨 처음, 세상이 시작되기 전에<br />
-                          말씀이 계셨다. 그 말씀은<br />
-                          하나님과 함께 계셨고<br />
-                          말씀이 곧 하나님이셨다.
-                        </p>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </motion.div>
             )}
           </AnimatePresence>
@@ -320,7 +322,7 @@ export const WordSection = () => {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="fixed inset-0 z-[9999] bg-white flex flex-col w-screen h-screen overflow-y-auto overscroll-none"
+            className="fixed inset-0 z-[9999] bg-white flex justify-center"
             style={{ 
               overscrollBehavior: 'contain',
               WebkitOverflowScrolling: 'touch',
@@ -328,39 +330,41 @@ export const WordSection = () => {
             }}
             onTouchMove={handleTouchMove}
           >
-            {/* 헤더 */}
-            <motion.div 
-              variants={itemVariants}
-              className="p-4 sticky top-0 bg-white z-10 relative"
-            >
-              <div className="flex items-center justify-center">
-                <button onClick={toggleHistory} className="absolute left-2 p-2">
-                  <IoIosArrowBack className="text-2xl" />
-                </button>
-                <h1 className="text-xl font-semibold">말씀</h1>
-              </div>
-            </motion.div>
+            <div className="w-full max-w-[550px] h-screen flex flex-col overflow-y-auto">
+              {/* 헤더 */}
+              <motion.div 
+                variants={itemVariants}
+                className="p-4 sticky top-0 bg-white z-10 relative"
+              >
+                <div className="flex items-center justify-center">
+                  <button onClick={toggleHistory} className="absolute left-2 p-2">
+                    <IoIosArrowBack className="text-2xl" />
+                  </button>
+                  <h1 className="text-xl font-semibold">말씀</h1>
+                </div>
+              </motion.div>
 
-            {/* 말씀 목록 */}
-            <div className="flex-1 p-4 pb-24">
-              {scriptureData.map((scripture) => (
-                <motion.div 
-                  key={scripture.id} 
-                  className="mb-10 pb-6 border-b border-gray-100"
-                  variants={itemVariants}
-                >
-                  <div className="flex justify-between items-baseline mb-2">
-                    <div className="flex items-center gap-2">
-                      <IoIosSunny className="text-yellow-500 text-lg" />
-                      <h3 className="text-lg font-semibold">{scripture.reference}</h3>
+              {/* 말씀 목록 */}
+              <div className="flex-1 p-4 pb-24">
+                {scriptureData.map((scripture) => (
+                  <motion.div 
+                    key={scripture.id} 
+                    className="mb-10 pb-6 border-b border-gray-100"
+                    variants={itemVariants}
+                  >
+                    <div className="flex justify-between items-baseline mb-2">
+                      <div className="flex items-center gap-2">
+                        <IoIosSunny className="text-yellow-500 text-lg" />
+                        <h3 className="text-lg font-semibold">{scripture.reference}</h3>
+                      </div>
+                      <span className="text-sm text-gray-500">{scripture.date}</span>
                     </div>
-                    <span className="text-sm text-gray-500">{scripture.date}</span>
-                  </div>
-                  <p className="text-base leading-relaxed mt-3">
-                    {formatContent(scripture.content)}
-                  </p>
-                </motion.div>
-              ))}
+                    <p className="text-base leading-relaxed mt-3">
+                      {formatContent(scripture.content)}
+                    </p>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </motion.div>
         )}

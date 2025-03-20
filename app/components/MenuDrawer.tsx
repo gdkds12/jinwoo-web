@@ -177,7 +177,7 @@ export const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
           initial="hidden"
           animate="visible"
           exit="exit"
-          className="fixed inset-0 bg-white z-50 overflow-y-auto overscroll-none"
+          className="fixed inset-0 bg-white z-50 overflow-y-auto overscroll-none flex justify-center"
           style={{ 
             overscrollBehavior: 'contain',
             WebkitOverflowScrolling: 'touch',
@@ -185,59 +185,61 @@ export const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
           }}
           onTouchMove={handleTouchMove}
         >
-          <motion.div 
-            variants={itemVariants}
-            className="p-4 sticky top-0 bg-white z-10 relative"
-          >
-            <div className="flex items-center justify-center">
-              <button onClick={onClose} className="absolute left-2 p-2">
-                <IoIosArrowBack className="text-2xl" />
-              </button>
-              <h2 className="text-xl font-semibold">메뉴</h2>
+          <div className="w-full max-w-[550px]">
+            <motion.div 
+              variants={itemVariants}
+              className="p-4 sticky top-0 bg-white z-10 relative"
+            >
+              <div className="flex items-center justify-center">
+                <button onClick={onClose} className="absolute left-2 p-2">
+                  <IoIosArrowBack className="text-2xl" />
+                </button>
+                <h2 className="text-xl font-semibold">메뉴</h2>
+              </div>
+            </motion.div>
+            
+            <div className="p-4 pb-24">
+              {menuItems.map((section, sectionIndex) => (
+                <motion.div 
+                  key={sectionIndex} 
+                  className="mb-6"
+                  variants={itemVariants}
+                >
+                  <h3 className="text-2xl font-semibold mb-4 pl-2">{section.title}</h3>
+                  <div className="space-y-2">
+                    {section.subItems?.map((item, itemIndex) => (
+                      <motion.div
+                        key={itemIndex}
+                        variants={itemVariants}
+                      >
+                        {item.onClick ? (
+                          <div
+                            className="flex items-center p-2 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
+                            onClick={item.onClick}
+                          >
+                            <div className="w-8 h-8 bg-[#F9F9F9] rounded-md flex items-center justify-center mr-3">
+                              {item.icon && <item.icon className="text-black" />}
+                            </div>
+                            <span className="text-black font-semibold">{item.title}</span>
+                          </div>
+                        ) : (
+                          <Link
+                            href={item.href}
+                            className="flex items-center p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                            onClick={onClose}
+                          >
+                            <div className="w-8 h-8 bg-[#F9F9F9] rounded-md flex items-center justify-center mr-3">
+                              {item.icon && <item.icon className="text-black" />}
+                            </div>
+                            <span className="text-black font-semibold">{item.title}</span>
+                          </Link>
+                        )}
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+              ))}
             </div>
-          </motion.div>
-          
-          <div className="p-4 pb-24">
-            {menuItems.map((section, sectionIndex) => (
-              <motion.div 
-                key={sectionIndex} 
-                className="mb-6"
-                variants={itemVariants}
-              >
-                <h3 className="text-2xl font-semibold mb-4 pl-2">{section.title}</h3>
-                <div className="space-y-2">
-                  {section.subItems?.map((item, itemIndex) => (
-                    <motion.div
-                      key={itemIndex}
-                      variants={itemVariants}
-                    >
-                      {item.onClick ? (
-                        <div
-                          className="flex items-center p-2 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
-                          onClick={item.onClick}
-                        >
-                          <div className="w-8 h-8 bg-[#F9F9F9] rounded-md flex items-center justify-center mr-3">
-                            {item.icon && <item.icon className="text-black" />}
-                          </div>
-                          <span className="text-black font-semibold">{item.title}</span>
-                        </div>
-                      ) : (
-                        <Link
-                          href={item.href}
-                          className="flex items-center p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                          onClick={onClose}
-                        >
-                          <div className="w-8 h-8 bg-[#F9F9F9] rounded-md flex items-center justify-center mr-3">
-                            {item.icon && <item.icon className="text-black" />}
-                          </div>
-                          <span className="text-black font-semibold">{item.title}</span>
-                        </Link>
-                      )}
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
           </div>
         </motion.div>
       )}
