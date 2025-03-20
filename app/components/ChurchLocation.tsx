@@ -58,22 +58,22 @@ export const ChurchLocation: React.FC<ChurchLocationProps> = ({ onClose }) => {
 
   return (
     <motion.div
-      className="fixed top-0 left-0 right-0 bottom-0 bg-white z-[60] overflow-hidden"
+      className="fixed top-0 left-0 right-0 bottom-0 bg-white dark:bg-dark z-[60] overflow-hidden flex justify-center"
       initial="closed"
       animate="open"
       exit="closed"
       variants={locationVariants}
       transition={{ type: "tween", ease: "easeInOut", duration: 0.3 }}
     >
-      <div className="h-full flex flex-col">
+      <div className="w-full max-w-[550px] md:max-w-[720px] h-full flex flex-col">
         <div className="flex items-center justify-between p-5">
           <div 
             className="w-10 h-10 flex items-center cursor-pointer"
             onClick={onClose}
           >
-            <IoIosArrowBack size={20} className="text-gray-600" />
+            <IoIosArrowBack size={20} className="text-gray-600 dark:text-gray-300" />
           </div>
-          <h1 className="text-xl font-bold">오시는 길</h1>
+          <h1 className="text-xl font-bold dark:text-white">오시는 길</h1>
           <div className="w-10"></div>
         </div>
 
@@ -91,12 +91,12 @@ export const ChurchLocation: React.FC<ChurchLocationProps> = ({ onClose }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
             >
-              <div className="p-4 bg-blue-50 rounded-t-lg">
+              <div className="p-4 bg-blue-50 dark:bg-blue-900/30 rounded-t-lg">
                 <div className="flex items-center mb-2">
-                  <FaMapMarkerAlt className="text-blue-600 mr-2" size={18} />
-                  <h3 className="text-lg font-bold text-blue-700">교회 주소</h3>
+                  <FaMapMarkerAlt className="text-blue-600 dark:text-blue-400 mr-2" size={18} />
+                  <h3 className="text-lg font-bold text-blue-700 dark:text-blue-400">교회 주소</h3>
                 </div>
-                <p className="text-gray-700 font-medium">{locationData.address}</p>
+                <p className="text-gray-700 dark:text-gray-300 font-medium">{locationData.address}</p>
               </div>
               
               {/* 지도 영역 - 실제 지도 API를 연동하거나 이미지로 대체할 수 있음 */}

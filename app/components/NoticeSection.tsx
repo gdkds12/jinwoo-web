@@ -308,10 +308,10 @@ export const NoticeSection = () => {
           borderTopWidth: 0,
           transition: { height: { duration: 0.2, ease: [0.4, 0, 0.2, 1] } }
         }}
-        className="overflow-hidden border-t mt-3 pt-3"
+        className="overflow-hidden border-t mt-3 pt-3 border-gray-200 dark:border-gray-600"
       >
         <div ref={contentRef} className="content-inner pb-2">
-          <p className="text-sm text-gray-600 leading-relaxed">
+          <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
             {notice.content}
           </p>
         </div>
@@ -337,14 +337,14 @@ export const NoticeSection = () => {
         animate={isTitleInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
         transition={{ duration: 0.5 }}
       >
-        <h2 className="text-2xl font-semibold cursor-pointer">공지사항</h2>
-        <IoIosArrowForward className="text-xl cursor-pointer" />
+        <h2 className="text-2xl font-semibold cursor-pointer dark:text-white">공지사항</h2>
+        <IoIosArrowForward className="text-xl cursor-pointer dark:text-white" />
       </motion.div>
 
       {/* 카드 섹션 - 메인 페이지 */}
-      <div className="flex flex-col gap-3 px-4">
+      <div className="space-y-2 px-3 md:px-4 mb-4">
         <motion.div 
-          className="w-full aspect-[5/1] bg-white rounded-xl p-3 flex flex-col justify-between cursor-pointer"
+          className="w-full aspect-[5/0.85] md:aspect-[5/0.6] bg-white dark:bg-dark-700 rounded-xl p-4 flex flex-col justify-between cursor-pointer"
           ref={cardRef1}
           initial={{ opacity: 0, y: 20 }}
           animate={isCard1InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
@@ -353,15 +353,15 @@ export const NoticeSection = () => {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
-          <h3 className="text-sm font-medium">{noticeData[0].title}</h3>
+          <h3 className="text-base md:text-lg font-medium dark:text-white">{noticeData[0].title}</h3>
           <div className="flex justify-between items-center">
-            <span className="text-xs text-gray-500">{noticeData[0].date}</span>
-            <span className="text-xs text-blue-500">{noticeData[0].department}</span>
+            <span className="text-xs md:text-sm text-gray-500 dark:text-gray-400">{noticeData[0].date}</span>
+            <span className="text-xs md:text-sm text-blue-500">{noticeData[0].department}</span>
           </div>
         </motion.div>
         
         <motion.div 
-          className="w-full aspect-[5/1] bg-white rounded-xl p-3 flex flex-col justify-between cursor-pointer"
+          className="w-full aspect-[5/0.85] md:aspect-[5/0.6] bg-white dark:bg-dark-700 rounded-xl p-4 flex flex-col justify-between cursor-pointer"
           ref={cardRef2}
           initial={{ opacity: 0, y: 20 }}
           animate={isCard2InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
@@ -370,15 +370,15 @@ export const NoticeSection = () => {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
-          <h3 className="text-sm font-medium">{noticeData[1].title}</h3>
+          <h3 className="text-base md:text-lg font-medium dark:text-white">{noticeData[1].title}</h3>
           <div className="flex justify-between items-center">
-            <span className="text-xs text-gray-500">{noticeData[1].date}</span>
-            <span className="text-xs text-blue-500">{noticeData[1].department}</span>
+            <span className="text-xs md:text-sm text-gray-500 dark:text-gray-400">{noticeData[1].date}</span>
+            <span className="text-xs md:text-sm text-blue-500">{noticeData[1].department}</span>
           </div>
         </motion.div>
         
         <motion.div 
-          className="w-full aspect-[5/1] bg-white rounded-xl p-3 flex flex-col justify-between cursor-pointer"
+          className="w-full aspect-[5/0.85] md:aspect-[5/0.6] bg-white dark:bg-dark-700 rounded-xl p-4 flex flex-col justify-between cursor-pointer"
           ref={cardRef3}
           initial={{ opacity: 0, y: 20 }}
           animate={isCard3InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
@@ -387,10 +387,10 @@ export const NoticeSection = () => {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
-          <h3 className="text-sm font-medium">{noticeData[2].title}</h3>
+          <h3 className="text-base md:text-lg font-medium dark:text-white">{noticeData[2].title}</h3>
           <div className="flex justify-between items-center">
-            <span className="text-xs text-gray-500">{noticeData[2].date}</span>
-            <span className="text-xs text-blue-500">{noticeData[2].department}</span>
+            <span className="text-xs md:text-sm text-gray-500 dark:text-gray-400">{noticeData[2].date}</span>
+            <span className="text-xs md:text-sm text-blue-500">{noticeData[2].department}</span>
           </div>
         </motion.div>
       </div>
@@ -400,7 +400,7 @@ export const NoticeSection = () => {
         {showFullScreen && (
           <motion.div
             ref={containerRef}
-            className="fixed inset-0 z-[9999] bg-white flex justify-center"
+            className="fixed inset-0 z-[9999] bg-white dark:bg-dark flex justify-center"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
@@ -411,17 +411,17 @@ export const NoticeSection = () => {
               touchAction: 'pan-y'
             }}
           >
-            <div className="w-full max-w-[550px] h-screen flex flex-col overflow-y-auto">
+            <div className="w-full max-w-[550px] md:max-w-[720px] h-screen flex flex-col overflow-y-auto">
               {/* 헤더 */}
               <motion.div 
                 variants={cardVariants}
-                className="p-4 sticky top-0 bg-white z-10"
+                className="p-4 sticky top-0 bg-white dark:bg-dark z-10"
               >
                 <div className="flex items-center justify-center">
                   <button onClick={toggleFullScreen} className="absolute left-2 p-2">
-                    <IoIosArrowBack className="text-2xl" />
+                    <IoIosArrowBack className="text-2xl dark:text-white" />
                   </button>
-                  <h1 className="text-xl font-semibold">공지사항</h1>
+                  <h1 className="text-xl font-semibold dark:text-white">공지사항</h1>
                 </div>
               </motion.div>
               
@@ -434,19 +434,19 @@ export const NoticeSection = () => {
                     variants={cardVariants}
                   >
                     <div 
-                      className="w-full bg-white rounded-xl p-4 cursor-pointer"
+                      className="w-full bg-white dark:bg-dark-700 rounded-xl p-4 cursor-pointer"
                       onClick={(e) => toggleNoticeExpand(notice.id, e)}
                     >
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
-                          <h3 className="text-base font-semibold mb-1">{notice.title}</h3>
+                          <h3 className="text-base font-semibold mb-1 dark:text-white">{notice.title}</h3>
                           <div className="flex items-center gap-2 text-sm">
-                            <span className="text-gray-500">{notice.date}</span>
+                            <span className="text-gray-500 dark:text-gray-300">{notice.date}</span>
                             <span className="text-blue-500">{notice.department}</span>
                           </div>
                         </div>
                         <button 
-                          className="p-2 text-gray-500"
+                          className="p-2 text-gray-500 dark:text-gray-300"
                           onClick={(e) => toggleNoticeExpand(notice.id, e)}
                         >
                           {expandedNotices.includes(notice.id) 

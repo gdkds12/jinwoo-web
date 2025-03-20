@@ -87,7 +87,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#F2F2F2]">
+    <div className="min-h-screen bg-[#F2F2F2] dark:bg-dark">
       <Header />
       
       {/* 공지사항 컴포넌트를 미리 로드 (화면에는 표시되지 않음) */}
@@ -96,7 +96,7 @@ export default function Home() {
       </div>
       
       <main className="w-full flex justify-center">
-        <div className="w-full max-w-[550px] mx-auto pt-2">
+        <div className="w-full max-w-[720px] mx-auto pt-2">
           <MainBanner />
           <MenuSection />
           <WordSection />

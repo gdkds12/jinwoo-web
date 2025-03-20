@@ -42,7 +42,7 @@ export const MenuSection = () => {
         {menuItems.map((item, index) => (
           <motion.div 
             key={index}
-            className="flex-1 aspect-[5/2.5] bg-transparent border border-black border-opacity-20 rounded-xl flex items-center cursor-pointer relative"
+            className="flex-1 aspect-[5/2.5] md:aspect-[5/2] bg-transparent border border-black border-opacity-20 dark:border-white dark:border-opacity-20 rounded-xl flex items-center cursor-pointer relative"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -55,7 +55,7 @@ export const MenuSection = () => {
             whileTap={{ scale: 0.95 }}
           >
             <motion.span 
-              className="text-xs font-medium whitespace-nowrap absolute left-1/2 -translate-x-1/2"
+              className="text-xs font-medium whitespace-nowrap absolute left-1/2 -translate-x-1/2 dark:text-white"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}

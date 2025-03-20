@@ -214,8 +214,8 @@ export const WordSection = () => {
         className="flex items-center justify-between px-4 mb-4"
         onClick={toggleHistory}
       >
-        <h2 className="text-2xl font-semibold cursor-pointer">말씀</h2>
-        <IoIosArrowForward className="text-xl cursor-pointer" />
+        <h2 className="text-2xl font-semibold cursor-pointer dark:text-white">말씀</h2>
+        <IoIosArrowForward className="text-xl cursor-pointer dark:text-white" />
       </div>
 
       {/* 카드 섹션 */}
@@ -322,7 +322,7 @@ export const WordSection = () => {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="fixed inset-0 z-[9999] bg-white flex justify-center"
+            className="fixed inset-0 z-[9999] bg-white dark:bg-dark flex justify-center"
             style={{ 
               overscrollBehavior: 'contain',
               WebkitOverflowScrolling: 'touch',
@@ -334,13 +334,13 @@ export const WordSection = () => {
               {/* 헤더 */}
               <motion.div 
                 variants={itemVariants}
-                className="p-4 sticky top-0 bg-white z-10 relative"
+                className="p-4 sticky top-0 bg-white dark:bg-dark z-10 relative"
               >
                 <div className="flex items-center justify-center">
                   <button onClick={toggleHistory} className="absolute left-2 p-2">
-                    <IoIosArrowBack className="text-2xl" />
+                    <IoIosArrowBack className="text-2xl dark:text-gray-300" />
                   </button>
-                  <h1 className="text-xl font-semibold">말씀</h1>
+                  <h1 className="text-xl font-semibold dark:text-white">말씀</h1>
                 </div>
               </motion.div>
 
@@ -349,17 +349,17 @@ export const WordSection = () => {
                 {scriptureData.map((scripture) => (
                   <motion.div 
                     key={scripture.id} 
-                    className="mb-10 pb-6 border-b border-gray-100"
+                    className="mb-10 pb-6 border-b border-gray-100 dark:border-gray-700"
                     variants={itemVariants}
                   >
                     <div className="flex justify-between items-baseline mb-2">
                       <div className="flex items-center gap-2">
                         <IoIosSunny className="text-yellow-500 text-lg" />
-                        <h3 className="text-lg font-semibold">{scripture.reference}</h3>
+                        <h3 className="text-lg font-semibold dark:text-white">{scripture.reference}</h3>
                       </div>
-                      <span className="text-sm text-gray-500">{scripture.date}</span>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">{scripture.date}</span>
                     </div>
-                    <p className="text-base leading-relaxed mt-3">
+                    <p className="text-base leading-relaxed mt-3 dark:text-gray-300">
                       {formatContent(scripture.content)}
                     </p>
                   </motion.div>

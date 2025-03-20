@@ -58,22 +58,22 @@ export const ChurchBulletin: React.FC<ChurchBulletinProps> = ({ onClose }) => {
 
   return (
     <motion.div
-      className="fixed top-0 left-0 right-0 bottom-0 bg-white z-[60] overflow-hidden flex justify-center"
+      className="fixed top-0 left-0 right-0 bottom-0 bg-white dark:bg-dark z-[60] overflow-hidden flex justify-center"
       initial="closed"
       animate="open"
       exit="closed"
       variants={bulletinVariants}
       transition={{ type: "tween", ease: "easeInOut", duration: 0.3 }}
     >
-      <div className="w-full max-w-[550px] h-full flex flex-col">
+      <div className="w-full max-w-[550px] md:max-w-[720px] h-full flex flex-col">
         <div className="flex items-center justify-between p-5">
           <div 
             className="w-10 h-10 flex items-center cursor-pointer"
             onClick={onClose}
           >
-            <IoIosArrowBack size={20} className="text-gray-600" />
+            <IoIosArrowBack size={20} className="text-gray-600 dark:text-gray-300" />
           </div>
-          <h1 className="text-xl font-bold">주보</h1>
+          <h1 className="text-xl font-bold dark:text-white">주보</h1>
           <div className="w-10"></div>
         </div>
 
@@ -91,9 +91,9 @@ export const ChurchBulletin: React.FC<ChurchBulletinProps> = ({ onClose }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
             >
-              <h2 className="text-2xl font-bold text-gray-800">{bulletinData.churchName}</h2>
-              <div className="text-sm text-gray-600">{bulletinData.date} {bulletinData.title}</div>
-              <div className="mt-4 px-6 py-3 bg-gray-50 rounded-lg italic text-gray-700 text-sm">
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-white">{bulletinData.churchName}</h2>
+              <div className="text-sm text-gray-600 dark:text-gray-300">{bulletinData.date} {bulletinData.title}</div>
+              <div className="mt-4 px-6 py-3 bg-gray-50 dark:bg-dark-700 rounded-lg italic text-gray-700 dark:text-gray-300 text-sm">
                 &ldquo;{bulletinData.mainVerse}&rdquo;
               </div>
             </motion.div>

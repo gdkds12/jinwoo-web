@@ -21,79 +21,79 @@ function MinistryContent() {
 
   return (
     <>
-      <h1 className="text-3xl font-bold text-center my-6">섬기는 사람들</h1>
+      <h1 className="text-3xl font-bold text-center my-6 dark:text-white">섬기는 사람들</h1>
       
       {/* 담임목사 섹션 */}
       <section id="pastors" className="py-6">
-        <h2 className="text-2xl font-bold mb-4 text-center">담임목사</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center dark:text-white">담임목사</h2>
         <div className="flex flex-col items-center">
-          <div className="w-24 h-24 mb-4 flex items-center justify-center bg-gray-100 rounded-full">
-            <FaUserTie size={48} className="text-gray-600" />
+          <div className="w-24 h-24 mb-4 flex items-center justify-center bg-gray-100 dark:bg-dark-700 rounded-full">
+            <FaUserTie size={48} className="text-gray-600 dark:text-white" />
           </div>
-          <h3 className="text-xl font-bold">배학기</h3>
-          <p className="text-gray-600">담임목사</p>
+          <h3 className="text-xl font-bold dark:text-white">배학기</h3>
+          <p className="text-gray-600 dark:text-gray-300">담임목사</p>
         </div>
-        <div className="w-full h-px bg-gray-200 my-6"></div>
+        <div className="w-full h-px bg-gray-200 dark:bg-dark-700 my-6"></div>
       </section>
 
       {/* 원로목사 섹션 */}
       <section id="seniorpastors" className="py-6">
-        <h2 className="text-2xl font-bold mb-4 text-center">원로목사</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center dark:text-white">원로목사</h2>
         <div className="flex flex-col items-center">
-          <div className="w-24 h-24 mb-4 flex items-center justify-center bg-gray-100 rounded-full">
-            <FaUserTie size={48} className="text-gray-600" />
+          <div className="w-24 h-24 mb-4 flex items-center justify-center bg-gray-100 dark:bg-dark-700 rounded-full">
+            <FaUserTie size={48} className="text-gray-600 dark:text-white" />
           </div>
-          <h3 className="text-xl font-bold">김근수</h3>
-          <p className="text-gray-600">원로목사</p>
+          <h3 className="text-xl font-bold dark:text-white">김근수</h3>
+          <p className="text-gray-600 dark:text-gray-300">원로목사</p>
         </div>
-        <div className="w-full h-px bg-gray-200 my-6"></div>
+        <div className="w-full h-px bg-gray-200 dark:bg-dark-700 my-6"></div>
       </section>
 
       {/* 장로 섹션 */}
       <section id="elders" className="py-6">
-        <h2 className="text-2xl font-bold mb-4 text-center">장로</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center dark:text-white">장로</h2>
         <div className="grid grid-cols-2 gap-4 mx-auto">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="text-center p-2">
-              <div className="w-16 h-16 mx-auto mb-2 flex items-center justify-center bg-gray-100 rounded-full">
-                <FaUsers size={28} className="text-gray-600" />
+              <div className="w-16 h-16 mx-auto mb-2 flex items-center justify-center bg-gray-100 dark:bg-dark-700 rounded-full">
+                <FaUsers size={28} className="text-gray-600 dark:text-white" />
               </div>
-              <h3 className="font-bold">장로 {i}</h3>
-              <p className="text-sm text-gray-600">시무장로</p>
+              <h3 className="font-bold dark:text-white">장로 {i}</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300">시무장로</p>
             </div>
           ))}
         </div>
-        <div className="w-full h-px bg-gray-200 my-6"></div>
+        <div className="w-full h-px bg-gray-200 dark:bg-dark-700 my-6"></div>
       </section>
 
       {/* 권사 섹션 */}
       <section id="deaconesses" className="py-6">
-        <h2 className="text-2xl font-bold mb-4 text-center">권사</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center dark:text-white">권사</h2>
         <div className="grid grid-cols-2 gap-4 mx-auto">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="text-center p-2">
-              <div className="w-16 h-16 mx-auto mb-2 flex items-center justify-center bg-gray-100 rounded-full">
-                <FaUserFriends size={28} className="text-gray-600" />
+              <div className="w-16 h-16 mx-auto mb-2 flex items-center justify-center bg-gray-100 dark:bg-dark-700 rounded-full">
+                <FaUserFriends size={28} className="text-gray-600 dark:text-white" />
               </div>
-              <h3 className="font-bold">권사 {i}</h3>
-              <p className="text-sm text-gray-600">시무권사</p>
+              <h3 className="font-bold dark:text-white">권사 {i}</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300">시무권사</p>
             </div>
           ))}
         </div>
-        <div className="w-full h-px bg-gray-200 my-6"></div>
+        <div className="w-full h-px bg-gray-200 dark:bg-dark-700 my-6"></div>
       </section>
 
       {/* 집사 섹션 */}
       <section id="deacons" className="py-6">
-        <h2 className="text-2xl font-bold mb-4 text-center">집사</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center dark:text-white">집사</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mx-auto">
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={i} className="text-center p-2">
-              <div className="w-16 h-16 mx-auto mb-2 flex items-center justify-center bg-gray-100 rounded-full">
-                <FaUserFriends size={28} className="text-gray-600" />
+              <div className="w-16 h-16 mx-auto mb-2 flex items-center justify-center bg-gray-100 dark:bg-dark-700 rounded-full">
+                <FaUserFriends size={28} className="text-gray-600 dark:text-white" />
               </div>
-              <h3 className="font-bold">집사 {i}</h3>
-              <p className="text-sm text-gray-600">시무집사</p>
+              <h3 className="font-bold dark:text-white">집사 {i}</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300">시무집사</p>
             </div>
           ))}
         </div>
@@ -104,17 +104,17 @@ function MinistryContent() {
 
 // 로딩 상태 컴포넌트
 function Loading() {
-  return <div className="text-center py-10">로딩 중...</div>;
+  return <div className="text-center py-10 dark:text-white">로딩 중...</div>;
 }
 
 export default function MinistryPage() {
   return (
-    <div className="min-h-screen bg-white p-4 flex justify-center">
-      <div className="w-full max-w-[550px]">
+    <div className="min-h-screen bg-white dark:bg-dark p-4 flex justify-center">
+      <div className="w-full max-w-[720px]">
         {/* 뒤로가기 버튼 */}
-        <div className="sticky top-0 bg-white z-10 py-4">
+        <div className="sticky top-0 bg-white dark:bg-dark z-10 py-4">
           <Link href="/" className="inline-block">
-            <IoIosArrowBack className="text-2xl" />
+            <IoIosArrowBack className="text-2xl dark:text-white" />
           </Link>
         </div>
         

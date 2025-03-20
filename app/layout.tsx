@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
+import { ThemeProvider } from "./context/ThemeContext";
 
 // Pretendard 폰트 설정
 const pretendard = localFont({
@@ -32,7 +33,9 @@ export default function RootLayout({
   return (
     <html lang="ko" className={`${pretendard.variable} ${geistMono.variable}`}>
       <body className="font-sans">
-        {children}
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

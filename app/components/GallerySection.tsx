@@ -270,21 +270,21 @@ export const GallerySection = ({ onClose, isOverlay = false }: GallerySectionPro
       transition={{ duration: 0.5 }}
     >
       {isOverlay && (
-        <div className="sticky top-0 bg-white z-10 p-4 flex items-center justify-center">
+        <div className="sticky top-0 bg-white dark:bg-dark z-10 p-4 flex items-center justify-center">
           <button 
             onClick={onClose} 
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors absolute left-2"
+            className="p-2 hover:bg-gray-100 dark:hover:bg-dark-800 rounded-full transition-colors absolute left-2"
           >
-            <IoIosClose size={24} />
+            <IoIosClose size={24} className="dark:text-white" />
           </button>
-          <h2 className="text-2xl font-bold">갤러리</h2>
+          <h2 className="text-2xl font-bold dark:text-white">갤러리</h2>
         </div>
       )}
       
       <div className="p-4">
         {years.map((year) => (
           <div key={year} className="mb-8">
-            <h3 className="text-2xl font-semibold mb-4">{year}년</h3>
+            <h3 className="text-2xl font-semibold mb-4 dark:text-white">{year}년</h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {imagesByYear[year].map((image) => (
                 <motion.div

@@ -1,6 +1,7 @@
 // tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+    darkMode: 'class',
     content: [
       "./app/**/*.{js,ts,jsx,tsx,mdx}", // app 폴더
       "./pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -15,7 +16,14 @@ module.exports = {
         },
         zIndex: {
             '50': '50', // z-index 커스텀 클래스 추가
+        },
+        colors: {
+          dark: {
+            DEFAULT: '#24241e',
+            800: '#2d2d26',
+            700: '#37372f',
           }
+        }
       },
     },
     plugins: [],
