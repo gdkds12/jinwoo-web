@@ -16,12 +16,9 @@ import {
   FaUserFriends,
   FaBuilding,
   FaPhone,
-  FaSitemap,
-  FaMoon,
-  FaSun
+  FaSitemap
 } from "react-icons/fa";
 import { IconType } from "react-icons";
-import { useTheme } from "../context/ThemeContext";
 import { ThemeToggle } from "./ThemeToggle";
 
 interface MenuItem {

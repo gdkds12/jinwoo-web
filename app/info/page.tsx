@@ -1,7 +1,6 @@
 "use client";
 import React, { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { IoIosArrowBack } from "react-icons/io";
 import Link from "next/link";
 import { IoLocationOutline, IoCallOutline, IoMailOutline, IoTimeOutline, IoChevronBackOutline } from "react-icons/io5";
 import { FaMusic, FaChalkboardTeacher, FaHandsHelping, FaPeopleCarry } from "react-icons/fa";
