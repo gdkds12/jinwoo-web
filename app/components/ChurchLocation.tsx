@@ -34,7 +34,8 @@ const locationData = {
 
 export const ChurchLocation: React.FC<ChurchLocationProps> = ({ onClose }) => {
   const mapElement = useRef<HTMLDivElement>(null);
-  const mapInstance = useRef<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const mapInstance = useRef<any>(null); // any 타입 유지 및 ESLint 규칙 비활성화
 
   const locationVariants = {
     open: { x: 0, opacity: 1 },
@@ -48,13 +49,12 @@ export const ChurchLocation: React.FC<ChurchLocationProps> = ({ onClose }) => {
     document.body.style.height = '100%';
     document.body.style.top = '0';
 
-    const clientId = 'u4vz6uh1ol'; // Client ID
-    const scriptId = `naver-maps-script-${clientId}`; // 스크립트 태그 ID
+    const clientId = 'u4vz6uh1ol';
+    const scriptId = `naver-maps-script-${clientId}`;
 
-    // 지도 초기화 함수
     const initMap = () => {
-      // window.naver 와 mapElement.current 가 확실히 준비되었고, 지도 인스턴스가 없을 때만 실행
-      const naver = (window as any).naver; // 타입 단언 사용
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const naver = (window as any).naver; // any 타입 유지 및 ESLint 규칙 비활성화
       if (naver && naver.maps && mapElement.current && !mapInstance.current) {
         try {
           const mapOptions = {
@@ -66,19 +66,16 @@ export const ChurchLocation: React.FC<ChurchLocationProps> = ({ onClose }) => {
             },
           };
 
-          // 지도 생성 및 ref 에 저장
           mapInstance.current = new naver.maps.Map(mapElement.current, mapOptions);
 
-          // 마커 생성
           new naver.maps.Marker({
             position: new naver.maps.LatLng(locationData.coordinates[0], locationData.coordinates[1]),
             map: mapInstance.current,
           });
-          console.log("Naver Map initialized successfully."); // 성공 로그
+          console.log("Naver Map initialized successfully.");
 
         } catch (error) {
             console.error("Error initializing Naver Map:", error);
-            // 지도 초기화 중 오류 발생 시 처리 (예: 사용자에게 메시지 표시)
         }
       } else if (!naver || !naver.maps) {
            console.warn("Naver maps object not ready yet.");
@@ -87,11 +84,9 @@ export const ChurchLocation: React.FC<ChurchLocationProps> = ({ onClose }) => {
       }
     };
 
-    // 기존 스크립트 태그 확인
     const existingScript = document.getElementById(scriptId);
 
     if (!existingScript) {
-      // 스크립트가 없으면 새로 생성
       const script = document.createElement('script');
       script.id = scriptId;
       script.src = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${clientId}`;
@@ -101,14 +96,12 @@ export const ChurchLocation: React.FC<ChurchLocationProps> = ({ onClose }) => {
 
       script.onload = () => {
         console.log("Naver Maps script loaded.");
-        initMap(); // 스크립트 로드 완료 후 지도 초기화 시도
+        initMap();
       };
       script.onerror = () => {
           console.error("Failed to load Naver Maps script.");
-          // 스크립트 로딩 실패 시 처리
       };
     } else {
-      // 스크립트가 이미 존재하면, naver 객체가 로드되었을 수 있으므로 바로 초기화 시도
       console.log("Naver Maps script already exists.");
       initMap();
     }

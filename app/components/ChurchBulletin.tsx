@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { IoIosArrowBack } from "react-icons/io";
-import { FaCross, FaPray, FaMusic, FaBookOpen, FaBullhorn, FaUserTie, FaPhone, FaMapMarkerAlt, FaUsers } from "react-icons/fa";
+import { FaCross, FaPray, FaMusic, FaBookOpen, FaBullhorn, FaUserTie, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
 
 type ChurchBulletinProps = {
   onClose: () => void;
