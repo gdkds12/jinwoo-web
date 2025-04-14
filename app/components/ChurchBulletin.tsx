@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { IoIosArrowBack } from "react-icons/io";
-import { FaCross, FaPray, FaMusic, FaBookOpen, FaBullhorn } from "react-icons/fa";
+import { FaCross, FaPray, FaMusic, FaBookOpen, FaBullhorn, FaUserTie, FaPhone, FaMapMarkerAlt, FaUsers } from "react-icons/fa";
 
 type ChurchBulletinProps = {
   onClose: () => void;
@@ -15,21 +15,28 @@ const bulletinData = {
   churchName: "진우교회",
   mainVerse: "여호와는 나의 목자시니 내게 부족함이 없으리로다 (시편 23:1)",
   worshipOrder: [
-    { icon: <FaCross />, title: "예배의 부름", content: "사회자" },
-    { icon: <FaPray />, title: "기도", content: "김집사" },
-    { icon: <FaMusic />, title: "찬송", content: "찬송가 478장 '참 아름다워라'" },
-    { icon: <FaBookOpen />, title: "성경봉독", content: "로마서 8:28-39" },
-    { icon: <FaMusic />, title: "찬양", content: "할렐루야 성가대 '주님의 은혜'" },
-    { icon: <FaBookOpen />, title: "말씀", content: "하나님의 사랑 안에서" },
-    { icon: <FaPray />, title: "축도", content: "담임목사" }
+    { icon: <FaMusic />, title: "경배와 찬양", content: "찬양팀" },
+    { icon: <FaCross />, title: "신앙 고백", content: "사도신경, 다함께" },
+    { icon: <FaMusic />, title: "개회 찬송", content: "찬송가 9장 '하늘에 가득 찬 영광의 하나님', 다함께" },
+    { icon: <FaPray />, title: "대표 기도", content: "나연옥 권사" },
+    { icon: <FaCross />, title: "성찬식", content: "다함께" },
+    { icon: <FaMusic />, title: "봉헌 찬송", content: "찬송가 412장 '내 영혼의 그윽히 깊은 데서', 인도자" },
+    { icon: <FaPray />, title: "봉헌 기도", content: "인도자" },
+    { icon: <FaBookOpen />, title: "말씀 선포", content: "갈라디아서 5:22–23, 배학기 목사" },
+    { icon: <FaBookOpen />, title: "설교", content: "'성령의 열매', 배학기 목사" },
+    { icon: <FaBullhorn />, title: "교회 소식", content: "인도자" },
+    { icon: <FaMusic />, title: "파송의 찬송", content: "찬송가 502장, 다함께" },
+    { icon: <FaCross />, title: "축도", content: "배학기 목사" }
   ],
-  announcements: [
-    "다음 주일은 전교인 야외예배로 드립니다.",
-    "수요 성경공부가 저녁 7시부터 진행됩니다.",
-    "주일학교 여름캠프 신청을 받고 있습니다.",
-    "새가족 환영회가 오늘 예배 후 친교실에서 있습니다."
+  pastorMessage: "사랑하는 성도 여러분, 하나님의 은혜와 평강이 함께하시기를 기도합니다. 오늘 말씀을 통해 우리를 향한 하나님의 변함없는 사랑을 깊이 묵상하는 시간이 되시길 바랍니다.",
+  pastors: [
+    { title: "담임목사", name: "배학기 목사" },
+    { title: "원로목사", name: "김근수" }
   ],
-  pastorMessage: "사랑하는 성도 여러분, 하나님의 은혜와 평강이 함께하시기를 기도합니다. 오늘 말씀을 통해 우리를 향한 하나님의 변함없는 사랑을 깊이 묵상하는 시간이 되시길 바랍니다."
+  worshipTeam: "찬양팀",
+  address: "경기도 광주시 도척면 저수지길 25-13",
+  phone: "031-764-9730 / 762-7298",
+  emergencyContact: "010-9150-6536"
 };
 
 export const ChurchBulletin: React.FC<ChurchBulletinProps> = ({ onClose }) => {
@@ -140,32 +147,60 @@ export const ChurchBulletin: React.FC<ChurchBulletinProps> = ({ onClose }) => {
               </p>
             </motion.div>
 
-            {/* 공지사항 */}
+            {/* 교회 정보 섹션 추가 */}
             <motion.div
-              className="rounded-lg"
+              className="rounded-lg mt-6"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.8 }}
             >
-              <h3 className="text-lg font-bold mb-4 border-b pb-2 flex items-center">
-                <FaBullhorn className="mr-2 text-gray-600" /> 공지사항
-              </h3>
-              <ul className="space-y-2 pl-2">
-                {bulletinData.announcements.map((item, index) => (
-                  <motion.li
-                    key={index}
-                    className="flex items-start py-2"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: 0.9 + index * 0.1 }}
-                  >
-                    <div className="w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center text-xs mr-3 mt-0.5">
-                      {index + 1}
-                    </div>
-                    <span className="text-sm">{item}</span>
-                  </motion.li>
-                ))}
-              </ul>
+              <h3 className="text-lg font-bold mb-4 border-b pb-2">교회 정보</h3>
+              <div className="space-y-4 text-sm">
+                {/* 목회자 정보 */}
+                <div className="flex items-start">
+                  <FaUserTie className="w-4 h-4 mr-3 mt-0.5 text-gray-600 dark:text-gray-400" />
+                  <div className="flex-1">
+                    {bulletinData.pastors.map((pastor, index) => (
+                      <div key={index}>
+                        <span className="font-medium">{pastor.title}: </span>
+                        <span>{pastor.name}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {/* 예배 찬양 */}
+                <div className="flex items-start">
+                  <FaMusic className="w-4 h-4 mr-3 mt-0.5 text-gray-600 dark:text-gray-400" />
+                  <div className="flex-1">
+                    <span className="font-medium">예배 찬양: </span>
+                    <span>{bulletinData.worshipTeam}</span>
+                  </div>
+                </div>
+                {/* 주소 */}
+                <div className="flex items-start">
+                  <FaMapMarkerAlt className="w-4 h-4 mr-3 mt-0.5 text-gray-600 dark:text-gray-400" />
+                  <div className="flex-1">
+                    <span className="font-medium">교회 주소: </span>
+                    <span>{bulletinData.address}</span>
+                  </div>
+                </div>
+                {/* 전화 */}
+                <div className="flex items-start">
+                  <FaPhone className="w-4 h-4 mr-3 mt-0.5 text-gray-600 dark:text-gray-400" />
+                  <div className="flex-1">
+                    <span className="font-medium">전화: </span>
+                    <span>{bulletinData.phone}</span>
+                  </div>
+                </div>
+                {/* 긴급 연락처 */}
+                <div className="flex items-start">
+                  <FaPhone className="w-4 h-4 mr-3 mt-0.5 text-gray-600 dark:text-gray-400" />
+                  <div className="flex-1">
+                    <span className="font-medium">긴급 연락처: </span>
+                    <span>{bulletinData.emergencyContact}</span>
+                  </div>
+                </div>
+              </div>
             </motion.div>
           </motion.div>
         </div>

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { IoIosArrowBack } from "react-icons/io";
 import { FaMapMarkerAlt, FaSubway, FaBus, FaCar } from "react-icons/fa";
@@ -11,17 +11,17 @@ type ChurchLocationProps = {
 // 교회 위치 정보
 const locationData = {
   address: "경기 광주시 도척면 저수지길 25-13",
-  coordinates: "37.3456, 127.1234", // 가상의 좌표값 (실제 교회 위치에 맞게 수정 필요)
+  coordinates: [37.321144, 127.338866], // 사용자가 제공한 좌표로 수정
   transportation: [
     { 
       type: "지하철", 
       icon: <FaSubway />, 
-      description: "OO역에서 하차 후 OO번 버스 환승" 
+      description: "곤지암역에서 하차"
     },
     { 
       type: "버스", 
       icon: <FaBus />, 
-      description: "OO번, OO번 버스 이용 → OO정류장 하차 → 도보 5분" 
+      description: "37-2, 37-21, 39-4, 37-32, 39-6 이용 -> 진우 삼거리, 진우 정미소 하차"
     },
     { 
       type: "자가용", 
@@ -29,30 +29,101 @@ const locationData = {
       description: "네비게이션에 '진우교회' 또는 주소 입력" 
     }
   ],
-  parkingInfo: "교회 내 주차장 이용 가능 (30대 주차 가능)"
+  parkingInfo: "교회 내 주차장 이용 가능"
 };
 
 export const ChurchLocation: React.FC<ChurchLocationProps> = ({ onClose }) => {
+  const mapElement = useRef<HTMLDivElement>(null);
+  const mapInstance = useRef<any>(null);
+
   const locationVariants = {
     open: { x: 0, opacity: 1 },
     closed: { x: "100%", opacity: 0 }
   };
 
   useEffect(() => {
-    // 오버레이가 열릴 때 body 스크롤 방지
     document.body.style.overflow = 'hidden';
     document.body.style.position = 'fixed';
     document.body.style.width = '100%';
     document.body.style.height = '100%';
     document.body.style.top = '0';
-    
+
+    const clientId = 'u4vz6uh1ol'; // Client ID
+    const scriptId = `naver-maps-script-${clientId}`; // 스크립트 태그 ID
+
+    // 지도 초기화 함수
+    const initMap = () => {
+      // window.naver 와 mapElement.current 가 확실히 준비되었고, 지도 인스턴스가 없을 때만 실행
+      const naver = (window as any).naver; // 타입 단언 사용
+      if (naver && naver.maps && mapElement.current && !mapInstance.current) {
+        try {
+          const mapOptions = {
+            center: new naver.maps.LatLng(locationData.coordinates[0], locationData.coordinates[1]),
+            zoom: 17,
+            zoomControl: true,
+            zoomControlOptions: {
+              position: naver.maps.Position.TOP_RIGHT,
+            },
+          };
+
+          // 지도 생성 및 ref 에 저장
+          mapInstance.current = new naver.maps.Map(mapElement.current, mapOptions);
+
+          // 마커 생성
+          new naver.maps.Marker({
+            position: new naver.maps.LatLng(locationData.coordinates[0], locationData.coordinates[1]),
+            map: mapInstance.current,
+          });
+          console.log("Naver Map initialized successfully."); // 성공 로그
+
+        } catch (error) {
+            console.error("Error initializing Naver Map:", error);
+            // 지도 초기화 중 오류 발생 시 처리 (예: 사용자에게 메시지 표시)
+        }
+      } else if (!naver || !naver.maps) {
+           console.warn("Naver maps object not ready yet.");
+      } else if (!mapElement.current) {
+           console.warn("Map container element not ready yet.");
+      }
+    };
+
+    // 기존 스크립트 태그 확인
+    const existingScript = document.getElementById(scriptId);
+
+    if (!existingScript) {
+      // 스크립트가 없으면 새로 생성
+      const script = document.createElement('script');
+      script.id = scriptId;
+      script.src = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${clientId}`;
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+
+      script.onload = () => {
+        console.log("Naver Maps script loaded.");
+        initMap(); // 스크립트 로드 완료 후 지도 초기화 시도
+      };
+      script.onerror = () => {
+          console.error("Failed to load Naver Maps script.");
+          // 스크립트 로딩 실패 시 처리
+      };
+    } else {
+      // 스크립트가 이미 존재하면, naver 객체가 로드되었을 수 있으므로 바로 초기화 시도
+      console.log("Naver Maps script already exists.");
+      initMap();
+    }
+
     return () => {
-      // 컴포넌트가 언마운트될 때 body 스크롤 복구
       document.body.style.overflow = '';
       document.body.style.position = '';
       document.body.style.width = '';
       document.body.style.height = '';
       document.body.style.top = '';
+      if (mapInstance.current) {
+        mapInstance.current.destroy();
+        mapInstance.current = null;
+        console.log('Naver Map instance destroyed.');
+      }
     };
   }, []);
 
@@ -84,7 +155,6 @@ export const ChurchLocation: React.FC<ChurchLocationProps> = ({ onClose }) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            {/* 주소 및 지도 섹션 */}
             <motion.div
               className="rounded-lg overflow-hidden"
               initial={{ opacity: 0, y: 20 }}
@@ -99,13 +169,9 @@ export const ChurchLocation: React.FC<ChurchLocationProps> = ({ onClose }) => {
                 <p className="text-gray-700 dark:text-gray-300 font-medium">{locationData.address}</p>
               </div>
               
-              {/* 지도 영역 - 실제 지도 API를 연동하거나 이미지로 대체할 수 있음 */}
-              <div className="w-full h-64 bg-gray-200 flex items-center justify-center">
-                <p className="text-gray-500">지도가 표시될 영역입니다.</p>
-              </div>
+              <div ref={mapElement} className="w-full h-64 md:h-80 bg-gray-200"></div>
             </motion.div>
 
-            {/* 교통편 안내 */}
             <motion.div
               className="rounded-lg p-4 bg-gray-50"
               initial={{ opacity: 0, y: 20 }}
@@ -134,7 +200,6 @@ export const ChurchLocation: React.FC<ChurchLocationProps> = ({ onClose }) => {
               </div>
             </motion.div>
 
-            {/* 주차 안내 */}
             <motion.div
               className="rounded-lg p-4 bg-gray-50"
               initial={{ opacity: 0, y: 20 }}
@@ -145,7 +210,6 @@ export const ChurchLocation: React.FC<ChurchLocationProps> = ({ onClose }) => {
               <p className="text-gray-700">{locationData.parkingInfo}</p>
             </motion.div>
 
-            {/* 문의 안내 */}
             <motion.div
               className="rounded-lg p-4 bg-blue-50 my-6"
               initial={{ opacity: 0, y: 20 }}
@@ -154,7 +218,7 @@ export const ChurchLocation: React.FC<ChurchLocationProps> = ({ onClose }) => {
             >
               <h3 className="text-lg font-bold mb-2 text-blue-700">오시는 길 문의</h3>
               <p className="text-sm text-gray-700 leading-relaxed">
-                교회 오시는 길에 대해 더 자세한 안내가 필요하시면 교회 사무실(000-000-0000)로 연락주시기 바랍니다.
+                교회 오시는 길에 대해 더 자세한 안내가 필요하시면 교회 사무실(031-764-9730)로 연락주시기 바랍니다.
               </p>
             </motion.div>
           </motion.div>

@@ -10,7 +10,7 @@ type OfferingGuideProps = {
 
 // 헌금 정보
 const offeringData = {
-  bankAccount: "OO은행 123-456-789012 (예금주: 진우교회)",
+  bankAccount: "농협 351-1333-2204-13 (기독교대한감리회진우교회)",
   offeringTypes: [
     { 
       icon: <FaHandHoldingHeart />, 

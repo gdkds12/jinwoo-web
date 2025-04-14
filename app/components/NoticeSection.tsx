@@ -344,7 +344,7 @@ export const NoticeSection = () => {
       {/* 카드 섹션 - 메인 페이지 */}
       <div className="space-y-2 px-3 md:px-4 mb-4">
         <motion.div 
-          className="w-full aspect-[5/0.85] md:aspect-[5/0.6] bg-white dark:bg-dark-700 rounded-xl p-4 flex flex-col justify-between cursor-pointer"
+          className="w-full aspect-[5/0.8] md:aspect-[5/0.55] bg-white dark:bg-dark-700 rounded-xl p-3 flex flex-col justify-between cursor-pointer"
           ref={cardRef1}
           initial={{ opacity: 0, y: 20 }}
           animate={isCard1InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
@@ -361,7 +361,7 @@ export const NoticeSection = () => {
         </motion.div>
         
         <motion.div 
-          className="w-full aspect-[5/0.85] md:aspect-[5/0.6] bg-white dark:bg-dark-700 rounded-xl p-4 flex flex-col justify-between cursor-pointer"
+          className="w-full aspect-[5/0.8] md:aspect-[5/0.55] bg-white dark:bg-dark-700 rounded-xl p-3 flex flex-col justify-between cursor-pointer"
           ref={cardRef2}
           initial={{ opacity: 0, y: 20 }}
           animate={isCard2InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
@@ -378,7 +378,7 @@ export const NoticeSection = () => {
         </motion.div>
         
         <motion.div 
-          className="w-full aspect-[5/0.85] md:aspect-[5/0.6] bg-white dark:bg-dark-700 rounded-xl p-4 flex flex-col justify-between cursor-pointer"
+          className="w-full aspect-[5/0.8] md:aspect-[5/0.55] bg-white dark:bg-dark-700 rounded-xl p-3 flex flex-col justify-between cursor-pointer"
           ref={cardRef3}
           initial={{ opacity: 0, y: 20 }}
           animate={isCard3InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
