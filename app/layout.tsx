@@ -22,8 +22,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "진우교회",
   description: "진우교회 홈페이지",
-  viewport: "width=device-width, initial-scale=1.0, maximum-scale=1.0",
 };
+
+export const viewport = "width=device-width, initial-scale=1.0, maximum-scale=1.0";
 
 export default function RootLayout({
   children,
