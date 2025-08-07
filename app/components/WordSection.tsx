@@ -164,20 +164,19 @@ export const WordSection = () => {
       transition={{ duration: 0.5 }}
     >
       <div 
-        className="relative w-full bg-white rounded-xl overflow-hidden cursor-pointer group md:flex md:h-80"
+        className="relative w-full bg-white rounded-xl overflow-hidden cursor-pointer group"
         onClick={toggleExpand}
       >
-        <div className="relative w-full h-64 md:h-full md:w-1/2">
+        <div className="relative w-full h-64">
           <Image
             src="/images/background/image1.jpg"
             alt="Main"
             fill
-            sizes="(max-width: 768px) 100vw, 33vw"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-black bg-opacity-30"></div>
         </div>
-        <div className="w-full p-6 flex flex-col justify-center md:w-1/2">
+        <div className="w-full p-6">
           <h2 className="text-xl font-bold text-gray-800 mb-2">{scriptureData[0].title}</h2>
           <p className="text-gray-600 mb-4 line-clamp-3">{scriptureData[0].content}</p>
           <p className="text-sm text-gray-500">{scriptureData[0].reference}</p>
