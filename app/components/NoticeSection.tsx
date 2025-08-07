@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { IoIosArrowForward, IoIosArrowBack, IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import { motion, AnimatePresence, usePresence, useInView } from "framer-motion";
+import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 
 // 공지사항 인터페이스
 interface Notice {
@@ -111,362 +111,178 @@ const noticeData: Notice[] = [
 ];
 
 export const NoticeSection = () => {
-  const [showFullScreen, setShowFullScreen] = useState(false);
-  const [expandedNotices, setExpandedNotices] = useState<number[]>([]);
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
-  const contentHeights = useRef<Record<number, number>>({});
-  
-  // 인뷰 상태 확인
-  const isTitleInView = useInView(titleRef, { once: true });
-  
-  // 각 카드의 참조 생성
-  const cardRef1 = useRef<HTMLDivElement>(null);
-  const cardRef2 = useRef<HTMLDivElement>(null);
-  const cardRef3 = useRef<HTMLDivElement>(null);
-  
-  const isCard1InView = useInView(cardRef1, { once: true });
-  const isCard2InView = useInView(cardRef2, { once: true });
-  const isCard3InView = useInView(cardRef3, { once: true });
-  
-  // 컴포넌트 초기화 - 즉시 실행되도록 수정
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isFullScreen, setIsFullScreen] = useState(false);
+  const [selectedNotice, setSelectedNotice] = useState<Notice | null>(null);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+
   useEffect(() => {
-    console.log('NoticeSection 컴포넌트 마운트됨');
-    
-    // 전역 인스턴스 설정
     noticeInstanceReady = true;
     noticeInstanceShowFn = () => {
-      setScrollPosition(window.scrollY);
-      setShowFullScreen(true);
+      setIsFullScreen(true);
     };
 
-    // localStorage에 저장된 이벤트가 있다면 실행
-    if (typeof window !== 'undefined') {
-      const queuedEvent = localStorage.getItem('noticeEventQueued');
-      if (queuedEvent === 'true') {
-        console.log('마운트 시 큐에 저장된 이벤트 실행');
-        localStorage.removeItem('noticeEventQueued');
-        setScrollPosition(window.scrollY);
-        setShowFullScreen(true);
-      }
-    }
-    
-    return () => {
-      console.log('NoticeSection 컴포넌트 언마운트됨');
-      noticeInstanceReady = false;
-      noticeInstanceShowFn = null;
-    };
-  }, []); // 의존성 배열을 비워서 컴포넌트 마운트 시 한 번만 실행되도록 함
-  
-  // 이벤트 리스너 등록
-  useEffect(() => {
-    const handleOpenFullScreen = () => {
-      console.log('openNoticeFullScreen 이벤트 감지됨');
-      setScrollPosition(window.scrollY);
-      setShowFullScreen(true);
-      
-      // 이벤트 처리 후 localStorage 제거
-      if (typeof window !== 'undefined') {
+    const handleOpenNotice = () => {
+      if (localStorage.getItem('noticeEventQueued') === 'true') {
         localStorage.removeItem('noticeEventQueued');
         localStorage.removeItem('noticeQueuedTime');
+        setTimeout(() => setIsFullScreen(true), 100);
       }
     };
-    
-    console.log('이벤트 리스너 등록됨');
-    document.addEventListener('openNoticeFullScreen', handleOpenFullScreen);
-    
-    return () => {
-      console.log('이벤트 리스너 제거됨');
-      document.removeEventListener('openNoticeFullScreen', handleOpenFullScreen);
-    };
-  }, []); // 의존성 배열을 비워서 컴포넌트 마운트 시 한 번만 실행되도록 함
-  
-  // 전체 화면 모드 토글
-  const toggleFullScreen = () => {
-    if (!showFullScreen) {
-      setScrollPosition(window.scrollY);
-    }
-    setShowFullScreen(!showFullScreen);
-  };
-  
-  // 공지사항 확장 토글 (개선된 버전)
-  const toggleNoticeExpand = (id: number, e: React.MouseEvent) => {
-    e.stopPropagation(); // 이벤트 버블링 방지
-    
-    // 이미 열려있는 공지가 있으면 닫고, 새 공지 열기
-    if (expandedNotices.includes(id)) {
-      // 이미 열려있는 공지를 닫는 경우
-      setExpandedNotices(prev => prev.filter(noticeId => noticeId !== id));
-    } else {
-      // 새 공지를 여는 경우
-      setExpandedNotices([id]); // 하나의 공지만 열도록 변경
-    }
-  };
-  
-  // 스크롤 제어
-  useEffect(() => {
-    console.log('스크롤 제어 useEffect 실행됨, showFullScreen:', showFullScreen);
-    
-    if (showFullScreen) {
-      // 전체 화면 모드일 때 스크롤 방지 및 위치 저장
-      document.body.style.overflow = 'hidden';
-      document.body.style.touchAction = 'none';
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollPosition}px`;
-      document.body.style.width = '100%';
-    } else {
-      // 일반 모드일 때 스크롤 허용 및 위치 복원
-      document.body.style.overflow = '';
-      document.body.style.touchAction = '';
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      window.scrollTo(0, scrollPosition);
-    }
-    
-    return () => {
-      document.body.style.overflow = '';
-      document.body.style.touchAction = '';
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      
-      if (showFullScreen) {
-        window.scrollTo(0, scrollPosition);
-      }
-    };
-  }, [showFullScreen, scrollPosition]);
-  
-  // 컨테이너 애니메이션
-  const containerVariants = {
-    hidden: { x: "100%" },
-    visible: { 
-      x: 0,
-      transition: {
-        type: "tween",
-        duration: 0.2,
-        when: "beforeChildren",
-        staggerChildren: 0.05
-      }
-    },
-    exit: { x: "100%" }
-  };
-  
-  // 카드 애니메이션
-  const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 24
-      }
-    }
-  };
-  
-  // ExpandableContent 컴포넌트 - 부드러운 확장 애니메이션을 위한 별도 컴포넌트
-  const ExpandableContent = ({ notice }: { notice: Notice }) => {
-    const contentRef = useRef<HTMLDivElement>(null);
-    const [isPresent, safeToRemove] = usePresence();
-    const [height, setHeight] = useState(0);
-    
-    useEffect(() => {
-      if (contentRef.current) {
-        // 실제 높이보다 약간 더 큰 값 설정 (마지막 줄이 잘리지 않도록)
-        const measuredHeight = contentRef.current.offsetHeight;
-        const newHeight = measuredHeight + 10; // 10px 추가 여백
-        setHeight(newHeight);
-        contentHeights.current[notice.id] = newHeight;
-      }
-    }, [notice.id]);
-    
-    useEffect(() => {
-      if (!isPresent) {
-        setTimeout(safeToRemove, 300);
-      }
-    }, [isPresent, safeToRemove]);
 
-    return (
-      <motion.div
-        initial={{ height: 0, opacity: 0, marginTop: 0, paddingTop: 0, borderTopWidth: 0 }}
-        animate={{ 
-          height: height, 
-          opacity: 1, 
-          marginTop: 12, 
-          paddingTop: 12, 
-          borderTopWidth: 1,
-          transition: { height: { duration: 0.3, ease: [0.25, 0.1, 0.25, 1] } }
-        }}
-        exit={{ 
-          height: 0, 
-          opacity: 0, 
-          marginTop: 0, 
-          paddingTop: 0, 
-          borderTopWidth: 0,
-          transition: { height: { duration: 0.2, ease: [0.4, 0, 0.2, 1] } }
-        }}
-        className="overflow-hidden border-t mt-3 pt-3 border-gray-200 dark:border-gray-600"
-      >
-        <div ref={contentRef} className="content-inner pb-2">
-          <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-            {notice.content}
-          </p>
-        </div>
-      </motion.div>
+    document.addEventListener('openNoticeFullScreen', handleOpenNotice);
+
+    return () => {
+      noticeInstanceReady = false;
+      noticeInstanceShowFn = null;
+      document.removeEventListener('openNoticeFullScreen', handleOpenNotice);
+    };
+  }, []);
+
+  const handlePrev = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? noticeData.length - 1 : prevIndex - 1
     );
   };
 
-  return (
-    <motion.div 
-      id="notice-section"
-      className="w-full mt-4 relative"
-      initial={{ opacity: 1 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      ref={containerRef}
-    >
-      {/* 제목 섹션 */}
-      <motion.div 
-        className="flex items-center justify-between px-4 mb-4"
-        onClick={toggleFullScreen}
-        ref={titleRef}
-        initial={{ opacity: 0, y: 20 }}
-        animate={isTitleInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-        transition={{ duration: 0.5 }}
-      >
-        <h2 className="text-2xl font-semibold cursor-pointer dark:text-white">공지사항</h2>
-        <IoIosArrowForward className="text-xl cursor-pointer dark:text-white" />
-      </motion.div>
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === noticeData.length - 1 ? 0 : prevIndex + 1
+    );
+  };
 
-      {/* 카드 섹션 - 메인 페이지 */}
-      <div className="space-y-2 px-3 md:px-4 mb-4">
-        <motion.div 
-          className="w-full aspect-[5/0.8] md:aspect-[5/0.55] bg-white dark:bg-dark-700 rounded-xl p-3 flex flex-col justify-between cursor-pointer"
-          ref={cardRef1}
-          initial={{ opacity: 0, y: 20 }}
-          animate={isCard1InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.5 }}
-          onClick={toggleFullScreen}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          <h3 className="text-base md:text-lg font-medium dark:text-white">{noticeData[0].title}</h3>
-          <div className="flex justify-between items-center">
-            <span className="text-xs md:text-sm text-gray-500 dark:text-gray-400">{noticeData[0].date}</span>
-            <span className="text-xs md:text-sm text-blue-500">{noticeData[0].department}</span>
+  const handleNoticeClick = (notice: Notice) => {
+    setSelectedNotice(notice);
+    setIsFullScreen(true);
+  };
+
+  const variants = {
+    enter: { y: 50, opacity: 0 },
+    center: { y: 0, opacity: 1 },
+    exit: { y: -50, opacity: 0 },
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      className="w-full mt-4"
+      initial={{ opacity: 0, y: 20 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5 }}
+    >
+      <div className="bg-white dark:bg-neutral-800 rounded-xl p-4 md:p-6">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-bold dark:text-white">교회 소식</h2>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={handlePrev}
+              className="p-1.5 rounded-full bg-gray-100 dark:bg-neutral-700 hover:bg-gray-200 dark:hover:bg-neutral-600 transition-colors"
+            >
+              <IoIosArrowBack className="dark:text-white" />
+            </button>
+            <button
+              onClick={handleNext}
+              className="p-1.5 rounded-full bg-gray-100 dark:bg-neutral-700 hover:bg-gray-200 dark:hover:bg-neutral-600 transition-colors"
+            >
+              <IoIosArrowForward className="dark:text-white" />
+            </button>
           </div>
-        </motion.div>
-        
-        <motion.div 
-          className="w-full aspect-[5/0.8] md:aspect-[5/0.55] bg-white dark:bg-dark-700 rounded-xl p-3 flex flex-col justify-between cursor-pointer"
-          ref={cardRef2}
-          initial={{ opacity: 0, y: 20 }}
-          animate={isCard2InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          onClick={toggleFullScreen}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          <h3 className="text-base md:text-lg font-medium dark:text-white">{noticeData[1].title}</h3>
-          <div className="flex justify-between items-center">
-            <span className="text-xs md:text-sm text-gray-500 dark:text-gray-400">{noticeData[1].date}</span>
-            <span className="text-xs md:text-sm text-blue-500">{noticeData[1].department}</span>
-          </div>
-        </motion.div>
-        
-        <motion.div 
-          className="w-full aspect-[5/0.8] md:aspect-[5/0.55] bg-white dark:bg-dark-700 rounded-xl p-3 flex flex-col justify-between cursor-pointer"
-          ref={cardRef3}
-          initial={{ opacity: 0, y: 20 }}
-          animate={isCard3InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          onClick={toggleFullScreen}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          <h3 className="text-base md:text-lg font-medium dark:text-white">{noticeData[2].title}</h3>
-          <div className="flex justify-between items-center">
-            <span className="text-xs md:text-sm text-gray-500 dark:text-gray-400">{noticeData[2].date}</span>
-            <span className="text-xs md:text-sm text-blue-500">{noticeData[2].department}</span>
-          </div>
-        </motion.div>
-      </div>
-      
-      {/* 전체 화면 모드 */}
-      <AnimatePresence>
-        {showFullScreen && (
-          <motion.div
-            ref={containerRef}
-            className="fixed inset-0 z-[9999] bg-white dark:bg-dark flex justify-center"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            style={{ 
-              overscrollBehavior: 'contain',
-              WebkitOverflowScrolling: 'touch',
-              touchAction: 'pan-y'
-            }}
-          >
-            <div className="w-full max-w-[550px] md:max-w-[720px] h-screen flex flex-col overflow-y-auto">
-              {/* 헤더 */}
-              <motion.div 
-                variants={cardVariants}
-                className="p-4 sticky top-0 bg-white dark:bg-dark z-10"
-              >
-                <div className="flex items-center justify-center">
-                  <button onClick={toggleFullScreen} className="absolute left-2 p-2">
-                    <IoIosArrowBack className="text-2xl dark:text-white" />
-                  </button>
-                  <h1 className="text-xl font-semibold dark:text-white">공지사항</h1>
+        </div>
+        <div className="relative h-48 md:h-64 overflow-hidden">
+          <AnimatePresence initial={false}>
+            <motion.div
+              key={currentIndex}
+              className="absolute w-full h-full cursor-pointer"
+              variants={variants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{
+                y: { type: "spring", stiffness: 300, damping: 30 },
+                opacity: { duration: 0.2 },
+              }}
+              drag="y"
+              dragConstraints={{ top: 0, bottom: 0 }}
+              dragElastic={0.1}
+              onDragEnd={(e, { offset }) => {
+                if (offset.y > 100) handlePrev();
+                else if (offset.y < -100) handleNext();
+              }}
+              onClick={() => handleNoticeClick(noticeData[currentIndex])}
+            >
+              <div className="flex flex-col justify-between h-full">
+                <div>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                    {noticeData[currentIndex].department}
+                  </p>
+                  <h3 className="text-md md:text-lg font-semibold mb-2 dark:text-white truncate">
+                    {noticeData[currentIndex].title}
+                  </h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-3">
+                    {noticeData[currentIndex].content}
+                  </p>
                 </div>
-              </motion.div>
-              
-              {/* 공지사항 목록 */}
-              <div className="flex-1 p-4 pb-24">
-                {noticeData.map((notice) => (
-                  <motion.div
-                    key={notice.id}
-                    className="mb-4 overflow-hidden"
-                    variants={cardVariants}
-                  >
-                    <div 
-                      className="w-full bg-white dark:bg-dark-700 rounded-xl p-4 cursor-pointer"
-                      onClick={(e) => toggleNoticeExpand(notice.id, e)}
-                    >
-                      <div className="flex justify-between items-start">
-                        <div className="flex-1">
-                          <h3 className="text-base font-semibold mb-1 dark:text-white">{notice.title}</h3>
-                          <div className="flex items-center gap-2 text-sm">
-                            <span className="text-gray-500 dark:text-gray-300">{notice.date}</span>
-                            <span className="text-blue-500">{notice.department}</span>
-                          </div>
-                        </div>
-                        <button 
-                          className="p-2 text-gray-500 dark:text-gray-300"
-                          onClick={(e) => toggleNoticeExpand(notice.id, e)}
-                        >
-                          {expandedNotices.includes(notice.id) 
-                            ? <IoIosArrowUp className="text-xl" /> 
-                            : <IoIosArrowDown className="text-xl" />
-                          }
-                        </button>
-                      </div>
-                      
-                      {/* 확장된 내용 */}
-                      <AnimatePresence>
-                        {expandedNotices.includes(notice.id) && (
-                          <ExpandableContent notice={notice} key={`content-${notice.id}`} />
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  </motion.div>
-                ))}
+                <p className="text-xs text-right text-gray-400 dark:text-gray-500">
+                  {noticeData[currentIndex].date}
+                </p>
               </div>
-            </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {isFullScreen && selectedNotice && (
+          <motion.div
+            className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="bg-white dark:bg-neutral-800 rounded-2xl w-11/12 max-w-2xl max-h-[80vh] overflow-y-auto p-6 md:p-8 relative"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="flex justify-between items-start mb-4">
+                <div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">
+                    {selectedNotice.department}
+                  </p>
+                  <h2 className="text-xl md:text-2xl font-bold dark:text-white">
+                    {selectedNotice.title}
+                  </h2>
+                </div>
+                <button
+                  onClick={() => setIsFullScreen(false)}
+                  className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-neutral-700 transition-colors"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 text-gray-600 dark:text-gray-300"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+                {selectedNotice.date}
+              </p>
+              <div className="prose dark:prose-invert max-w-none text-base text-gray-700 dark:text-gray-200 whitespace-pre-wrap leading-relaxed">
+                {selectedNotice.content}
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -474,4 +290,4 @@ export const NoticeSection = () => {
   );
 };
 
-export default NoticeSection; 
+export default NoticeSection;

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { IoIosArrowForward, IoIosArrowBack, IoIosSunny } from "react-icons/io";
+import { IoIosArrowBack, IoIosSunny } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoMdClose } from "react-icons/io";
 import Image from "next/image";
@@ -49,73 +49,35 @@ const scriptureData: Scripture[] = [
 export const WordSection = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showExpandedText, setShowExpandedText] = useState(false);
-  const [showHistory, setShowHistory] = useState(false); // 말씀 기록 표시 상태
+  const [showHistory, setShowHistory] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const [scrollPosition, setScrollPosition] = useState(0);
+  const scrollPos = useRef(0);
 
-  // 확장 상태가 변경될 때 body 스크롤 제어 및 텍스트 표시 관리
+  // 통합된 스크롤 제어 useEffect
   useEffect(() => {
-    if (isExpanded) {
-      // 확장 상태일 때 스크롤 방지 및 위치 저장
-      setScrollPosition(window.scrollY);
+    const isModalOpen = isExpanded || showHistory;
+    if (isModalOpen) {
+      scrollPos.current = window.scrollY;
       document.body.style.overflow = 'hidden';
-      document.body.style.touchAction = 'none';
       document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollPosition}px`;
+      document.body.style.top = `-${scrollPos.current}px`;
       document.body.style.width = '100%';
-      
-      // 약간의 지연 후 확장된 텍스트 표시
-      const timer = setTimeout(() => {
-        setShowExpandedText(true);
-      }, 300);
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo(0, scrollPos.current);
+    }
+
+    // 텍스트 표시/숨김 처리
+    if (isExpanded) {
+      const timer = setTimeout(() => setShowExpandedText(true), 300);
       return () => clearTimeout(timer);
     } else {
-      // 일반 상태일 때 스크롤 허용 및 위치 복원
-      document.body.style.overflow = '';
-      document.body.style.touchAction = '';
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      window.scrollTo(0, scrollPosition);
-      
       setShowExpandedText(false);
     }
-  }, [isExpanded, scrollPosition]);
-
-  // 말씀 기록 화면 표시 시에도 스크롤 방지
-  useEffect(() => {
-    if (showHistory) {
-      // 현재 스크롤 위치 저장
-      setScrollPosition(window.scrollY);
-      document.body.style.overflow = 'hidden';
-      document.body.style.touchAction = 'none';
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollPosition}px`;
-      document.body.style.width = '100%';
-    } else {
-      document.body.style.overflow = '';
-      document.body.style.touchAction = '';
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      
-      // 스크롤 위치 복원
-      window.scrollTo(0, scrollPosition);
-    }
-    
-    return () => {
-      document.body.style.overflow = '';
-      document.body.style.touchAction = '';
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      
-      // 컴포넌트 언마운트시 스크롤 위치 복원
-      if (showHistory) {
-        window.scrollTo(0, scrollPosition);
-      }
-    };
-  }, [showHistory, scrollPosition]);
+  }, [isExpanded, showHistory]);
 
   const handleTouchMove = (e: React.TouchEvent) => {
     const menuElement = menuRef.current;
@@ -132,18 +94,10 @@ export const WordSection = () => {
   };
 
   const toggleExpand = () => {
-    if (!isExpanded) {
-      // 확장 전에 현재 스크롤 위치 저장
-      setScrollPosition(window.scrollY);
-    }
     setIsExpanded(!isExpanded);
   };
 
   const toggleHistory = () => {
-    if (!showHistory) {
-      // 토글 전에 현재 스크롤 위치 저장
-      setScrollPosition(window.scrollY);
-    }
     setShowHistory(!showHistory);
   };
 
@@ -209,111 +163,86 @@ export const WordSection = () => {
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
     >
-      {/* 제목 섹션 */}
       <div 
-        className="flex items-center justify-between px-4 mb-4"
-        onClick={toggleHistory}
+        className="relative w-full bg-white rounded-xl overflow-hidden cursor-pointer group md:flex md:h-80"
+        onClick={toggleExpand}
       >
-        <h2 className="text-2xl font-semibold cursor-pointer dark:text-white">말씀</h2>
-        <IoIosArrowForward className="text-xl cursor-pointer dark:text-white" />
-      </div>
-
-      {/* 카드 섹션 */}
-      <div className="overflow-x-auto pb-4">
-        <div className="flex gap-4 px-4">
-          {/* 일반 카드 - 항상 표시됨 */}
-          <motion.div 
-            className="flex-none w-[85%] aspect-square rounded-xl p-4 flex flex-col cursor-pointer relative overflow-hidden"
-            animate={{ opacity: isExpanded ? 0 : 1 }}
-            transition={{ duration: 0.3 }}
-            onClick={toggleExpand}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <div className="absolute inset-0 z-0">
-              <Image 
-                src="/images/background/image1.jpg" 
-                alt="배경 이미지" 
-                className="object-cover"
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-              <div className="absolute inset-0 bg-black/40 z-10"></div>
-            </div>
-            <div className="flex flex-col items-end mb-2 relative z-10">
-              <h3 className="text-white text-lg font-medium">이번주 말씀</h3>
-              <p className="text-white/80 text-sm">요한복음 1:1 KOERV</p>
-            </div>
-            <div className="flex-1 flex items-center justify-end text-right relative z-10">
-              <p className="text-white text-xl font-medium leading-relaxed">
-                맨 처음, 세상이 시작되기 전에<br />
-                말씀이 계셨다. 그 말씀은<br />
-                하나님과 함께 계셨고<br />
-                말씀이 곧 하나님이셨다.
-              </p>
-            </div>
-          </motion.div>
-
-          {/* 확장된 카드 - 확장 상태일 때만 표시됨 */}
-          <AnimatePresence>
-            {isExpanded && (
-              <motion.div 
-                className="fixed inset-0 z-[9999] flex justify-center"
-                initial={{ borderRadius: "0.75rem", opacity: 0, scale: 0.9 }}
-                animate={{ borderRadius: 0, opacity: 1, scale: 1 }}
-                exit={{ borderRadius: "0.75rem", opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.4, ease: "easeInOut" }}
-              >
-                <div className="w-full max-w-[550px] h-screen flex flex-col">
-                  <div className="absolute inset-0 z-0">
-                    <Image 
-                      src="/images/background/image1.jpg" 
-                      alt="배경 이미지" 
-                      className="w-full h-full object-cover"
-                      fill
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                    />
-                    <div className="absolute inset-0 bg-black/60 z-10"></div>
-                  </div>
-                  <div className="flex justify-end w-full p-4 mb-6 relative z-10">
-                    <IoMdClose 
-                      className="text-3xl text-white cursor-pointer" 
-                      onClick={toggleExpand}
-                    />
-                  </div>
-                  
-                  <AnimatePresence>
-                    {showExpandedText && (
-                      <motion.div 
-                        className="flex-1 flex flex-col items-end justify-center p-4 relative z-10"
-                        variants={textVariants}
-                        initial="hidden"
-                        animate="visible"
-                        exit="hidden"
-                      >
-                        <div className="flex flex-col items-end mb-4">
-                          <h3 className="text-white text-2xl font-medium">이번주 말씀</h3>
-                          <p className="text-white/80 text-base">요한복음 1:1 KOERV</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-white text-2xl font-medium leading-relaxed">
-                            맨 처음, 세상이 시작되기 전에<br />
-                            말씀이 계셨다. 그 말씀은<br />
-                            하나님과 함께 계셨고<br />
-                            말씀이 곧 하나님이셨다.
-                          </p>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+        <div className="relative w-full h-64 md:h-full md:w-1/2">
+          <Image
+            src="/images/background/image1.jpg"
+            alt="Main"
+            fill
+            sizes="(max-width: 768px) 100vw, 33vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-black bg-opacity-30"></div>
+        </div>
+        <div className="w-full p-6 flex flex-col justify-center md:w-1/2">
+          <h2 className="text-xl font-bold text-gray-800 mb-2">{scriptureData[0].title}</h2>
+          <p className="text-gray-600 mb-4 line-clamp-3">{scriptureData[0].content}</p>
+          <p className="text-sm text-gray-500">{scriptureData[0].reference}</p>
         </div>
       </div>
 
-      {/* 말씀 기록 컴포넌트 */}
+      {/* AnimatePresence for expanded view */}
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.div 
+            className="fixed inset-0 z-[9999] flex justify-center"
+            initial={{ borderRadius: "0.75rem", opacity: 0, scale: 0.9 }}
+            animate={{ borderRadius: 0, opacity: 1, scale: 1 }}
+            exit={{ borderRadius: "0.75rem", opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            onClick={(e) => e.target === e.currentTarget && toggleExpand()}
+          >
+            <div className="w-full max-w-[550px] h-screen flex flex-col">
+              <div className="absolute inset-0 z-0">
+                <Image 
+                  src="/images/background/image1.jpg" 
+                  alt="배경 이미지" 
+                  className="w-full h-full object-cover"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+                <div className="absolute inset-0 bg-black/60 z-10"></div>
+              </div>
+              <div className="flex justify-end w-full p-4 mb-6 relative z-10">
+                <IoMdClose 
+                  className="text-3xl text-white cursor-pointer" 
+                  onClick={toggleExpand}
+                />
+              </div>
+              
+              <AnimatePresence>
+                {showExpandedText && (
+                  <motion.div 
+                    className="flex-1 flex flex-col items-end justify-center p-4 relative z-10"
+                    variants={textVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="hidden"
+                  >
+                    <div className="flex flex-col items-end mb-4">
+                      <h3 className="text-white text-2xl font-medium">이번주 말씀</h3>
+                      <p className="text-white/80 text-base">요한복음 1:1 KOERV</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-white text-2xl font-medium leading-relaxed">
+                        맨 처음, 세상이 시작되기 전에<br />
+                        말씀이 계셨다. 그 말씀은<br />
+                        하나님과 함께 계셨고<br />
+                        말씀이 곧 하나님이셨다.
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* AnimatePresence for history view */}
       <AnimatePresence>
         {showHistory && (
           <motion.div 
@@ -373,4 +302,4 @@ export const WordSection = () => {
   );
 };
 
-export default WordSection; 
+export default WordSection;

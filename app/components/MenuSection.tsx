@@ -1,74 +1,37 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import { FaRegClock, FaNewspaper, FaMapMarkedAlt, FaHandHoldingHeart } from "react-icons/fa";
 
 export const MenuSection = () => {
-  const handleShowWorshipTime = () => {
-    const event = new CustomEvent('showWorshipTime');
-    document.dispatchEvent(event);
-  };
-
-  const handleShowBulletin = () => {
-    const event = new CustomEvent('showBulletin');
-    document.dispatchEvent(event);
-  };
-
-  const handleShowLocation = () => {
-    const event = new CustomEvent('showLocation');
-    document.dispatchEvent(event);
-  };
-
-  const handleShowOffering = () => {
-    const event = new CustomEvent('showOffering');
-    document.dispatchEvent(event);
-  };
-  
   const menuItems = [
-    { text: "예배 시간", onClick: handleShowWorshipTime, icon: FaRegClock },
-    { text: "주보", onClick: handleShowBulletin, icon: FaNewspaper },
-    { text: "오시는 길", onClick: handleShowLocation, icon: FaMapMarkedAlt },
-    { text: "헌금안내", onClick: handleShowOffering, icon: FaHandHoldingHeart }
+    { title: "SaRang ON", subtitle: "사랑온" },
+    { title: "SaGA", subtitle: "사랑글로벌아카데미" },
+    { title: "글로벌 특별새벽부흥회", subtitle: "" },
+    { title: "2025 WEA", subtitle: "서울총회" },
+    { title: "제4회", subtitle: "한국교회섬김의날" },
   ];
 
   return (
-    <motion.div 
-      className="w-full mt-4"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
-    >
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-2 px-2.5">
-        {menuItems.map((item, index) => (
-          <motion.div 
-            key={index}
-            className="flex-1 aspect-[2/1] md:aspect-square bg-white dark:bg-neutral-800 rounded-xl flex flex-row items-center justify-center gap-2 md:flex-col md:gap-1 cursor-pointer relative hover:bg-gray-100 dark:hover:bg-neutral-700 transition-colors"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            onClick={item.onClick}
-            whileHover={{ 
-              scale: 1.05,
-              // boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)" // 호버 시 배경색 변경으로 대체
-            }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <item.icon className="text-xl md:text-2xl text-neutral-600 dark:text-neutral-300" />
-            <motion.span 
-              className="text-xs md:text-sm font-medium whitespace-nowrap dark:text-white"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}
+    <div className="bg-white dark:bg-neutral-900 py-8">
+      <div className="w-full max-w-screen-xl mx-auto px-4">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
+          {menuItems.map((item, index) => (
+            <motion.div
+              key={index}
+              className="p-4 bg-gray-100 dark:bg-neutral-800 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-neutral-700 transition-colors"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              {item.text}
-            </motion.span>
-          </motion.div>
-        ))}
+              <h3 className="font-semibold text-gray-800 dark:text-white">{item.title}</h3>
+              {item.subtitle && <p className="text-sm text-gray-500 dark:text-gray-400">{item.subtitle}</p>}
+            </motion.div>
+          ))}
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
-export default MenuSection; 
+export default MenuSection;
